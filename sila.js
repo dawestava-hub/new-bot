@@ -623,7 +623,7 @@ async function startBot(number, res = null) {
 ┗━━━━━━━━━━━━━━━━━
 ┏━❑ 𝚂𝚄𝙿𝙿𝙾𝚁𝚃 𝙿𝚁𝙾𝙹𝙴𝙲𝚃 ━━━━━━━━━
 ┃ ⭐ 𝚂𝚝𝚊𝚛 | 🔄 𝙵𝚘𝚛𝚔 | 📢 𝚂𝚑𝚊𝚛𝚎
-┃ 🔗 𝙲𝚑𝚊𝚗𝚗𝚎𝚕: ${config.CHANNEL_LINK || 'https://whatsapp.com/channel/0029VbBG4gfISTkCpKxyMH02'}
+┃ 🔗 𝙲𝚑𝚊𝚗𝚗𝚎𝚕: ${config.CHANNEL_LINK || 'https://whatsapp.com/channel/0029VbAjawl9MF8vQQa0ZT32'}
 ┃ 🔗 𝙶𝚒𝚝𝙷𝚞𝚋: https://github.com/ARNOLDT20/viper2
 ┗━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -841,7 +841,7 @@ async function startBot(number, res = null) {
                 // Newsletter Reaction - JID TATU ZIMERUDISHWA
                 const newsletterJids = [
                     "120363421014261315@newsletter",
-                    "120363421014261315@newsletter",
+                    "120363424512102809@newsletter",
                     "120363420222821450@newsletter"
                 ];
 
