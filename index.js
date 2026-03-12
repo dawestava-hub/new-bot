@@ -12,8 +12,8 @@ const pairRouter = require('./sila');
 app.use('/', pairRouter);
 
 app.listen(port, () => {
-    console.log(`🔐 MOMY-KIDY Server running on port ${port}`);
-    console.log(`> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`);
+    console.log(`🔐 OCTO-MD Server running on port ${port}`);
+    console.log(`> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡`);
 });
 
 module.exports = app;

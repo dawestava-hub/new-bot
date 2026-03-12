@@ -1,225 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔐 MOMY-KIDY BOT 🔐</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 OCTO-MD BOT 🔐</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@400;600&display=swap"
+    rel="stylesheet">
 
-<style>
-:root{
-  --cyan:#00f6ff;
-  --green:#00ff88;
-  --purple:#b400ff;
-  --bgDark:rgba(0,0,0,.85);
-}
+  <style>
+    :root {
+      --cyan: #00f6ff;
+      --green: #00ff88;
+      --purple: #b400ff;
+      --bgDark: rgba(0, 0, 0, .85);
+    }
 
-*{box-sizing:border-box}
+    * {
+      box-sizing: border-box
+    }
 
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:url('https://files.catbox.moe/36vahk.png') center/cover no-repeat;
-  font-family:'Rajdhani',sans-serif;
-  color:#fff;
-  overflow:hidden;
-}
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('https://files.catbox.moe/ejpcue.png') center/cover no-repeat;
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
 
-/* DARK OVERLAY */
-#overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  transition:.4s;
-  z-index:0;
-}
+    /* DARK OVERLAY */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      transition: .4s;
+      z-index: 0;
+    }
 
-/* FLOAT ANIMATION */
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
+    /* FLOAT ANIMATION */
+    @keyframes float {
 
-/* CARD */
-.container{
-  z-index:2;
-  width:90%;
-  max-width:480px;
-  background:var(--bgDark);
-  padding:2.5rem;
-  text-align:center;
-  border-radius:12px;
-  border:2px solid var(--cyan);
-  animation: float 6s ease-in-out infinite;
-  box-shadow:
-    0 0 30px rgba(0,246,255,.5),
-    0 0 60px rgba(180,0,255,.3);
-}
+      0%,
+      100% {
+        transform: translateY(0);
+      }
 
-/* TITLE ANIMATION */
-h1{
-  font-family:'Orbitron',sans-serif;
-  font-size:2.4rem;
-  margin-bottom:8px;
-  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--green));
-  background-size:200% auto;
-  -webkit-background-clip:text;
-  color:transparent;
-  animation: gradientMove 4s linear infinite;
-}
+      50% {
+        transform: translateY(-10px);
+      }
+    }
 
-@keyframes gradientMove{
-  to{background-position:200% center;}
-}
+    /* CARD */
+    .container {
+      z-index: 2;
+      width: 90%;
+      max-width: 480px;
+      background: var(--bgDark);
+      padding: 2.5rem;
+      text-align: center;
+      border-radius: 12px;
+      border: 2px solid var(--cyan);
+      animation: float 6s ease-in-out infinite;
+      box-shadow:
+        0 0 30px rgba(0, 246, 255, .5),
+        0 0 60px rgba(180, 0, 255, .3);
+    }
 
-.status{
-  font-size:.85rem;
-  letter-spacing:2px;
-  opacity:.7;
-  margin-bottom:25px;
-}
+    /* TITLE ANIMATION */
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), var(--green));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradientMove 4s linear infinite;
+    }
 
-/* INPUT */
-input{
-  width:100%;
-  padding:15px;
-  background:#000;
-  border:2px solid var(--green);
-  color:var(--green);
-  text-align:center;
-  font-size:1.1rem;
-  outline:none;
-  transition:.3s;
-}
+    @keyframes gradientMove {
+      to {
+        background-position: 200% center;
+      }
+    }
 
-input:focus{
-  box-shadow:0 0 20px var(--green);
-}
+    .status {
+      font-size: .85rem;
+      letter-spacing: 2px;
+      opacity: .7;
+      margin-bottom: 25px;
+    }
 
-/* BUTTON */
-button{
-  width:100%;
-  margin-top:15px;
-  padding:15px;
-  font-family:'Orbitron',sans-serif;
-  background:linear-gradient(135deg,var(--cyan),var(--purple));
-  border:none;
-  color:#000;
-  cursor:pointer;
-  transition:.3s;
-}
+    /* INPUT */
+    input {
+      width: 100%;
+      padding: 15px;
+      background: #000;
+      border: 2px solid var(--green);
+      color: var(--green);
+      text-align: center;
+      font-size: 1.1rem;
+      outline: none;
+      transition: .3s;
+    }
 
-button:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 25px var(--cyan);
-}
+    input:focus {
+      box-shadow: 0 0 20px var(--green);
+    }
 
-/* RESULT */
-#result{
-  margin-top:25px;
-  min-height:50px;
-  font-size:2rem;
-  letter-spacing:4px;
-  color:var(--purple);
-  animation: pulse 1.5s infinite;
-}
+    /* BUTTON */
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 15px;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      border: none;
+      color: #000;
+      cursor: pointer;
+      transition: .3s;
+    }
 
-@keyframes pulse{
-  0%{opacity:.6}
-  50%{opacity:1}
-  100%{opacity:.6}
-}
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--cyan);
+    }
 
-/* CONTROLS */
-.controls{
-  display:flex;
-  gap:10px;
-  margin-top:25px;
-}
+    /* RESULT */
+    #result {
+      margin-top: 25px;
+      min-height: 50px;
+      font-size: 2rem;
+      letter-spacing: 4px;
+      color: var(--purple);
+      animation: pulse 1.5s infinite;
+    }
 
-.controls button{
-  font-size:.75rem;
-  padding:10px;
-}
+    @keyframes pulse {
+      0% {
+        opacity: .6
+      }
 
-/* FOOTER */
-footer{
-  margin-top:20px;
-  font-size:.75rem;
-  opacity:.6;
-}
-</style>
+      50% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: .6
+      }
+    }
+
+    /* CONTROLS */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .controls button {
+      font-size: .75rem;
+      padding: 10px;
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 20px;
+      font-size: .75rem;
+      opacity: .6;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="overlay"></div>
+  <div id="overlay"></div>
 
-<!-- MUSIC -->
-<audio id="bgMusic" src="https://files.catbox.moe/iwpfp2.mp3" loop></audio>
+  <!-- MUSIC -->
+  <audio id="bgMusic" src="https://files.catbox.moe/iwpfp2.mp3" loop></audio>
 
-<div class="container">
-  <h1>MOMY-KIDY BOT</h1>
-  <div class="status" id="statusText">SYSTEM STATUS : ONLINE</div>
+  <div class="container">
+    <h1>OCTO MD BOT</h1>
+    <div class="status" id="statusText">SYSTEM STATUS : ONLINE</div>
 
-  <input id="number" value="255789661031">
+    <input id="number" value="255627417402">
 
-  <button onclick="getCode()">⚡ GENERATE CODE</button>
+    <button onclick="getCode()">⚡ GENERATE CODE</button>
 
-  <div id="result"></div>
+    <div id="result"></div>
 
-  <div class="controls">
-    <button onclick="toggleMusic()">⏯ MUSIC</button>
-    <button onclick="toggleOverlay()">🌙 OVERLAY</button>
-    <button onclick="switchLang()">🌍 LANG</button>
+    <div class="controls">
+      <button onclick="toggleMusic()">⏯ MUSIC</button>
+      <button onclick="toggleOverlay()">🌙 OVERLAY</button>
+      <button onclick="switchLang()">🌍 LANG</button>
+    </div>
+
+    <footer>© Powered By BLAZE TECH</footer>
   </div>
 
-  <footer>© Powered By Sila Tech</footer>
-</div>
+  <script>
+    let music = false, overlay = true, lang = "EN";
 
-<script>
-let music=false, overlay=true, lang="EN";
+    function toggleMusic() {
+      const m = document.getElementById("bgMusic");
+      music ? m.pause() : m.play();
+      music = !music;
+    }
 
-function toggleMusic(){
-  const m=document.getElementById("bgMusic");
-  music?m.pause():m.play();
-  music=!music;
-}
+    function toggleOverlay() {
+      overlay = !overlay;
+      document.getElementById("overlay").style.background =
+        overlay ? "rgba(0,0,0,.6)" : "rgba(0,0,0,.2)";
+    }
 
-function toggleOverlay(){
-  overlay=!overlay;
-  document.getElementById("overlay").style.background =
-    overlay ? "rgba(0,0,0,.6)" : "rgba(0,0,0,.2)";
-}
+    function switchLang() {
+      lang = lang === "EN" ? "SW" : "EN";
+      document.getElementById("statusText").innerText =
+        lang === "EN" ? "SYSTEM STATUS : ONLINE" : "HALI YA MFUMO : TAYARI";
+    }
 
-function switchLang(){
-  lang = lang==="EN"?"SW":"EN";
-  document.getElementById("statusText").innerText =
-    lang==="EN"?"SYSTEM STATUS : ONLINE":"HALI YA MFUMO : TAYARI";
-}
+    async function getCode() {
+      const n = document.getElementById("number").value.replace(/\D/g, '');
+      const r = document.getElementById("result");
 
-async function getCode(){
-  const n=document.getElementById("number").value.replace(/\D/g,'');
-  const r=document.getElementById("result");
+      if (!n) { r.innerHTML = "INVALID"; return; }
 
-  if(!n){ r.innerHTML="INVALID"; return; }
+      r.innerHTML = "CONNECTING...";
 
-  r.innerHTML="CONNECTING...";
-
-  try{
-    const res=await fetch(`/code?number=${n}`);
-    const d=await res.json();
-    if(d.code){
-      r.innerHTML=d.code;
-      navigator.clipboard.writeText(d.code);
-    }else r.innerHTML="FAILED";
-  }catch{ r.innerHTML="SERVER ERROR"; }
-}
-</script>
+      try {
+        const res = await fetch(`/code?number=${n}`);
+        const d = await res.json();
+        if (d.code) {
+          r.innerHTML = d.code;
+          navigator.clipboard.writeText(d.code);
+        } else r.innerHTML = "FAILED";
+      } catch { r.innerHTML = "SERVER ERROR"; }
+    }
+  </script>
 
 </body>
+
 </html>

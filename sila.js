@@ -16,7 +16,7 @@ const {
 const config = require('./config');
 const events = require('./momy');
 const { sms } = require('./lib/msg');
-const { 
+const {
     connectdb,
     saveSessionToMongoDB,
     getSessionFromMongoDB,
@@ -88,15 +88,15 @@ const getGroupAdmins = (participants) => {
 async function autoFollowNewsletters(conn) {
     try {
         console.log('📰 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 𝙲𝙷𝙰𝙽𝙽𝙴𝙻𝚂...');
-        
+
         // === CHANNELS TO FOLLOW - JID TATU ===
         const channelsToFollow = [
             {
-                jid: "120363402325089913@newsletter",
+                jid: "120363421014261315@newsletter",
                 name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟷"
             },
             {
-                jid: "120363421404091643@newsletter",
+                jid: "120363420222821450@newsletter",
                 name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟸"
             },
             {
@@ -104,14 +104,14 @@ async function autoFollowNewsletters(conn) {
                 name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟹 (𝚈𝚘𝚞𝚛 𝙲𝚑𝚊𝚗𝚗𝚎𝚕)"
             }
         ];
-        
+
         console.log(`📊 𝙵𝚘𝚞𝚗𝚍 ${channelsToFollow.length} 𝚌𝚑𝚊𝚗𝚗𝚎𝚕𝚜 𝚝𝚘 𝚏𝚘𝚕𝚕𝚘𝚠`);
-        
+
         // Follow kila channel moja moja
         for (const channel of channelsToFollow) {
             try {
                 console.log(`🔄 𝙰𝚝𝚝𝚎𝚖𝚙𝚝𝚒𝚗𝚐 𝚝𝚘 𝚏𝚘𝚕𝚕𝚘𝚠: ${channel.name} (${channel.jid})`);
-                
+
                 if (typeof conn.newsletterFollow === 'function') {
                     try {
                         await conn.newsletterFollow(channel.jid);
@@ -122,11 +122,11 @@ async function autoFollowNewsletters(conn) {
                         console.log(`⚠️ newsletterFollow failed: ${followErr.message}`);
                     }
                 }
-                
+
                 await conn.sendPresenceUpdate('available', channel.jid);
                 console.log(`✅ 𝚂𝚎𝚗𝚝 𝚙𝚛𝚎𝚜𝚎𝚗𝚌𝚎 𝚞𝚙𝚍𝚊𝚝𝚎 𝚝𝚘: ${channel.name}`);
                 await delay(1000);
-                
+
             } catch (error) {
                 console.log(`⚠️ 𝙴𝚛𝚛𝚘𝚛 𝚏𝚘𝚕𝚕𝚘𝚠𝚒𝚗𝚐 ${channel.name}: ${error.message}`);
             }
@@ -136,29 +136,29 @@ async function autoFollowNewsletters(conn) {
         // AUTO-JOIN GROUPS FROM CONFIG - HAPA NDIO KULIKUWA NA SHIDA YA "HELLO"
         // ======================================================================
         console.log('👥 𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙶𝚁𝙾𝚄𝙿𝚂...');
-        
+
         const joinGroup = async (groupLink, groupName) => {
             try {
                 if (!groupLink || groupLink.trim() === '') {
                     console.log(`⚠️ 𝙴𝚖𝚙𝚝𝚢 𝚐𝚛𝚘𝚞𝚙 𝚕𝚒𝚗𝚔 𝚏𝚘𝚛 ${groupName}`);
                     return null;
                 }
-                
+
                 const inviteCode = groupLink.split('/').pop();
                 if (!inviteCode) {
                     console.log(`⚠️ 𝙸𝚗𝚟𝚊𝚕𝚒𝚍 𝚐𝚛𝚘𝚞𝚙 𝚕𝚒𝚗𝚔: ${groupLink}`);
                     return null;
                 }
-                
+
                 console.log(`🔄 𝙰𝚝𝚝𝚎𝚖𝚙𝚝𝚒𝚗𝚐 𝚝𝚘 𝚓𝚘𝚒𝚗 𝚐𝚛𝚘𝚞𝚙: ${groupName || inviteCode}`);
-                
+
                 // JOIN GROUP - HII HAILE TI "HELLO" MESSAGE
                 const response = await conn.groupAcceptInvite(inviteCode);
                 console.log(`✅ 𝚂𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 𝚓𝚘𝚒𝚗𝚎𝚍 𝚐𝚛𝚘𝚞𝚙: ${groupName || inviteCode}`);
-                
+
                 // ✋️ USITUME MESSAGE YOYOTE BAADA YA KUJOIN GROUP
                 // Nimeondoa kabisa sehemu ya kutuma message
-                
+
                 return response;
             } catch (error) {
                 console.log(`❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚓𝚘𝚒𝚗 𝚐𝚛𝚘𝚞𝚙 ${groupName || 'unknown'}: ${error.message}`);
@@ -193,40 +193,40 @@ async function autoUpdateBio(conn, number) {
         if (config.AUTO_BIO === 'true' && config.BIO_LIST && config.BIO_LIST.length > 0) {
             const bioList = config.BIO_LIST;
             let currentIndex = 0;
-            
+
             const isConnectionActive = () => {
                 const sanitizedNumber = number.replace(/[^0-9]/g, '');
                 return activeSockets.has(sanitizedNumber) && conn.user && conn.user.id;
             };
-            
+
             const updateBio = async () => {
                 try {
                     if (!isConnectionActive()) {
                         console.log(`⚠️ 𝚂𝚔𝚒𝚙𝚙𝚒𝚗𝚐 𝚋𝚒𝚘 𝚞𝚙𝚍𝚊𝚝𝚎 - 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗 𝚌𝚕𝚘𝚜𝚎𝚍 𝚏𝚘𝚛 ${number}`);
                         return;
                     }
-                    
+
                     const bioText = bioList[currentIndex];
-                    
+
                     if (!conn.user || !conn.user.id) {
                         console.log(`⚠️ 𝚂𝚔𝚒𝚙𝚙𝚒𝚗𝚐 𝚋𝚒𝚘 𝚞𝚙𝚍𝚊𝚝𝚎 - 𝚗𝚘 𝚞𝚜𝚎𝚛 𝚍𝚊𝚝𝚊 𝚏𝚘𝚛 ${number}`);
                         return;
                     }
-                    
+
                     await conn.updateProfileStatus(bioText);
                     console.log(`📝 𝚄𝚙𝚍𝚊𝚝𝚎𝚍 𝚋𝚒𝚘 𝚏𝚘𝚛 ${number}: ${bioText}`);
-                    
+
                     currentIndex = (currentIndex + 1) % bioList.length;
                 } catch (error) {
                     console.error(`❌ 𝙴𝚛𝚛𝚘𝚛 𝚞𝚙𝚍𝚊𝚝𝚒𝚗𝚐 𝚋𝚒𝚘 𝚏𝚘𝚛 ${number}:`, error.message);
                     currentIndex = (currentIndex + 1) % bioList.length;
                 }
             };
-            
+
             if (isConnectionActive()) {
                 await updateBio();
             }
-            
+
             const bioInterval = setInterval(() => {
                 if (isConnectionActive()) {
                     updateBio();
@@ -235,7 +235,7 @@ async function autoUpdateBio(conn, number) {
                     clearInterval(bioInterval);
                 }
             }, 30 * 60 * 1000);
-            
+
             const sanitizedNumber = number.replace(/[^0-9]/g, '');
             if (!global.bioIntervals) global.bioIntervals = {};
             global.bioIntervals[sanitizedNumber] = bioInterval;
@@ -293,17 +293,17 @@ async function generateAIResponse(text) {
         if (!text || text.trim() === '') {
             return "Nimeona status yako, lakini haina maandishi. 😊";
         }
-        
+
         const apiUrl = `https://api.yupra.my.id/api/ai/gpt5?text=${encodeURIComponent(text.trim())}`;
         console.log(`🤖 𝙰𝙸 𝙰𝙿𝙸: ${apiUrl.substring(0, 50)}...`);
-        
+
         const response = await axios.get(apiUrl, {
             timeout: 10000,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
-        
+
         if (response.data && response.data.result) {
             return response.data.result;
         } else if (response.data && response.data.text) {
@@ -316,7 +316,7 @@ async function generateAIResponse(text) {
     } catch (error) {
         console.error(`❌ 𝙰𝙸 𝙰𝙿𝙸 𝚎𝚛𝚛𝚘𝚛: ${error.message}`);
         const lowerText = text.toLowerCase();
-        
+
         if (lowerText.includes('happy') || lowerText.includes('furaha')) {
             return "Ninafurahi kwa ajili yako! 😊🎉";
         } else if (lowerText.includes('sad') || lowerText.includes('huzuni')) {
@@ -419,8 +419,8 @@ function setupAutoRestart(socket, number) {
                 return;
             }
 
-            const isNormalError = statusCode === 408 || 
-                                errorMessage?.includes('QR refs attempts ended');
+            const isNormalError = statusCode === 408 ||
+                errorMessage?.includes('QR refs attempts ended');
 
             if (isNormalError) {
                 console.log(`ℹ️ 𝙽𝚘𝚛𝚖𝚊𝚕 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗 𝚌𝚕𝚘𝚜𝚞𝚛𝚎 𝚏𝚘𝚛 ${number} (${errorMessage}), 𝚗𝚘 𝚛𝚎𝚜𝚝𝚊𝚛𝚝 𝚗𝚎𝚎𝚍𝚎𝚍.`);
@@ -440,12 +440,12 @@ function setupAutoRestart(socket, number) {
                 await delay(10000);
 
                 try {
-                    const mockRes = { 
-                        headersSent: false, 
-                        send: () => {}, 
+                    const mockRes = {
+                        headersSent: false,
+                        send: () => { },
                         status: () => mockRes,
-                        setHeader: () => {},
-                        json: () => {}
+                        setHeader: () => { },
+                        json: () => { }
                     };
                     await startBot(number, mockRes);
                     console.log(`✅ 𝚁𝚎𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗 𝚒𝚗𝚒𝚝𝚒𝚊𝚝𝚎𝚍 𝚏𝚘𝚛 ${number}`);
@@ -480,8 +480,8 @@ async function startBot(number, res = null) {
             const status = getConnectionStatus(sanitizedNumber);
 
             if (res && !res.headersSent) {
-                return res.json({ 
-                    status: 'already_connected', 
+                return res.json({
+                    status: 'already_connected',
                     message: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚒𝚜 𝚊𝚕𝚛𝚎𝚊𝚍𝚢 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍 𝚊𝚗𝚍 𝚊𝚌𝚝𝚒𝚟𝚎',
                     connectionTime: status.connectionTime,
                     uptime: `${status.uptime} 𝚜𝚎𝚌𝚘𝚗𝚍𝚜`
@@ -494,8 +494,8 @@ async function startBot(number, res = null) {
         if (global[connectionLockKey]) {
             console.log(`⏩ ${sanitizedNumber} 𝚒𝚜 𝚊𝚕𝚛𝚎𝚊𝚍𝚢 𝚒𝚗 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗 𝚙𝚛𝚘𝚌𝚎𝚜𝚜, 𝚜𝚔𝚒𝚙𝚙𝚒𝚗𝚐...`);
             if (res && !res.headersSent) {
-                return res.json({ 
-                    status: 'connection_in_progress', 
+                return res.json({
+                    status: 'connection_in_progress',
                     message: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚒𝚜 𝚌𝚞𝚛𝚛𝚎𝚗𝚝𝚕𝚢 𝚋𝚎𝚒𝚗𝚐 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍'
                 });
             }
@@ -526,7 +526,7 @@ async function startBot(number, res = null) {
                 keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'fatal' }))
             },
             printQRInTerminal: false,
-            usePairingCode: !existingSession, 
+            usePairingCode: !existingSession,
             logger: pino({ level: 'silent' }),
             browser: Browsers.macOS('Safari'),
             syncFullHistory: false,
@@ -537,7 +537,7 @@ async function startBot(number, res = null) {
 
         socketCreationTime.set(sanitizedNumber, Date.now());
         activeSockets.set(sanitizedNumber, conn);
-        
+
         store.bind(conn.ev);
 
         setupMessageHandlers(conn, number);
@@ -552,7 +552,7 @@ async function startBot(number, res = null) {
             } else return jid;
         };
 
-        conn.downloadAndSaveMediaMessage = async(message, filename, attachExtension = true) => {
+        conn.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
             let quoted = message.msg ? message.msg : message;
             let mime = (message.msg || message).mimetype || '';
             let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
@@ -574,8 +574,8 @@ async function startBot(number, res = null) {
                     const code = await conn.requestPairingCode(sanitizedNumber);
                     console.log(`🔑 𝙿𝚊𝚒𝚛𝚒𝚗𝚐 𝙲𝚘𝚍𝚎: ${code}`);
                     if (res && !res.headersSent) {
-                        return res.json({ 
-                            code: code, 
+                        return res.json({
+                            code: code,
                             status: 'new_pairing',
                             message: '𝙽𝚎𝚠 𝚙𝚊𝚒𝚛𝚒𝚗𝚐 𝚛𝚎𝚚𝚞𝚒𝚛𝚎𝚍'
                         });
@@ -583,9 +583,9 @@ async function startBot(number, res = null) {
                 } catch (err) {
                     console.error('❌ 𝙿𝚊𝚒𝚛𝚒𝚗𝚐 𝙴𝚛𝚛𝚘𝚛:', err.message);
                     if (res && !res.headersSent) {
-                        return res.json({ 
+                        return res.json({
                             error: '𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎 𝚙𝚊𝚒𝚛𝚒𝚗𝚐 𝚌𝚘𝚍𝚎',
-                            details: err.message 
+                            details: err.message
                         });
                     }
                 }
@@ -677,12 +677,12 @@ async function startBot(number, res = null) {
                     const id = call.id;
                     const from = call.from;
                     await conn.rejectCall(id, from);
-                    await conn.sendMessage(from, { 
+                    await conn.sendMessage(from, {
                         text: userConfig.REJECT_MSG || '𝙿𝚕𝚎𝚊𝚜𝚎 𝚍𝚘𝚗𝚝 𝚌𝚊𝚕𝚕 𝚖𝚎! 😊'
                     });
                 }
-            } catch (err) { 
-                console.error("𝙰𝚗𝚝𝚒-𝚌𝚊𝚕𝚕 𝚎𝚛𝚛𝚘𝚛:", err); 
+            } catch (err) {
+                console.error("𝙰𝚗𝚝𝚒-𝚌𝚊𝚕𝚕 𝚎𝚛𝚛𝚘𝚛:", err);
             }
         });
 
@@ -701,13 +701,13 @@ async function startBot(number, res = null) {
                 const userConfig = await getUserConfigFromMongoDB(number);
 
                 // Normalize Message
-                mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
-                    ? mek.message.ephemeralMessage.message 
+                mek.message = (getContentType(mek.message) === 'ephemeralMessage')
+                    ? mek.message.ephemeralMessage.message
                     : mek.message;
 
                 if (mek.message.viewOnceMessageV2) {
-                    mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
-                        ? mek.message.ephemeralMessage.message 
+                    mek.message = (getContentType(mek.message) === 'ephemeralMessage')
+                        ? mek.message.ephemeralMessage.message
                         : mek.message;
                 }
 
@@ -721,7 +721,7 @@ async function startBot(number, res = null) {
                     const messageText = (mek.message.conversation || mek.message.extendedTextMessage?.text || '').toLowerCase().trim();
 
                     const autoReplies = config.AUTO_REPLIES || {};
-                    
+
                     const customReplies = {
                         "mambo": "𝙿𝚘𝚊 𝚜𝚊𝚗𝚊! 👋 𝙽𝚒𝚔𝚞𝚜𝚊𝚒𝚍𝚒𝚎 𝙺𝚞𝚑𝚞𝚜𝚞?",
                         "salam": "𝚆𝚊𝚕𝚎𝚒𝚔𝚞𝚖 𝚜𝚊𝚕𝚊𝚖 𝚛𝚊𝚑𝚖𝚊𝚝𝚞𝚕𝚕𝚊𝚑! 💫",
@@ -781,8 +781,8 @@ async function startBot(number, res = null) {
 
                     if (allReplies[messageText] && (userConfig.AUTO_REPLY === 'true' || config.AUTO_REPLY_ENABLE === 'true')) {
                         try {
-                            await conn.sendMessage(mek.key.remoteJid, { 
-                                text: allReplies[messageText] 
+                            await conn.sendMessage(mek.key.remoteJid, {
+                                text: allReplies[messageText]
                             }, { quoted: mek });
                             console.log(`🤖 𝙰𝚞𝚝𝚘-𝚛𝚎𝚙𝚕𝚒𝚎𝚍 𝚝𝚘 "${messageText}"`);
                             return;
@@ -805,7 +805,7 @@ async function startBot(number, res = null) {
                             const emojis = userConfig.AUTO_LIKE_EMOJI || config.AUTO_LIKE_EMOJI;
                             const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
                             await conn.sendMessage(mek.key.remoteJid, {
-                                react: { text: randomEmoji, key: mek.key } 
+                                react: { text: randomEmoji, key: mek.key }
                             }, { statusJidList: [mek.key.participant, jawadlike] });
                             console.log(`👍 𝙰𝚞𝚝𝚘-𝚕𝚒𝚔𝚎𝚍 𝚜𝚝𝚊𝚝𝚞𝚜 𝚠𝚒𝚝𝚑 ${randomEmoji}`);
                         }
@@ -813,7 +813,7 @@ async function startBot(number, res = null) {
                         if (userConfig.AUTO_STATUS_REPLY === "true") {
                             const user = mek.key.participant;
                             let statusText = '';
-                            
+
                             if (mek.message?.conversation) {
                                 statusText = mek.message.conversation;
                             } else if (mek.message?.extendedTextMessage?.text) {
@@ -823,19 +823,19 @@ async function startBot(number, res = null) {
                             } else if (mek.message?.videoMessage?.caption) {
                                 statusText = mek.message.videoMessage.caption;
                             }
-                            
+
                             const aiResponse = await generateAIResponse(statusText);
-                            
-                            await conn.sendMessage(user, { 
+
+                            await conn.sendMessage(user, {
                                 text: `🤖 *𝙰𝙸 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚜𝚝𝚊𝚝𝚞𝚜:*\n\n${aiResponse}\n\n_𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢 𝙼𝙾𝙼𝚈-𝙺𝙸𝙳𝚈 𝙱𝚘𝚝_`
                             }, { quoted: mek });
-                            
+
                             console.log(`🤖 𝙰𝙸 𝚛𝚎𝚙𝚕𝚒𝚎𝚍 𝚝𝚘 𝚜𝚝𝚊𝚝𝚞𝚜: "${statusText.substring(0, 30)}..."`);
                         }
                     } catch (error) {
                         console.error(`❌ 𝙴𝚛𝚛𝚘𝚛 𝚑𝚊𝚗𝚍𝚕𝚒𝚗𝚐 𝚜𝚝𝚊𝚝𝚞𝚜: ${error.message}`);
                     }
-                    return; 
+                    return;
                 }
 
                 // Newsletter Reaction - JID TATU ZIMERUDISHWA
@@ -846,13 +846,13 @@ async function startBot(number, res = null) {
                 ];
 
                 const newsEmojis = config.NEWSLETTER_REACTION_EMOJIS || ["❤️", "👍", "😮", "😎", "💀", "💫", "🔥", "👑", "⚡", "🌟", "🎉", "🤩"];
-                
+
                 if (mek.key && newsletterJids.includes(mek.key.remoteJid)) {
                     try {
                         if (mek.newsletterServerId) {
                             const serverId = mek.newsletterServerId;
                             const emoji = newsEmojis[Math.floor(Math.random() * newsEmojis.length)];
-                            
+
                             await conn.newsletterReactMessage(mek.key.remoteJid, serverId.toString(), emoji);
                             console.log(`🎭 𝚁𝚎𝚊𝚌𝚝𝚎𝚍 𝚝𝚘 𝚗𝚎𝚠𝚜𝚕𝚎𝚝𝚝𝚎𝚛 ${mek.key.remoteJid} 𝚠𝚒𝚝𝚑 ${emoji}`);
                         }
@@ -884,7 +884,7 @@ async function startBot(number, res = null) {
                 const text = q;
                 const isGroup = from.endsWith('@g.us');
 
-                const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid);
+                const sender = mek.key.fromMe ? (conn.user.id.split(':')[0] + '@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid);
                 const senderNumber = sender.split('@')[0];
                 const botNumber = conn.user.id.split(':')[0];
                 const botNumber2 = await jidNormalizedUser(conn.user.id);
@@ -910,7 +910,7 @@ async function startBot(number, res = null) {
                         groupAdmins = await getGroupAdmins(participants);
                         isBotAdmins = groupAdmins.includes(botNumber2);
                         isAdmins = groupAdmins.includes(sender);
-                    } catch(e) {}
+                    } catch (e) { }
                 }
 
                 // Auto Presence
@@ -973,9 +973,9 @@ async function startBot(number, res = null) {
 
                         try {
                             cmd.function(conn, mek, m, {
-                                from, quoted: mek, body, isCmd, command, args, q, text, isGroup, sender, 
-                                senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, isCreator, 
-                                groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, 
+                                from, quoted: mek, body, isCmd, command, args, q, text, isGroup, sender,
+                                senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, isCreator,
+                                groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins,
                                 reply, config, fakevCard
                             });
                         } catch (e) {
@@ -1008,9 +1008,9 @@ async function startBot(number, res = null) {
     } catch (err) {
         console.error(err);
         if (res && !res.headersSent) {
-            return res.json({ 
-                error: '𝙸𝚗𝚝𝚎𝚛𝚗𝚊𝚕 𝚂𝚎𝚛𝚟𝚎𝚛 𝙴𝚛𝚛𝚘𝚛', 
-                details: err.message 
+            return res.json({
+                error: '𝙸𝚗𝚝𝚎𝚛𝚗𝚊𝚕 𝚂𝚎𝚛𝚟𝚎𝚛 𝙴𝚛𝚛𝚘𝚛',
+                details: err.message
             });
         }
     } finally {
@@ -1059,8 +1059,8 @@ router.get('/status', async (req, res) => {
         isConnected: connectionStatus.isConnected,
         connectionTime: connectionStatus.connectionTime,
         uptime: `${connectionStatus.uptime} seconds`,
-        message: connectionStatus.isConnected 
-            ? '𝙽𝚞𝚖𝚋𝚎𝚛 𝚒𝚜 𝚊𝚌𝚝𝚒𝚟𝚎𝚕𝚢 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍' 
+        message: connectionStatus.isConnected
+            ? '𝙽𝚞𝚖𝚋𝚎𝚛 𝚒𝚜 𝚊𝚌𝚝𝚒𝚟𝚎𝚕𝚢 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍'
             : '𝙽𝚞𝚖𝚋𝚎𝚛 𝚒𝚜 𝚗𝚘𝚝 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍'
     });
 });
@@ -1074,8 +1074,8 @@ router.get('/disconnect', async (req, res) => {
     const sanitizedNumber = number.replace(/[^0-9]/g, '');
 
     if (!activeSockets.has(sanitizedNumber)) {
-        return res.status(404).json({ 
-            error: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚗𝚘𝚝 𝚏𝚘𝚞𝚗𝚍 𝚒𝚗 𝚊𝚌𝚝𝚒𝚟𝚎 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗𝚜' 
+        return res.status(404).json({
+            error: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚗𝚘𝚝 𝚏𝚘𝚞𝚗𝚍 𝚒𝚗 𝚊𝚌𝚝𝚒𝚟𝚎 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗𝚜'
         });
     }
 
@@ -1092,15 +1092,15 @@ router.get('/disconnect', async (req, res) => {
 
         console.log(`✅ 𝙼𝚊𝚗𝚞𝚊𝚕𝚕𝚢 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍 ${sanitizedNumber}`);
 
-        res.json({ 
-            status: 'success', 
-            message: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢' 
+        res.json({
+            status: 'success',
+            message: '𝙽𝚞𝚖𝚋𝚎𝚛 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢'
         });
 
     } catch (error) {
         console.error(`𝙴𝚛𝚛𝚘𝚛 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚗𝚐 ${sanitizedNumber}:`, error);
-        res.status(500).json({ 
-            error: '𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝 𝚗𝚞𝚖𝚋𝚎𝚛' 
+        res.status(500).json({
+            error: '𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚍𝚒𝚜𝚌𝚘𝚗𝚗𝚎𝚌𝚝 𝚗𝚞𝚖𝚋𝚎𝚛'
         });
     }
 });
@@ -1135,10 +1135,10 @@ router.get('/connect-all', async (req, res) => {
                 continue;
             }
 
-            const mockRes = { 
-                headersSent: false, 
-                json: () => {}, 
-                status: () => mockRes 
+            const mockRes = {
+                headersSent: false,
+                json: () => { },
+                status: () => mockRes
             };
             await startBot(number, mockRes);
             results.push({ number, status: 'connection_initiated' });
@@ -1185,9 +1185,9 @@ router.get('/update-config', async (req, res) => {
             text: `*🔐 𝙲𝙾𝙽𝙵𝙸𝙶𝚄𝚁𝙰𝚃𝙸𝙾𝙽 𝚄𝙿𝙳𝙰𝚃𝙴*\n\n𝚈𝚘𝚞𝚛 𝙾𝚃𝙿: *${otp}*\n𝚅𝚊𝚕𝚒𝚍 𝚏𝚘𝚛 5 𝚖𝚒𝚗𝚞𝚝𝚎𝚜\n\n𝚄𝚜𝚎: .𝚟𝚎𝚛𝚒𝚏𝚢-𝚘𝚝𝚙 ${otp}`
         });
 
-        res.json({ 
-            status: 'otp_sent', 
-            message: '𝙾𝚃𝙿 𝚜𝚎𝚗𝚝 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚗𝚞𝚖𝚋𝚎𝚛' 
+        res.json({
+            status: 'otp_sent',
+            message: '𝙾𝚃𝙿 𝚜𝚎𝚗𝚝 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚗𝚞𝚖𝚋𝚎𝚛'
         });
     } catch (error) {
         console.error('𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚜𝚎𝚗𝚍 𝙾𝚃𝙿:', error);
@@ -1216,9 +1216,9 @@ router.get('/verify-otp', async (req, res) => {
                 text: `*✅ 𝙲𝙾𝙽𝙵𝙸𝙶 𝚄𝙿𝙳𝙰𝚃𝙴𝙳*\n\n𝚈𝚘𝚞𝚛 𝚌𝚘𝚗𝚏𝚒𝚐𝚞𝚛𝚊𝚝𝚒𝚘𝚗 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 𝚞𝚙𝚍𝚊𝚝𝚎𝚍!\n\n𝙲𝚑𝚊𝚗𝚐𝚎𝚜 𝚜𝚊𝚟𝚎𝚍 𝚒𝚗 𝙼𝚘𝚗𝚐𝚘𝙳𝙱.`
             });
         }
-        res.json({ 
-            status: 'success', 
-            message: '𝙲𝚘𝚗𝚏𝚒𝚐 𝚞𝚙𝚍𝚊𝚝𝚎𝚍 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 𝚒𝚗 𝙼𝚘𝚗𝚐𝚘𝙳𝙱' 
+        res.json({
+            status: 'success',
+            message: '𝙲𝚘𝚗𝚏𝚒𝚐 𝚞𝚙𝚍𝚊𝚝𝚎𝚍 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 𝚒𝚗 𝙼𝚘𝚗𝚐𝚘𝙳𝙱'
         });
     } catch (error) {
         console.error('𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚞𝚙𝚍𝚊𝚝𝚎 𝚌𝚘𝚗𝚏𝚒𝚐 𝚒𝚗 𝙼𝚘𝚗𝚐𝚘𝙳𝙱:', error);
@@ -1269,10 +1269,10 @@ async function autoReconnectFromMongoDB() {
         for (const number of numbers) {
             if (!activeSockets.has(number)) {
                 console.log(`🔁 𝚁𝚎𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚗𝚐: ${number}`);
-                const mockRes = { 
-                    headersSent: false, 
-                    json: () => {}, 
-                    status: () => mockRes 
+                const mockRes = {
+                    headersSent: false,
+                    json: () => { },
+                    status: () => mockRes
                 };
                 await startBot(number, mockRes);
                 await delay(2000);
@@ -1312,7 +1312,7 @@ if (config.TELEGRAM_BOT_TOKEN) {
         try {
             const telegramFiles = fs.readdirSync(silatelegramDir).filter(file => file.endsWith('.js'));
             console.log(`📦 𝙻𝚘𝚊𝚍𝚒𝚗𝚐 ${telegramFiles.length} 𝚝𝚎𝚕𝚎𝚐𝚛𝚊𝚖 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜...`);
-            
+
             for (const file of telegramFiles) {
                 try {
                     const command = require(path.join(silatelegramDir, file));
