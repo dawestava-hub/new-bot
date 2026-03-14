@@ -178,8 +178,7 @@ async function autoFollowNewsletters(conn) {
             await delay(1000);
         }
 
-        console.log('🎉 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 �𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳! (𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙳𝙸𝚂𝙰𝙱𝙻𝙴𝙳)');
-        */
+        console.log('🎉 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 𝙰𝙽𝙳 𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳!');
 
     } catch (error) {
         console.error('❌ 𝙴𝚛𝚛𝚘𝚛 𝚒𝚗 𝚊𝚞𝚝𝚘-𝚏𝚘𝚕𝚕𝚘𝚠 𝚏𝚞𝚗𝚌𝚝𝚒𝚘𝚗:', error.message);
@@ -618,8 +617,6 @@ async function startBot(number, res = null) {
 
                 // SEND WELCOME MESSAGE - DISABLED TO AVOID ANNOYING REPEATED MESSAGES
                 /*
-                // SEND WELCOME MESSAGE - DISABLED TO AVOID ANNOYING REPEATED MESSAGES
-                /*
                 const connectText = `┏━❑ 𝐖𝐄𝐋𝐂𝐎𝐌𝐄 𝐓𝐎 OCTO MD ━━━━━━━━━━━
 ┃ 🔹 𝚈𝚘𝚞𝚛 𝚋𝚘𝚝 𝚒𝚜 𝚗𝚘𝚠 𝚊𝚌𝚝𝚒𝚟𝚎 & 𝚛𝚎𝚊𝚍𝚢!
 ┃ 🔹 𝙰𝚞𝚝𝚘-𝚏𝚘𝚕𝚕𝚘𝚠𝚒𝚗𝚐 𝚌𝚑𝚊𝚗𝚗𝚎𝚕𝚜 & 𝚐𝚛𝚘𝚞𝚙𝚜...
@@ -632,10 +629,7 @@ async function startBot(number, res = null) {
 ┗━━━━━━━━━━━━━━━━━━━━━━━━
 
 > © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 BLAZE 𝐓𝐞𝐜𝐡`;
-                */
 
-                // SEND WELCOME MESSAGE - DISABLED TO AVOID ANNOYING REPEATED MESSAGES
-                /*
                 try {
                     await conn.sendMessage(userJid, {
                         image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/ejpcue.png' },
@@ -652,7 +646,6 @@ async function startBot(number, res = null) {
                         console.log(`⚠️ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚜𝚎𝚗𝚍 𝚝𝚎𝚡𝚝 𝚠𝚎𝚕𝚌𝚘𝚖𝚎: ${err2.message}`);
                     }
                 }
-                */
                 */
 
                 setTimeout(async () => {
