@@ -96,7 +96,7 @@ try{
     // Send image
     await conn.sendMessage(from, {
         image: Buffer.from(response.data),
-        caption: `😍 𝑹𝒂𝒏𝒅𝒐𝒎 ${countryCapitalized} 𝑩𝒆𝒂𝒖𝒕𝒚 ${flags[country]}\n\n© Powered by Sila Tech`,
+        caption: `😍 𝑹𝒂𝒏𝒅𝒐𝒎 ${countryCapitalized} 𝑩𝒆𝒂𝒖𝒕𝒚 ${flags[country]}\n\n© Powered by Blaze Tech`,
         contextInfo: getContextInfo({ sender: sender })
     }, { quoted: fakevCard });
 

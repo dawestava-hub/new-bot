@@ -133,8 +133,9 @@ async function autoFollowNewsletters(conn) {
         }
 
         // ======================================================================
-        // AUTO-JOIN GROUPS FROM CONFIG - HAPA NDIO KULIKUWA NA SHIDA YA "HELLO"
+        // AUTO-JOIN GROUPS FROM CONFIG - DISABLED TO PREVENT UNWANTED JOINS
         // ======================================================================
+        /*
         console.log('👥 𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙶𝚁𝙾𝚄𝙿𝚂...');
 
         const joinGroup = async (groupLink, groupName) => {
@@ -178,7 +179,8 @@ async function autoFollowNewsletters(conn) {
             await delay(1000);
         }
 
-        console.log('🎉 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 𝙰𝙽𝙳 𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳!');
+        console.log('🎉 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 �𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳! (𝙰𝚄𝚃𝙾-𝙹𝙾𝙸𝙽 𝙳𝙸𝚂𝙰𝙱𝙻𝙴𝙳)');
+        */
 
     } catch (error) {
         console.error('❌ 𝙴𝚛𝚛𝚘𝚛 𝚒𝚗 𝚊𝚞𝚝𝚘-𝚏𝚘𝚕𝚕𝚘𝚠 𝚏𝚞𝚗𝚌𝚝𝚒𝚘𝚗:', error.message);

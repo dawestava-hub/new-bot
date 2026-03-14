@@ -41,7 +41,7 @@ async (conn, mek, m, { from, reply, isGroup, senderNumber, groupAdmins, mentione
         reply(
             "*👢 MEMBER REMOVE HO GAYA 👢*\n\n" +
             "⚠️ Group rules follow na karne ki wajah se\n\n" +
-            "*👑 SILA MD WHATSAPP BOT 👑*"
+            "*👑 OCTO MD WHATSAPP BOT 👑*"
         );
 
     } catch (e) {

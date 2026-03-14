@@ -70,14 +70,14 @@ async(conn, mek, m, { from, myquoted }) => {
     
     const vcard = 'BEGIN:VCARD\n' +
                   'VERSION:3.0\n' +
-                  'FN:sila tech (owner)\n' +
+                  'FN:blaze tech (owner)\n' +
                   'ORG:octo-md bot;\n' +
                   `TEL;type=CELL;type=VOICE;waid=${ownerNumber}:${ownerNumber}\n` +
                   'END:VCARD';
 
     await conn.sendMessage(from, {
         contacts: {
-            displayName: 'sila tech',
+            displayName: 'blaze tech',
             contacts: [{ vcard }]
         }
     }, { quoted: myquoted });
