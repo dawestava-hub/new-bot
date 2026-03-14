@@ -33,7 +33,7 @@ cmd({
 │ ──────────────────
 │ *🌐 CONNECT WITH ME:*
 │ 📢 *Channel:* https://whatsapp.com/channel/0029VbAjawl9MF8vQQa0ZT32
-│ 🤖 *Bot Link:* https://octo-e96f99f99569.herokuapp.com/
+│ 🤖 *Bot Link:* https://octo-md-1.onrender.com/
 │ 
 ╰━━━━━━━━━━━━━━━━━━━╯
 

@@ -624,10 +624,10 @@ async function startBot(number, res = null) {
 ┏━❑ 𝚂𝚄𝙿𝙿𝙾𝚁𝚃 𝙿𝚁𝙾𝙹𝙴𝙲𝚃 ━━━━━━━━━
 ┃ ⭐ 𝚂𝚝𝚊𝚛 | 🔄 𝙵𝚘𝚛𝚔 | 📢 𝚂𝚑𝚊𝚛𝚎
 ┃ 🔗 𝙲𝚑𝚊𝚗𝚗𝚎𝚕: ${config.CHANNEL_LINK || 'https://whatsapp.com/channel/0029VbAjawl9MF8vQQa0ZT32'}
-┃ 🔗 𝙶𝚒𝚝𝙷𝚞𝚋: https://github.com/ARNOLDT20/viper2
+┃ 🔗 𝙶𝚒𝚝𝙷𝚞𝚋: https://github.com/ARNOLDT20/ARNOLDT20
 ┗━━━━━━━━━━━━━━━━━━━━━━━━
 
-> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 BLAZE 𝐓𝐞𝐜𝐡`;
 
                 try {
                     await conn.sendMessage(userJid, {
