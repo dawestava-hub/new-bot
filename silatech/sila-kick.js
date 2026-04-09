@@ -13,13 +13,13 @@ cmd({
 },
     async (conn, mek, m, { from, reply, isGroup, senderNumber, groupAdmins, mentionedJid }) => {
         try {
-            if (!isGroup) return reply("*YEH COMMAND SIRF GROUPS ME USE KARE 😊*");
+            if (!isGroup) return reply("❌ This command only works in groups");
 
             const botOwner = conn.user.id.split(":")[0];
             const senderJid = senderNumber + "@s.whatsapp.net";
 
             if (!groupAdmins.includes(senderJid) && senderNumber !== botOwner) {
-                return reply("*YEH COMMAND SIRF ADMINS USE KAR SAKTE HAI 😊*");
+                return reply("❌ Only group admins can use this command");
             }
 
             // Bot admin check
@@ -27,11 +27,11 @@ cmd({
             const botNumber = conn.user.id.split(":")[0] + "@s.whatsapp.net";
 
             if (!groupInfo.participants.find(p => p.id === botNumber && p.admin)) {
-                return reply("*PEHLE MUJHE GROUP ADMIN BANAO 🥺*");
+                return reply("❌ Please make the bot an admin first");
             }
 
             if (!mentionedJid || mentionedJid.length === 0) {
-                return reply("*❌ KISI MEMBER KO TAG KARO*\n\nExample:\n.kick @user");
+                return reply("❌ Please tag the member to remove\n\nExample:\n.kick @user");
             }
 
             for (let user of mentionedJid) {
@@ -39,13 +39,13 @@ cmd({
             }
 
             reply(
-                "*👢 MEMBER REMOVE HO GAYA 👢*\n\n" +
-                "⚠️ Group rules follow na karne ki wajah se\n\n" +
-                "*👑 OCTO MD WHATSAPP BOT 👑*"
+                "👢 MEMBER REMOVED 👢\n\n" +
+                "Due to not following group rules\n\n" +
+                "👑 SHINIGAMI MD WHATSAPP BOT 👑"
             );
 
         } catch (e) {
             console.error("Kick Error:", e);
-            reply("*❌ MEMBER REMOVE KARNE ME ERROR AYA 🥺*");
+            reply("❌ Failed to remove member");
         }
     });
