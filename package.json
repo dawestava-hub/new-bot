@@ -1,14 +1,15 @@
+
 {
-  "name": "octo-md-bot",
+  "name": "shinigami-md-bot",
   "version": "s1",
-  "description": "OCTO-MD WhatsApp Bot Base",
+  "description": "Shinigami-MD WhatsApp Bot Base",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "pm2-start": "pm2 start index.js --name octo-md --watch",
-    "pm2-stop": "pm2 stop octo-md",
-    "pm2-restart": "pm2 restart octo-md",
-    "pm2-logs": "pm2 logs octo-md",
+    "pm2-start": "pm2 start index.js --name shinigami-md --watch",
+    "pm2-stop": "pm2 stop shinigami-md",
+    "pm2-restart": "pm2 restart shinigami-md",
+    "pm2-logs": "pm2 logs shinigami-md",
     "pm2-status": "pm2 status",
     "pm2-monit": "pm2 monit"
   },
