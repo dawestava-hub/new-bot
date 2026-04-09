@@ -74,7 +74,7 @@ ${email}
 .tempmail inbox
 
 ⚠️ Token private hota hai
-👑 SILA-MD BOT`
+> MADE IN BY INCONNU BOY`
         )
 
     } catch (e) {
