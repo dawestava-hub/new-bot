@@ -11,7 +11,7 @@ cmd({
     try {
         // Check if in group
         if (!isGroup) {
-            return reply("*❌ 𝚃𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚘𝚗𝚕𝚢 𝚠𝚘𝚛𝚔𝚜 𝚒𝚗 𝚐𝚛𝚘𝚞𝚙𝚜*");
+            return reply("❌ This command only works in groups");
         }
 
         // Get group metadata
@@ -21,13 +21,13 @@ cmd({
         // Check if sender is admin
         const senderParticipant = members.find(p => p.id === sender);
         if (!senderParticipant || (senderParticipant.admin !== "admin" && senderParticipant.admin !== "superadmin")) {
-            return reply("*❌ 𝙾𝚗𝚕𝚢 𝚐𝚛𝚘𝚞𝚙 𝚊𝚍𝚖𝚒𝚗𝚜 𝚌𝚊𝚗 𝚞𝚜𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍*");
+            return reply("❌ Only group admins can use this command");
         }
 
         // Check if bot is admin
         const botParticipant = members.find(p => p.id === conn.user.id);
         if (!botParticipant || (botParticipant.admin !== "admin" && botParticipant.admin !== "superadmin")) {
-            return reply("*❌ 𝙿𝚕𝚎𝚊𝚜𝚎 𝚖𝚊𝚔𝚎 𝚝𝚑𝚎 𝚋𝚘𝚝 𝚊𝚗 𝚊𝚍𝚖𝚒𝚗 𝚏𝚒𝚛𝚜𝚝*");
+            return reply("❌ Please make the bot an admin first");
         }
 
         // Get duration from args
@@ -39,19 +39,17 @@ cmd({
             try {
                 await conn.groupSettingUpdate(from, 'not_announcement');
                 
-                const successMsg = `╭━━【 🔊 𝚄𝙽𝙼𝚄𝚃𝙴 】━━━╮
-│ ✅ 𝙶𝚛𝚘𝚞𝚙 𝚞𝚗𝚖𝚞𝚝𝚎𝚍
-│ 👥 𝙼𝚎𝚖𝚋𝚎𝚛𝚜 𝚌𝚊𝚗 𝚗𝚘𝚠 𝚜𝚎𝚗𝚍 𝚖𝚎𝚜𝚜𝚊𝚐𝚎𝚜
-╰━━━━━━━━━━━━━━━━━━━╯
+                const successMsg = `✅ GROUP UNMUTED
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
-                
+Group unmuted successfully
+Members can now send messages`;
+
                 await conn.sendMessage(from, { text: successMsg });
                 await m.react("✅");
                 return;
             } catch (error) {
                 console.error('Error unmuting group:', error);
-                return reply("*❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚞𝚗𝚖𝚞𝚝𝚎 𝚐𝚛𝚘𝚞𝚙*");
+                return reply("❌ Failed to unmute group");
             }
         }
 
@@ -59,7 +57,7 @@ cmd({
         if (durationArg && !isNaN(durationArg)) {
             durationInMinutes = parseInt(durationArg);
             if (durationInMinutes < 1 || durationInMinutes > 1440) {
-                return reply("*❌ 𝙸𝚗𝚟𝚊𝚕𝚒𝚍 𝚍𝚞𝚛𝚊𝚝𝚒𝚘𝚗. 𝚄𝚜𝚎 1-1440 𝚖𝚒𝚗𝚞𝚝𝚎𝚜*");
+                return reply("❌ Invalid duration. Use 1-1440 minutes");
             }
         }
 
@@ -70,13 +68,11 @@ cmd({
         if (durationInMinutes > 0) {
             const durationInMilliseconds = durationInMinutes * 60 * 1000;
             
-            successMsg = `╭━━【 🔇 𝙼𝚄𝚃𝙴 】━━━╮
-│ ✅ 𝙶𝚛𝚘𝚞𝚙 𝚖𝚞𝚝𝚎𝚍
-│ ⏰ 𝙳𝚞𝚛𝚊𝚝𝚒𝚘𝚗: ${durationInMinutes} 𝚖𝚒𝚗𝚞𝚝𝚎𝚜
-│ 👥 𝙾𝚗𝚕𝚢 𝚊𝚍𝚖𝚒𝚗𝚜 𝚌𝚊𝚗 𝚜𝚎𝚗𝚍 𝚖𝚎𝚜𝚜𝚊𝚐𝚎𝚜
-╰━━━━━━━━━━━━━━━━━━━╯
+            successMsg = `✅ GROUP MUTED
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+Group muted for ${durationInMinutes} minutes
+Only admins can send messages
+Auto-unmute will happen after ${durationInMinutes} minutes`;
             
             await conn.sendMessage(from, { text: successMsg });
             
@@ -84,12 +80,11 @@ cmd({
             setTimeout(async () => {
                 try {
                     await conn.groupSettingUpdate(from, 'not_announcement');
-                    const unmuteMsg = `╭━━【 🔊 𝙰𝚄𝚃𝙾 𝚄𝙽𝙼𝚄𝚃𝙴 】━━━╮
-│ ✅ 𝙶𝚛𝚘𝚞𝚙 𝚊𝚞𝚝𝚘𝚖𝚊𝚝𝚒𝚌𝚊𝚕𝚕𝚢 𝚞𝚗𝚖𝚞𝚝𝚎𝚍
-│ ⏰ 𝚃𝚒𝚖𝚎𝚛 𝚌𝚘𝚖𝚙𝚕𝚎𝚝𝚎𝚍: ${durationInMinutes} 𝚖𝚒𝚗𝚞𝚝𝚎𝚜
-╰━━━━━━━━━━━━━━━━━━━╯
+                    const unmuteMsg = `✅ AUTO UNMUTE
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+Group automatically unmuted
+Timer completed: ${durationInMinutes} minutes
+Members can now send messages again`;
                     
                     await conn.sendMessage(from, { text: unmuteMsg });
                 } catch (unmuteError) {
@@ -99,13 +94,11 @@ cmd({
             
         } else {
             // Permanent mute
-            successMsg = `╭━━【 🔇 𝙿𝙴𝚁𝙼𝙰𝙽𝙴𝙽𝚃 𝙼𝚄𝚃𝙴 】━━━╮
-│ ✅ 𝙶𝚛𝚘𝚞𝚙 𝚙𝚎𝚛𝚖𝚊𝚗𝚎𝚗𝚝𝚕𝚢 𝚖𝚞𝚝𝚎𝚍
-│ 👥 𝙾𝚗𝚕𝚢 𝚊𝚍𝚖𝚒𝚗𝚜 𝚌𝚊𝚗 𝚜𝚎𝚗𝚍 𝚖𝚎𝚜𝚜𝚊𝚐𝚎𝚜
-│ 💡 𝚄𝚜𝚎: .𝚖𝚞𝚝𝚎 𝚘𝚏𝚏 𝚝𝚘 𝚞𝚗𝚖𝚞𝚝𝚎
-╰━━━━━━━━━━━━━━━━━━━╯
+            successMsg = `✅ GROUP PERMANENTLY MUTED
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+Group permanently muted
+Only admins can send messages
+Use: .mute off to unmute`;
             
             await conn.sendMessage(from, { text: successMsg });
         }
@@ -114,7 +107,7 @@ cmd({
 
     } catch (error) {
         console.error('Error in mute command:', error);
-        reply("*❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚖𝚞𝚝𝚎/𝚞𝚗𝚖𝚞𝚝𝚎 𝚐𝚛𝚘𝚞𝚙*");
+        reply("❌ Failed to mute/unmute group");
         await m.react("❌");
     }
 });
