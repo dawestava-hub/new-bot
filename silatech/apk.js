@@ -33,7 +33,7 @@ cmd({
 
 *downloading...*
 
-> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> © MADE IN BY INCONNU BOY`;
 
     await conn.sendMessage(from, { image: { url: app.icon }, caption }, { quoted: myquoted });
 
