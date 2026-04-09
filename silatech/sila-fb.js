@@ -48,13 +48,13 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
         // Send video directly with styled caption
         await conn.sendMessage(from, { 
             video: { url: videoUrl },
-            caption: `╭━━【 𝙼𝙾𝙼𝚈-𝙺𝙸𝙳𝚈 𝙱𝙾𝚃 】━━━━━━━━╮
+            caption: `╭━━【 SHINIGAMI MD 】━━━━━━╮
 │ *facebook video*
 │ *quality:* ${videoQuality}
 │ *title:* ${title.substring(0, 50)}${title.length > 50 ? '...' : ''}
-╰━━━━━━━━━━━━━━━━━━━━╯
+╰━━━━━━━━━━━━━━━━━━╯
 
-${config.BOT_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡'}`
+${config.BOT_FOOTER || '> © MADE IN BY INCONNU BOY'}`
         }, { quoted: myquoted });
 
     } catch (error) {
