@@ -26,9 +26,9 @@ END:VCARD`
 
 cmd({
     pattern: "video",
-    alias: ["ytmp4", "mp4", "ytv", "octovideo"],
+    alias: ["ytmp4", "mp4", "ytv", "shiniplay"],
     desc: "Download videos from YouTube",
-    category: "downloader",
+    category: "download",
     react: "🎥",
     filename: __filename
 },
