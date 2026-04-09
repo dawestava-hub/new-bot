@@ -2,7 +2,7 @@ const { cmd } = require('../momy');
 const axios = require('axios');
 const yts = require('yt-search');
 
-const VIDEO_IMAGE = 'https://files.catbox.moe/36vahk.png';
+const VIDEO_IMAGE = 'https://files.catbox.moe/xoac4l.jpg';
 
 // Define combined fakevCard 
 const fakevCard = {
@@ -13,12 +13,12 @@ const fakevCard = {
     },
     message: {
         contactMessage: {
-            displayName: "© OCTO-MD",
+            displayName: "© SHINIGAMI-MD",
             vcard: `BEGIN:VCARD
 VERSION:3.0
-FN:OCTO MD BOT
-ORG:OCTO-MD;
-TEL;type=CELL;type=VOICE;waid=255627417402:+255627417402
+FN: SHINIGAMI MD
+ORG:SHINIGAMI-MD;
+TEL;type=CELL;type=VOICE;waid=554488138425:+554488138425
 END:VCARD`
         }
     }
@@ -35,7 +35,7 @@ cmd({
     async (conn, mek, m, { from, sender, reply, q }) => {
         try {
             if (!q) {
-                return reply(`┏━❑ OCTO‑MD VIDEO DOWNLOADER ━━━━━━━━━
+                return reply(`┏━❑ VIDEO DOWNLOADER ━━━━━━━━━
 ┃ 🎥 DO YOU WANT TO DOWNLOAD A VIDEO?
 ┃
 ┃ TYPE: .video your video name
@@ -47,7 +47,7 @@ cmd({
 
             const search = await yts(q);
             if (!search.videos.length) {
-                return reply(`┏━❑ OCTO‑MD VIDEO SEARCH ━━━━━━━━━
+                return reply(`┏━❑ VIDEO SEARCH ━━━━━━━━━
 ┃ ❌ No Video Found
 ┃ 😔 Try Another Search
 ┗━━━━━━━━━━━━━━━━━━━━`);
@@ -60,7 +60,7 @@ cmd({
             const { data: apiRes } = await axios.get(api);
 
             if (!apiRes?.status || !apiRes.result?.media?.video_url) {
-                return reply(`┏━❑ OCTO‑MD VIDEO ERROR ━━━━━━━━━
+                return reply(`┏━❑ VIDEO ERROR ━━━━━━━━━
 ┃ ❌ Video Download Failed
 ┃ Please Try Again
 ┗━━━━━━━━━━━━━━━━━━━━`);
@@ -68,7 +68,7 @@ cmd({
 
             const result = apiRes.result.media;
 
-            const caption = `┏━❑ OCTO‑MD VIDEO PLAYER ━━━━━━━━━
+            const caption = `┏━❑ VIDEO PLAYER ━━━━━━━━━
 ┃ 🎬 Title: ${data.title}
 ┃
 ┃ 🔗 Link: ${data.url}
@@ -77,8 +77,8 @@ cmd({
 ┃
 ┃ Choose Your Version:
 ┃ 
-┃ ❮1❯ Simple Video
-┃ ❮2❯ File Video
+┃ °1 Simple Video
+┃ °2 File Video
 ┗━━━━━━━━━━━━━━━━━━━━`;
 
             const sentMsg = await conn.sendMessage(from, {
@@ -107,7 +107,7 @@ cmd({
                             await conn.sendMessage(senderID, {
                                 video: { url: result.video_url },
                                 mimetype: "video/mp4",
-                                caption: `🎬 ${data.title}\n\nDownloaded by OCTO‑MD`
+                                caption: `🎬 ${data.title}\n\nDownloaded by shinigami-md`
                             }, { quoted: fakevCard });
 
                         } else if (choice === "2") {
@@ -116,14 +116,14 @@ cmd({
                                 document: { url: result.video_url },
                                 mimetype: "video/mp4",
                                 fileName: `${data.title}.mp4`,
-                                caption: `🎬 ${data.title}\n\nDownloaded by OCTO‑MD`
+                                caption: `🎬 ${data.title}\n\nDownloaded by Shinigami`
                             }, { quoted: fakevCard });
 
                         } else {
 
                             await conn.sendMessage(senderID, {
-                                text: `┏━❑ OCTO‑MD SELECTION ━━━━━━━━━
-┃ ❌ Reply with ❮1❯ or ❮2❯
+                                text: `┏━❑  SELECTION NUM ━━━━━━━━━
+┃ ❌ Reply with °1 or °2
 ┗━━━━━━━━━━━━━━━━━━━━`
                             }, { quoted: fakevCard });
 
@@ -133,7 +133,7 @@ cmd({
                         console.error("Video send error:", err.message);
 
                         await conn.sendMessage(senderID, {
-                            text: `┏━❑ OCTO‑MD ERROR ━━━━━━━━━
+                            text: `┏━❑ ERROR ━━━━━━━━━
 ┃ ❌ Failed to send video
 ┗━━━━━━━━━━━━━━━━━━━━`
                         }, { quoted: fakevCard });
@@ -154,7 +154,7 @@ cmd({
 
             console.error('Video Error:', error.message);
 
-            reply(`┏━❑ OCTO‑MD DOWNLOAD FAILED ━━━━━━━━━
+            reply(`┏━❑ DOWNLOAD FAILED ━━━━━━━━━
 ┃ 😔 Video download failed
 ┃ Please try again
 ┗━━━━━━━━━━━━━━━━━━━━`);
