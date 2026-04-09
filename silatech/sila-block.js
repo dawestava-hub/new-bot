@@ -9,8 +9,8 @@ const fakevCard = {
   },
   message: {
     contactMessage: {
-      displayName: "© 𝐒𝐈𝐋𝐀-𝐌𝐃",
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐒𝐈𝐋𝐀 𝐌𝐃 𝐁𝐎𝐓\nORG:𝐒𝐈𝐋𝐀-𝐌𝐃;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
+      displayName: "© SHINIGAMI-MD",
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:SHINIGAMI MD BOT\nORG:SHINIGAMI-MD;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
     }
   }
 };
@@ -21,8 +21,8 @@ const getContextInfo = (m) => {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363402325089913@newsletter',
-            newsletterName: '© 𝐒𝐈𝐋𝐀 𝐌𝐃',
+            newsletterJid: '120363403408693274@newsletter',
+            newsletterName: '© SHINIGAMI MD',
             serverMessageId: 143,
         },
     };
@@ -41,22 +41,22 @@ try{
     // Owner check
     if (!isOwner) {
         return await conn.sendMessage(from, {
-            text: `❌ 𝚃𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚒𝚜 𝚘𝚗𝚕𝚢 𝚏𝚘𝚛 𝚋𝚘𝚝 𝚘𝚠𝚗𝚎𝚛`,
+            text: `❌ This command is only for bot owner`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
     }
     
     let jid;
     
-    // Check kama kuna quoted message
+    // Check if there is a quoted message
     if (quoted) {
         jid = quoted.sender;
     }
-    // Check kama kuna mentioned users
+    // Check if there are mentioned users
     else if (m.mentionedJid && m.mentionedJid.length > 0) {
         jid = m.mentionedJid[0];
     }
-    // Check kama kuna argument (namba)
+    // Check if there is an argument (number)
     else if (q) {
         // Clean the number
         let number = q.replace(/[^0-9]/g, '');
@@ -69,7 +69,7 @@ try{
         jid = number;
     } else {
         return await conn.sendMessage(from, {
-            text: `❌ 𝙿𝚕𝚎𝚊𝚜𝚎 𝚛𝚎𝚙𝚕𝚢 𝚝𝚘 𝚊 𝚖𝚎𝚜𝚜𝚊𝚐𝚎, 𝚖𝚎𝚗𝚝𝚒𝚘𝚗 𝚊 𝚞𝚜𝚎𝚛, 𝚘𝚛 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚗𝚞𝚖𝚋𝚎𝚛\n\n𝙴𝚡𝚊𝚖𝚙𝚕𝚎: ${prefix}block 255789661031`,
+            text: `❌ Please reply to a message, mention a user, or provide a number\n\nExample: ${prefix}block 255789661031`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
     }
@@ -82,18 +82,18 @@ try{
         const username = user?.status || jid.split('@')[0];
         
         await conn.sendMessage(from, {
-            text: `┏━❑ 𝐁𝐋𝐎𝐂𝐊 𝐔𝐒𝐄𝐑 ━━━━━━━━━━━━━━━
-┃ 🚫 𝚄𝚜𝚎𝚛 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 𝚋𝚕𝚘𝚌𝚔𝚎𝚍
-┃ 👤 𝙽𝚊𝚖𝚎: @${jid.split('@')[0]}
-┃ 📱 𝙽𝚞𝚖𝚋𝚎𝚛: ${jid.split('@')[0]}
-┗━━━━━━━━━━━━━━━━━━━━━━━━`,
+            text: `BLOCK USER
+
+🚫 User has been blocked
+👤 Name: @${jid.split('@')[0]}
+📱 Number: ${jid.split('@')[0]}`,
             mentions: [jid],
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
         
     } catch (e) {
         await conn.sendMessage(from, {
-            text: `❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚋𝚕𝚘𝚌𝚔 𝚞𝚜𝚎𝚛\n\n𝙴𝚛𝚛𝚘𝚛: ${e.message}`,
+            text: `❌ Failed to block user\n\nError: ${e.message}`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
         l(e);
@@ -101,7 +101,7 @@ try{
     
 } catch (e) {
     await conn.sendMessage(from, {
-        text: `❌ 𝙲𝚘𝚖𝚖𝚊𝚗𝚍 𝚏𝚊𝚒𝚕𝚎𝚍`,
+        text: `❌ Command failed`,
         contextInfo: getContextInfo({ sender: sender })
     }, { quoted: fakevCard });
     l(e);
@@ -121,22 +121,22 @@ try{
     // Owner check
     if (!isOwner) {
         return await conn.sendMessage(from, {
-            text: `❌ 𝚃𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚒𝚜 𝚘𝚗𝚕𝚢 𝚏𝚘𝚛 𝚋𝚘𝚝 𝚘𝚠𝚗𝚎𝚛`,
+            text: `❌ This command is only for bot owner`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
     }
     
     let jid;
     
-    // Check kama kuna quoted message
+    // Check if there is a quoted message
     if (quoted) {
         jid = quoted.sender;
     }
-    // Check kama kuna mentioned users
+    // Check if there are mentioned users
     else if (m.mentionedJid && m.mentionedJid.length > 0) {
         jid = m.mentionedJid[0];
     }
-    // Check kama kuna argument (namba)
+    // Check if there is an argument (number)
     else if (q) {
         // Clean the number
         let number = q.replace(/[^0-9]/g, '');
@@ -149,7 +149,7 @@ try{
         jid = number;
     } else {
         return await conn.sendMessage(from, {
-            text: `❌ 𝙿𝚕𝚎𝚊𝚜𝚎 𝚛𝚎𝚙𝚕𝚢 𝚝𝚘 𝚊 𝚖𝚎𝚜𝚜𝚊𝚐𝚎, 𝚖𝚎𝚗𝚝𝚒𝚘𝚗 𝚊 𝚞𝚜𝚎𝚛, 𝚘𝚛 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚗𝚞𝚖𝚋𝚎𝚛\n\n𝙴𝚡𝚊𝚖𝚙𝚕𝚎: ${prefix}unblock 255789661031`,
+            text: `❌ Please reply to a message, mention a user, or provide a number\n\nExample: ${prefix}unblock 255789661031`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
     }
@@ -162,18 +162,18 @@ try{
         const username = user?.status || jid.split('@')[0];
         
         await conn.sendMessage(from, {
-            text: `┏━❑ 𝐔𝐍𝐁𝐋𝐎𝐂𝐊 𝐔𝐒𝐄𝐑 ━━━━━━━━━━━━━━━
-┃ 🔓 𝚄𝚜𝚎𝚛 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 𝚞𝚗𝚋𝚕𝚘𝚌𝚔𝚎𝚍
-┃ 👤 𝙽𝚊𝚖𝚎: @${jid.split('@')[0]}
-┃ 📱 𝙽𝚞𝚖𝚋𝚎𝚛: ${jid.split('@')[0]}
-┗━━━━━━━━━━━━━━━━━━━━━━━━`,
+            text: `UNBLOCK USER
+
+🔓 User has been unblocked
+👤 Name: @${jid.split('@')[0]}
+📱 Number: ${jid.split('@')[0]}`,
             mentions: [jid],
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
         
     } catch (e) {
         await conn.sendMessage(from, {
-            text: `❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚞𝚗𝚋𝚕𝚘𝚌𝚔 𝚞𝚜𝚎𝚛\n\n𝙴𝚛𝚛𝚘𝚛: ${e.message}`,
+            text: `❌ Failed to unblock user\n\nError: ${e.message}`,
             contextInfo: getContextInfo({ sender: sender })
         }, { quoted: fakevCard });
         l(e);
@@ -181,7 +181,7 @@ try{
     
 } catch (e) {
     await conn.sendMessage(from, {
-        text: `❌ 𝙲𝚘𝚖𝚖𝚊𝚗𝚍 𝚏𝚊𝚒𝚕𝚎𝚍`,
+        text: `❌ Command failed`,
         contextInfo: getContextInfo({ sender: sender })
     }, { quoted: fakevCard });
     l(e);
