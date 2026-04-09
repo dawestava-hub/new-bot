@@ -64,7 +64,7 @@ cmd({
 │ 📊 𝚀𝚞𝚊𝚕𝚒𝚝𝚢: 𝙷𝙳 (𝟺𝙺)
 ╰━━━━━━━━━━━━━━━━━━━╯
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> MADE IN BY INCONNU BOY`;
 
         await conn.sendMessage(from, {
             image: imageBuffer,
