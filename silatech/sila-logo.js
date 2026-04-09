@@ -10,8 +10,8 @@ const fakevCard = {
   },
   message: {
     contactMessage: {
-      displayName: "© 𝐒𝐈𝐋𝐀-𝐌𝐃",
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐒𝐈𝐋𝐀 𝐌𝐃 𝐁𝐎𝐓\nORG:𝐒𝐈𝐋𝐀-𝐌𝐃;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
+      displayName: "© SHINIGAMI-MD",
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:SHINIGAMI MD BOT\nORG:SHINIGAMI-MD;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
     }
   }
 };
@@ -22,8 +22,8 @@ const getContextInfo = (sender) => {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363402325089913@newsletter',
-            newsletterName: '© 𝐒𝐈𝐋𝐀 𝐌𝐃',
+            newsletterJid: '120363403408693274@newsletter',
+            newsletterName: '© SHINIGAMI MD',
             serverMessageId: 143,
         },
     };
@@ -64,13 +64,13 @@ textCommands.forEach(effect => {
     try{
         if (!q) {
             return await conn.sendMessage(from, {
-                text: `❌ 𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚝𝚎𝚡𝚝\n𝙴𝚡𝚊𝚖𝚙𝚕𝚎: .${effect} 𝚂𝙸𝙻𝙰`,
+                text: `❌ Please provide text\nExample: .${effect} SHINIGAMI`,
                 contextInfo: getContextInfo(sender)
             }, { quoted: fakevCard });
         }
         
         await conn.sendMessage(from, {
-            text: `⏳ 𝙲𝚛𝚎𝚊𝚝𝚒𝚗𝚐 ${effect} 𝚝𝚎𝚡𝚝...`,
+            text: `⏳ Creating ${effect} text...`,
             contextInfo: getContextInfo(sender)
         }, { quoted: fakevCard });
         
@@ -78,7 +78,7 @@ textCommands.forEach(effect => {
         
         if (!result || !result.image) {
             return await conn.sendMessage(from, {
-                text: `❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚌𝚛𝚎𝚊𝚝𝚎 ${effect} 𝚝𝚎𝚡𝚝`,
+                text: `❌ Failed to create ${effect} text`,
                 contextInfo: getContextInfo(sender)
             }, { quoted: fakevCard });
         }
@@ -87,10 +87,10 @@ textCommands.forEach(effect => {
             from,
             {
                 image: { url: result.image },
-                caption: `┏━❑ 𝐓𝐄𝐗𝐓 𝐄𝐅𝐅𝐄𝐂𝐓 ━━━━━━━━━━━━━━━
-┃ ✨ 𝙴𝚏𝚏𝚎𝚌𝚝: ${effect}
-┃ 🔤 𝚃𝚎𝚡𝚝: ${q}
-┗━━━━━━━━━━━━━━━━━━━━━━━━`,
+                caption: `TEXT EFFECT
+
+Effect: ${effect}
+Text: ${q}`,
                 contextInfo: getContextInfo(sender)
             },
             { quoted: fakevCard }
@@ -98,7 +98,7 @@ textCommands.forEach(effect => {
         
     } catch (e) {
         await conn.sendMessage(from, {
-            text: `❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚌𝚛𝚎𝚊𝚝𝚎 ${effect} 𝚝𝚎𝚡𝚝`,
+            text: `❌ Failed to create ${effect} text`,
             contextInfo: getContextInfo(sender)
         }, { quoted: fakevCard });
         l(e);
@@ -111,7 +111,7 @@ cmd({
     pattern: "textmaker",
     alias: ["textfx", "textlist"],
     desc: "List all text effects",
-    category: "textmaker",
+    category: "logo",
     react: "📝",
     filename: __filename
 },
@@ -120,19 +120,19 @@ try{
     const effectsList = textCommands.map(effect => `• ${prefix}${effect} <text>`).join('\n');
     
     await conn.sendMessage(from, {
-        text: `┏━❑ 𝐓𝐄𝐗𝐓 𝐄𝐅𝐅𝐄𝐂𝐓𝐒 ━━━━━━━━━━━━━━━
-┃ 📝 𝙰𝚟𝚊𝚒𝚕𝚊𝚋𝚕𝚎 𝚝𝚎𝚡𝚝 𝚎𝚏𝚏𝚎𝚌𝚝𝚜:
-┃ ━━━━━━━━━━━━━━━━━━━━━━
+        text: `TEXT EFFECTS
+
+Available text effects:
+
 ${effectsList}
-┃ ━━━━━━━━━━━━━━━━━━━━━━
-┃ 𝙴𝚡𝚊𝚖𝚙𝚕𝚎: .metallic 𝚂𝙸𝙻𝙰
-┗━━━━━━━━━━━━━━━━━━━━━━━━`,
+
+Example: .metallic SHINIGAMI`,
         contextInfo: getContextInfo(sender)
     }, { quoted: fakevCard });
     
 } catch (e) {
     await conn.sendMessage(from, {
-        text: `❌ 𝙲𝚘𝚖𝚖𝚊𝚗𝚍 𝚏𝚊𝚒𝚕𝚎𝚍`,
+        text: `❌ Command failed`,
         contextInfo: getContextInfo(sender)
     }, { quoted: fakevCard });
     l(e);
