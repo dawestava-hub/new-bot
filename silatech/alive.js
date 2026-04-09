@@ -1,7 +1,7 @@
 const { cmd, commands } = require('../momy');
 const config = require('../config');
 
-// Commande Ping
+// Ping Command
 cmd({
     pattern: "ping",
     desc: "Check bot latency",
@@ -11,40 +11,41 @@ cmd({
     async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply, myquoted }) => {
         try {
             const startTime = Date.now();
-            const message = await conn.sendMessage(from, { text: '🔍 _checking connection..._' }, { quoted: myquoted });
+            const message = await conn.sendMessage(from, { text: '🔍 Checking connection...' }, { quoted: myquoted });
             const endTime = Date.now();
             const ping = endTime - startTime;
 
-            const pongMessage = `*😎 OCTO MD PONG : ${ping} ms*`;
+            const pongMessage = `⚡ SHINIGAMI MD PONG: ${ping} ms`;
 
             await conn.sendMessage(from, { text: pongMessage }, { quoted: message });
         } catch (e) {
             console.log(e);
-            reply(`❌ error: ${e.message}`);
+            reply(`❌ Error: ${e.message}`);
         }
     });
 
-// Commande Alive
+// Alive Command - NO DESIGN, JUST TEXT
 cmd({
     pattern: "alive",
-    desc: "Check if bot is alive",
+    desc: "Check if bot is active",
     category: "general",
-    react: "🔐"
+    react: "✅"
 },
     async (conn, mek, m, { from, reply, myquoted }) => {
         try {
-            await conn.sendMessage(from, {
-                image: { url: config.IMAGE_PATH }, // updated to config image
-                caption: `╭━━【 OCTO MD BOT 】━━━━━━━━╮
-│ status: *active & running*
-│ prefix: *${config.PREFIX}*
-│ version: *2.0.0*
-│ developed: *BLAZE TECH*
-╰━━━━━━━━━━━━━━━━━━━━╯
+            // Simple plain text message - no design boxes
+            const aliveMessage = `✅ SHINIGAMI MD IS ACTIVE
 
-${config.BOT_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡'}`
-            }, { quoted: myquoted });
+🤖 Status: Active
+🔰 Prefix: ${config.PREFIX}
+📦 Version: 2.0.0
+👨‍💻 Dev: INCONNU BOY
+
+💫 Bot is running smoothly!
+🚀 Type ${config.PREFIX}menu for commands`;
+
+            await conn.sendMessage(from, { text: aliveMessage }, { quoted: myquoted });
         } catch (e) {
-            reply("error: " + e.message);
+            reply("❌ Error: " + e.message);
         }
     });
