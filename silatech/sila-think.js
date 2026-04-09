@@ -1,13 +1,14 @@
+
 const { cmd } = require('../momy');
 const axios = require('axios');
 
-// Fake vCard for Octo MD
+// Fake vCard for Shinigami MD
 const fakevCard = {
     key: { fromMe: false, participant: "0@s.whatsapp.net", remoteJid: "status@broadcast" },
     message: {
         contactMessage: {
-            displayName: "© 𝐎𝐂𝐓𝐎-𝐌𝐃",
-            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐎𝐂𝐓𝐎 𝐌𝐃 𝐁𝐎𝐓\nORG:𝐎𝐂𝐓𝐎-𝐌𝐃;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
+            displayName: "© SHINIGAMI-MD",
+            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:SHINIGAMI MD BOT\nORG:SHINIGAMI-MD;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
         }
     }
 };
@@ -18,8 +19,8 @@ const getContextInfo = (sender) => ({
     forwardingScore: 999,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363421014261315@newsletter',
-        newsletterName: '© 𝐎𝐂𝐓𝐎-𝐌𝐃',
+        newsletterJid: '120363403408693274@newsletter',
+        newsletterName: '© SHINIGAMI-MD',
         serverMessageId: 143,
     },
 });
@@ -33,8 +34,8 @@ const AXIOS_DEFAULTS = {
     }
 };
 
-// Format AI response
-const formatResponse = (text) => text.split('\n').map(l => `┃ ${l}`).join('\n');
+// Format AI response - NO DESIGN, just plain text
+const formatResponse = (text) => text;
 
 // Call Copilot AI
 const callCopilotAI = async (prompt) => {
@@ -44,7 +45,7 @@ const callCopilotAI = async (prompt) => {
     return data.response || data.result || data.data || data.message || JSON.stringify(data);
 };
 
-// Unified AI command for Octo MD
+// Unified AI command for Shinigami MD
 cmd({
     pattern: "ai",
     alias: ["think", "reason", "deepthink", "analyze", "ponder", "logic"],
@@ -56,11 +57,11 @@ cmd({
     try {
         if (!q || !q.trim()) {
             return await conn.sendMessage(from, {
-                text: `┏━❑ 𝐎𝐂𝐓𝐎 𝐀𝐈 ━━━━━━━━━
-┃ 🧠 Usage:
-┃ • .ai your question → Quick AI response
-┃ • .ai reason your question → Step-by-step reasoning
-┗━━━━━━━━━━━━━━━━━━━━`,
+                text: `SHINIGAMI AI
+
+Usage:
+• .ai your question → Quick AI response
+• .ai reason your question → Step-by-step reasoning`,
                 contextInfo: getContextInfo(sender)
             }, { quoted: fakevCard });
         }
@@ -73,8 +74,8 @@ cmd({
         // Show thinking indicator
         const thinkingMsg = await conn.sendMessage(from, {
             text: isReasoning
-                ? "🔍 Octo MD is analyzing step by step... ⏳"
-                : "🧠 Octo MD is thinking... ⏳"
+                ? "🔍 Shinigami MD is analyzing step by step... ⏳"
+                : "🧠 Shinigami MD is thinking... ⏳"
         }, { quoted: mek });
 
         try {
@@ -82,10 +83,9 @@ cmd({
             let textResponse = aiResult;
             if (textResponse.length > 4096) textResponse = textResponse.substring(0, 4090) + '...';
 
-            const formatted = formatResponse(textResponse);
             const finalText = isReasoning
-                ? `┏━❑ 𝐒𝐓𝐄𝐏-𝐁𝐘-𝐒𝐓𝐄𝐏 𝐑𝐄𝐀𝐒𝐎𝐍𝐈𝐍𝐆 ━━━━━━\n${formatted}\n┗━━━━━━━━━━━━━━━━━━━━`
-                : `┏━❑ 𝐐𝐔𝐈𝐂𝐊 𝐀𝐈 𝐑𝐄𝐒𝐏𝐎𝐍𝐒𝐄 ━━━━━━\n${formatted}\n┗━━━━━━━━━━━━━━━━━━━━`;
+                ? `SHINIGAMI MD - STEP BY STEP REASONING\n\n${textResponse}`
+                : `SHINIGAMI MD - AI RESPONSE\n\n${textResponse}`;
 
             // Delete thinking message
             await conn.sendMessage(from, { delete: thinkingMsg.key });
@@ -99,12 +99,12 @@ cmd({
         } catch (apiErr) {
             console.error('AI API error:', apiErr);
             await conn.sendMessage(from, { delete: thinkingMsg.key });
-            return reply("❌ Octo AI failed to process the request. Try again later.", { quoted: fakevCard });
+            return reply("❌ Shinigami AI failed to process the request. Try again later.", { quoted: fakevCard });
         }
 
     } catch (err) {
         console.error('AI command error:', err);
-        reply("❌ An error occurred while running Octo AI.", { quoted: fakevCard });
+        reply("❌ An error occurred while running Shinigami AI.", { quoted: fakevCard });
         if (l) l(err);
     }
 });
