@@ -5,7 +5,7 @@ cmd({
     pattern: "screenshot",
     alias: ["ss", "webshot", "sitepic"],
     desc: "take website screenshot",
-    category: "tools",
+    category: "general",
     react: "🖥️",
     filename: __filename
 }, async (conn, mek, m, { from, reply, args, myquoted }) => {
@@ -65,7 +65,7 @@ cmd({
 │ 📊 𝙵𝚞𝚕𝚕 𝙿𝚊𝚐𝚎: 𝚈𝚎𝚜
 ╰━━━━━━━━━━━━━━━━━━━╯
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> MADE IN BY INCONNU BOY`;
 
             await conn.sendMessage(from, {
                 image: res2.data,
