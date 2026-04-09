@@ -20,8 +20,8 @@ const fakevCard = {
 	},
 	message: {
 		contactMessage: {
-			displayName: "© 𝐒𝐈𝐋𝐀-𝐌𝐃",
-			vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐒𝐈𝐋𝐀 𝐌𝐃 𝐁𝐎𝐓\nORG:𝐒𝐈𝐋𝐀-𝐌𝐃;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
+			displayName: "© INCONNU BOY",
+			vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:INCONNU BOY\nORG:INCONNU BOY;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
 		}
 	}
 };
@@ -128,12 +128,12 @@ cmd({
 	alias: ['spot', 'spoti', 'spotifyplay', 'spotmusic', 'spotify', 'silaspotify'],
 	react: '🎧',
 	desc: 'Search and play songs from Spotify',
-	category: 'downloader',
+	category: 'download',
 	filename: __filename
 }, async (conn, mek, m, { from, sender, reply, q }) => {
 	try {
 		if (!q) {
-			return reply(`┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚂𝙿𝙾𝚃𝙸𝙵𝚈 𝙿𝙻𝙰𝚈𝙴𝚁 ━━━━━━━━━
+			return reply(`┏━❑ 𝚂𝙿𝙾𝚃𝙸𝙵𝚈 𝙿𝙻𝙰𝚈𝙴𝚁 ━━━━━━━━━
 ┃ 🎧 𝚂𝚎𝚊𝚛𝚌𝚑 & 𝚙𝚕𝚊𝚢 𝚖𝚞𝚜𝚒𝚌 𝚏𝚛𝚘𝚖 𝚂𝚙𝚘𝚝𝚒𝚏𝚢
 ┃
 ┃ 𝚄𝚜𝚎: .𝚜𝚙𝚘𝚝𝚒𝚏𝚢 𝚜𝚘𝚗𝚐_𝚗𝚊𝚖𝚎
@@ -160,7 +160,7 @@ cmd({
 			results = await searchSpotifyYupra(q);
 		} catch (searchErr) {
 			await conn.sendMessage(from, { delete: searchMsg.key });
-			return reply(`┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚜𝚎𝚊𝚛𝚌𝚑 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
+			return reply(`┏━❑ 𝚜𝚎𝚊𝚛𝚌𝚑 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
 ┃ ❌ 𝙽𝚘 𝚛𝚎𝚜𝚞𝚕𝚝𝚜 𝚏𝚘𝚞𝚗𝚍
 ┃ 𝚃𝚛𝚢 𝚖𝚘𝚛𝚎 𝚜𝚙𝚎𝚌𝚒𝚏𝚒𝚌 𝚛𝚖𝚎𝚜
 ┗━━━━━━━━━━━━━━━━━━━━`);
@@ -168,7 +168,7 @@ cmd({
 
 		if (!results || results.length === 0) {
 			await conn.sendMessage(from, { delete: searchMsg.key });
-			return reply(`┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚜𝚎𝚊𝚛𝚌𝚑 ━━━━━━━━━
+			return reply(`┏━❑ 𝚜𝚎𝚊𝚛𝚌𝚑 ━━━━━━━━━
 ┃ ❌ 𝙽𝚘 𝚛𝚎𝚜𝚞𝚕𝚝𝚜 𝚏𝚘𝚞𝚗𝚍
 ┗━━━━━━━━━━━━━━━━━━━━`);
 		}
@@ -177,7 +177,7 @@ cmd({
 		const song = results[0];
 
 		// Build results list
-		let resultsList = `┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚂𝙿𝙾𝚃𝙸𝙵𝚈 𝚂𝙴𝙰𝚁𝙲𝙷 ━━━━━━\n┃\n`;
+		let resultsList = `┏━❑ 𝚂𝙿𝙾𝚃𝙸𝙵𝚈 𝚂𝙴𝙰𝚁𝙲𝙷 ━━━━━━\n┃\n`;
 		results.slice(0, 5).forEach((r, i) => {
 			const artists = r.artists?.map(a => a.name)?.join(', ') || 'Unknown';
 			resultsList += `┃ 𝟶${i + 1} • ${r.title?.substring(0, 35)}\n┃    🎤 ${artists.substring(0, 35)}\n┃\n`;
@@ -280,7 +280,7 @@ cmd({
 
 		} catch (downloadErr) {
 			console.error('Download error:', downloadErr);
-			reply(`┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
+			reply(`┏━❑ 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
 ┃ ❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍
 ┃ 𝚙𝚕𝚎𝚊𝚜𝚎 𝚝𝚛𝚢 𝚊𝚐𝚊𝚒𝚗
 ┗━━━━━━━━━━━━━━━━━━━━`, { quoted: fakevCard });
@@ -288,7 +288,7 @@ cmd({
 
 	} catch (err) {
 		console.error('Spotify command error:', err);
-		reply(`┏━❑ 𝐒𝙸𝙻𝐀-𝐌𝐃 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
+		reply(`┏━❑ 𝚎𝚛𝚛𝚘𝚛 ━━━━━━━━━
 ┃ ❌ 𝚂𝚘𝚖𝚎𝚝𝚑𝚒𝚗𝚐 𝚠𝚎𝚗𝚝 𝚠𝚛𝚘𝚗𝚐
 ┃ 𝚃𝚛𝚢 𝚊𝚐𝚊𝚒𝚗 𝚕𝚊𝚝𝚎𝚛
 ┗━━━━━━━━━━━━━━━━━━━━`, { quoted: fakevCard });
