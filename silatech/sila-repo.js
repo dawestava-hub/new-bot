@@ -48,7 +48,7 @@ cmd({
   pattern: "repo",
   alias: ["repository", "github"],
   desc: "Get bot repository link",
-  category: "main",
+  category: "general",
   react: "📦",
   filename: __filename
 },
