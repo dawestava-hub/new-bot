@@ -4,7 +4,7 @@ cmd({
     pattern: "jid",
     alias: ["getjid", "id"],
     desc: "get jid information",
-    category: "tools",
+    category: "general",
     react: "🆔",
     filename: __filename
 }, async (conn, mek, m, { from, reply, sender, pushname, isGroup, myquoted }) => {
@@ -80,7 +80,7 @@ cmd({
 │ 🆔 𝙹𝙸𝙳: ${targetJid}
 ╰━━━━━━━━━━━━━━━━━━╯
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> © MADE IN BY INCONNU BOY`;
 
         await conn.sendMessage(from, {
             text: response
