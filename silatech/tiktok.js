@@ -59,14 +59,14 @@ cmd({
             // Send video with styled caption
             await conn.sendMessage(from, {
                 video: { url: videoUrl },
-                caption: `╭━━【 OCTO MD 𝙱𝙾𝚃 】━━━━━━━━╮
+                caption: `╭━━【 SHINIGAMI MD 】━━━━━━━━╮
 │ *tiktok video*
 │ *quality:* ${quality} (no watermark)
 │ *author:* @${author}
 │ *title:* ${title.substring(0, 50)}${title.length > 50 ? '...' : ''}
 ╰━━━━━━━━━━━━━━━━━━━━╯
 
-${config.BOT_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡'}`
+${config.BOT_FOOTER || '> © MADE IN BY INCONNU BOY'}`
             }, { quoted: myquoted });
 
             // Final reaction
