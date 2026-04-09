@@ -7,7 +7,7 @@ cmd({
     pattern: "fb2",
     alias: ["facebook2", "fbdl2"],
     desc: "download facebook video",
-    category: "media",
+    category: "download",
     react: "📥",
     filename: __filename
 }, async (conn, mek, m, { from, reply, args, myquoted }) => {
@@ -141,7 +141,7 @@ cmd({
 │ 📹 𝚀𝚞𝚊𝚕𝚒𝚝𝚢: ${data.result.hd_video ? "𝙷𝙳" : "𝚂𝙳"}
 ╰━━━━━━━━━━━━━━━━━━━╯
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> © MADE IN BY INCONNU BOY`;
 
             await conn.sendMessage(from, {
                 video: { url: tempFile },
@@ -170,7 +170,7 @@ cmd({
 │ 📹 𝚀𝚞𝚊𝚕𝚒𝚝𝚢: ${data.result.hd_video ? "𝙷𝙳" : "𝚂𝙳"}
 ╰━━━━━━━━━━━━━━━━━━━╯
 
-> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+> © MADE IN BY INCONNU BOY`;
 
                 await conn.sendMessage(from, {
                     video: { url: fbvid },
