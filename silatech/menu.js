@@ -6,8 +6,17 @@ const { cmd, commands } = require('../momy');
 const toUpper = (str) => str.toUpperCase();
 const normalize = str => str.toLowerCase().replace(/\s+menu$/, '').trim();
 
+// Uptime function
+const getUptime = () => {
+    let sec = process.uptime();
+    let h = Math.floor(sec / 3600);
+    let mn = Math.floor((sec % 3600) / 60);
+    let s = Math.floor(sec % 60);
+    return `${h}h ${mn}m ${s}s`;
+};
+
 // =============================================================
-// 📌 COMMANDE MENU
+// 📌 MENU COMMAND - DYNAMIC
 // =============================================================
 cmd({
   pattern: "menu",
@@ -22,28 +31,19 @@ cmd({
 
     try {
       const totalCommands = commands.length;
-
-      const uptime = () => {
-        let sec = process.uptime();
-        let h = Math.floor(sec / 3600);
-        let mn = Math.floor((sec % 3600) / 60);
-        let s = Math.floor(sec % 60);
-        return `${h}h ${mn}m ${s}s`;
-      };
-
       const prefix = config.PREFIX || ".";
       const mode = config.WORK_TYPE?.toUpperCase() || "PUBLIC";
+      const botName = config.BOT_NAME || "SHINIGAMI MD";
 
       // Menu Header
-      let menu = `╭━━【 💀 OCTO MD 】━━━━╮
-│ 👤 user: @${sender.split("@")[0]}
-│ ⚙️ mode: ${mode}
-│ ⌨️ prefix: ${prefix}
-│ 📊 commands: ${totalCommands}
-│ ⏱️ uptime: ${uptime()}
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-*📁 available commands:*\n`;
+      let menu = `
+╭━━━━━━━━━━━━━•
+│ • BOT: ${botName}
+│ • USER: @${sender.split("@")[0]}
+│ • PREFIX: ${prefix}
+│ • UPTIME: ${getUptime()}
+│ • COMMANDS: ${totalCommands}
+╰─────────────•\n`;
 
       // Grouping Categories
       let categories = {};
@@ -61,7 +61,7 @@ cmd({
         const catHeader = toUpper(cat);
 
         // Start category section
-        menu += `\n┏━❑ ${catHeader} ━━━━━━━━━\n`;
+        menu += `\n╭─  ${catHeader}\n`;
 
         const cmds = categories[cat]
           .filter(c => c.pattern)
@@ -77,28 +77,28 @@ cmd({
           const isLast = index === cmds.length - 1;
 
           if (isLast) {
-            menu += `┃ ⤷ ${prefix}${cmdName}\n`;
-            menu += `┗━━━━━━━━━━━━━━━━━━━━\n`;
+            menu += `│ • ${prefix}${cmdName}\n`;
+            menu += `╰───────────────⭓\n`;
           } else {
-            menu += `┃ ⤷ ${prefix}${cmdName}\n`;
+            menu += `│ • ${prefix}${cmdName}\n`;
           }
         });
       }
 
       // Footer
-      menu += `\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡`;
+      menu += `\n> POWERED BY SHINIGAMI MD`;
 
       // Send the Menu with image and context info
       await conn.sendMessage(from, {
-        image: { url: config.IMAGE_PATH }, // updated image
+        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/ejpcue.png' },
         caption: menu,
         contextInfo: {
           mentionedJid: [sender],
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: config.CHANNEL_JID_1, // updated JID
-            newsletterName: 'OCTO MD',          // updated name
+            newsletterJid: config.CHANNEL_JID_1 || '120363421014261315@newsletter',
+            newsletterName: 'SHINIGAMI MD',
             serverMessageId: 13
           }
         }
@@ -106,7 +106,7 @@ cmd({
 
     } catch (e) {
       console.error("menu error:", e);
-      reply(`*error generating menu*`);
+      reply(`❌ Error generating menu`);
     }
 
   });
