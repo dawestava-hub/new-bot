@@ -32,27 +32,25 @@ cmd({
       const ram = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
       const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
 
-      let status = `╭━━━〔 *UPTIME* 〕━━━┈⊷
-┃
-┃ 👑 *STATUS:* ONLINE
-┃ 👑 *UPTIME:* ${getUptime()}
-┃ 👑 *HOST:* ${platform.toUpperCase()}
-┃ 👑 *RAM:* ${ram}MB / ${totalRam}GB
-┃ 👑 *PLATFORM:* ${os.platform().toUpperCase()}
-┃
-╰━━━━━━━━━━━━━━━┈⊷
+      let status = `SHINIGAMI MD STATUS
 
-*POWERED BY OCTO-MD* 👑`;
+STATUS: ONLINE
+UPTIME: ${getUptime()}
+HOST: ${platform.toUpperCase()}
+RAM: ${ram}MB / ${totalRam}GB
+PLATFORM: ${os.platform().toUpperCase()}
+
+MADE IN BY INCONNU BOY`;
 
       await conn.sendMessage(from, {
-        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/ejpcue.png' },
+        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/xoac4l.jpg' },
         caption: status,
         contextInfo: {
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363421014261315@newsletter',
-            newsletterName: 'BLAZE TECH',
+            newsletterJid: '120363403408693274@newsletter',
+            newsletterName: 'SHINIGAMI MD',
             serverMessageId: 143
           }
         }
@@ -63,4 +61,3 @@ cmd({
     }
 
   });
-
