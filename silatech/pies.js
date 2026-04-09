@@ -16,7 +16,7 @@ cmd({
     pattern: "beauty",
     alias: ["china", "indonesia", "japan", "korea", "thailand", "chinese", "indo", "japanese", "korean", "thai"],
     desc: "Get random beauty image by country",
-    category: "nsfw",
+    category: "general",
     react: "😍",
     filename: __filename
 },
@@ -74,11 +74,11 @@ cmd({
             // Send image with styled caption
             await conn.sendMessage(from, {
                 image: Buffer.from(response.data),
-                caption: `╭━━【 💀 𝙾𝙲𝚃𝙾-𝙼𝙳 𝙱𝙾𝚃 】━━━━━━━━╮
+                caption: `╭━━【 SHINIGAMI MD 】━━━━━━━━╮
 │ *random ${countryCapitalized} beauty* ${flag}
 ╰━━━━━━━━━━━━━━━━━━━━╯
 
-${config.BOT_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐋𝐀𝐙𝐄 𝐓𝐄𝐂𝐇'}`
+${config.BOT_FOOTER || '> © MADE IN BY INCONNU BOY'}`
             }, { quoted: myquoted });
 
         } catch (e) {
