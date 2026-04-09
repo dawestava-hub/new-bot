@@ -10,8 +10,8 @@ const fakevCard = {
   },
   message: {
     contactMessage: {
-      displayName: "© 𝐒𝐈𝐋𝐀-𝐌𝐃",
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐒𝐈𝐋𝐀 𝐌𝐃 𝐁𝐎𝐓\nORG:𝐒𝐈𝐋𝐀-𝐌𝐃;\nTEL;type=CELL;type=VOICE;waid=255789661031:+255789661031\nEND:VCARD`
+      displayName: "© SHINIGAMI-MD",
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: SHINIGAMI MD\nORG: SHINIGAMI-MD ;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
     }
   }
 };
@@ -22,8 +22,8 @@ const getContextInfo = (m) => {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363402325089913@newsletter',
-            newsletterName: '© 𝐒𝐈𝐋𝐀 𝐌𝐃',
+            newsletterJid: '120363403408693274@newsletter',
+            newsletterName: '© SHINIGAMI MD',
             serverMessageId: 143,
         },
     };
@@ -34,7 +34,7 @@ cmd({
     alias: ["subdomain", "subs", "domains"],
     react: "🔍",
     desc: "Find subdomains for a domain",
-    category: "tools",
+    category: "general",
     filename: __filename
 },
 async(conn, mek, m, {from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
