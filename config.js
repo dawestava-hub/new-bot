@@ -71,8 +71,8 @@ module.exports = {
     // ===========================================================
     // 7. IMAGES & LINKS
     // ===========================================================
-    IMAGE_PATH: 'https://files.catbox.moe/ejpcue.png',
-    CHANNEL_LINK: 'https://whatsapp.com/channel/0029VbAjawl9MF8vQQa0ZT32',
+    IMAGE_PATH: 'https://files.catbox.moe/xoac4l.jpg',
+    CHANNEL_LINK: 'https://whatsapp.com/channel/0029VbC6It7K0IBkQwaKYd2J',
     GROUP_LINK_1: 'https://chat.whatsapp.com/DJMA7QOT4V8FuRD6MpjPpt',
     GROUP_LINK_2: 'https://chat.whatsapp.com/DJMA7QOT4V8FuRD6MpjPpt',
 
@@ -91,11 +91,11 @@ module.exports = {
     // ===========================================================
     AUTO_BIO: process.env.AUTO_BIO || 'true',
     BIO_LIST: [
-        "🔐 OCTO MD BOT - Your ultimate WhatsApp bot",
-        "🚀 Powered by BLAZE TECH",
+        "🔐 Shinigami - Your ultimate WhatsApp bot",
+        "🚀 made in by inconnu boy",
         "💫 Always at your service!",
         "🎯 Fast, Secure & Reliable",
-        "🤖 OCTO MD - Your digital assistant",
+        "🤖 Shinigami - Your digital assistant",
         "⚡ Multi-device bot with MongoDB",
         "🔒 Secure & Private Bot",
         "🌟 Version 1.0.0 - New Features!"
@@ -110,8 +110,8 @@ module.exports = {
     // ===========================================================
     // 12. BUTTON & LIST MESSAGE SETTINGS
     // ===========================================================
-    BUTTON_FOOTER: process.env.BUTTON_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡',
-    LIST_TITLE: process.env.LIST_TITLE || 'OCTO MD BOT MENU',
+    BUTTON_FOOTER: process.env.BUTTON_FOOTER || '> © MADE IN BY INCONNU BOY',
+    LIST_TITLE: process.env.LIST_TITLE || 'SHINIGAMI MD',
     LIST_BUTTON_TEXT: process.env.LIST_BUTTON_TEXT || 'SELECT OPTION',
 
     // ===========================================================
@@ -127,7 +127,7 @@ module.exports = {
         'boss': '*🎯 𝚈𝚎𝚜 𝚋𝚘𝚜𝚜! 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚑𝚎𝚕𝚙 𝚢𝚘𝚞?*',
         'habari': '*🌟 𝙽𝚣𝚞𝚛𝚒 𝚜𝚊𝚗𝚊! 𝙷𝚊𝚋𝚊𝚛𝚒 𝚢𝚊𝚔𝚘?*',
         'hello': '*🤖 𝙷𝚒 𝚝𝚑𝚎𝚛𝚎! 𝚄𝚜𝚎 .𝚖𝚎𝚗𝚞 𝚏𝚘𝚛 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜*',
-        'bot': '*⚙️ 𝚈𝚎𝚜, 𝙸 𝚊𝚖 OCTO MD BOT! 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?*',
+        'bot': '*⚙️ 𝚈𝚎𝚜, 𝙸 𝚊𝚖 shinigami-md ! 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?*',
         'menu': '*📜 𝚃𝚢𝚙𝚎 .𝚖𝚎𝚗𝚞 𝚏𝚘𝚛 𝚊𝚕𝚕 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜!*',
         'owner': '*👑 𝙲𝚘𝚗𝚝𝚊𝚌𝚝 𝚘𝚠𝚗𝚎𝚛 𝚞𝚜𝚒𝚗𝚐 .𝚘𝚠𝚗𝚎𝚛*',
         'thanks': '*✨ 𝚈𝚘𝚞\'𝚛𝚎 𝚠𝚎𝚕𝚌𝚘𝚖𝚎!*',
