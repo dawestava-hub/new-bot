@@ -1,8 +1,8 @@
 const { cmd } = require('../momy');
 const axios = require('axios');
 
-const REPO_IMAGE = 'https://files.catbox.moe/ejpcue.png'; // You can replace with your OCTO MD logo if needed
-const REPO_LINK = 'https://github.com/ARNOLDT20/Viper-MD'; // Replace with your actual repository link
+const REPO_IMAGE = 'https://files.catbox.moe/xoac4l.jpg'; // You can replace with your SHINIGAMI MD logo if needed
+const REPO_LINK = 'https://github.com/INCONNU-BOY/INCONNU-XD-V2'; // Replace with your actual repository link
 
 // Define combined fakevCard 
 const fakevCard = {
@@ -13,19 +13,19 @@ const fakevCard = {
   },
   message: {
     contactMessage: {
-      displayName: "© OCTO MD",
-      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:OCTO MD BOT\nORG:OCTO MD;\nTEL;type=CELL;type=VOICE;waid=255627417402:+255627417402\nEND:VCARD`
+      displayName: "© SHINIGAMI MD",
+      vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:SHINIGAMI MD BOT\nORG:SHINIGAMI MD;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
     }
   }
 };
 
-// Utility function for formatted messages
-function octoMessage(text) {
+// Utility function for formatted messages - keeping contextInfo but removing design
+function shinigamiMessage(text) {
   return {
     text: text,
     contextInfo: {
       externalAdReply: {
-        title: 'OCTO MD',
+        title: 'SHINIGAMI MD',
         body: 'GitHub Repository ‧ Verified',
         thumbnailUrl: REPO_IMAGE,
         sourceUrl: REPO_LINK,
@@ -34,8 +34,8 @@ function octoMessage(text) {
         mediaType: 1
       },
       forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363421014261315@newsletter',
-        newsletterName: 'OCTO MD',
+        newsletterJid: '120363403408693274@newsletter',
+        newsletterName: 'SHINIGAMI MD',
         serverMessageId: Math.floor(Math.random() * 1000000)
       },
       isForwarded: true,
@@ -66,20 +66,19 @@ cmd({
         console.log('Could not fetch GitHub stats');
       }
 
-      const repoMessage =
-        `┏━❑ OCTO MD GITHUB ━━━━━━━━━
-┃ 📦 Repository: OCTO-MD
-┃ 👨‍💻 Developer: BLAZE TECH
-┃ 🔗 Link: ${REPO_LINK}
-┃
-┃ ⭐ Stars: ${stars}
-┃ 🔀 Forks: ${forks}
-┃
-┃ 🛠️ Open Source WhatsApp Bot
-┃ 💚 Made with ❤️ by BLAZE TECH
-┗━━━━━━━━━━━━━━━━━━━━`;
+      const repoMessage = `SHINIGAMI MD GITHUB
 
-      const messageData = octoMessage(repoMessage);
+Repository: SHINIGAMI-MD
+Developer: BLAZE TECH
+Link: ${REPO_LINK}
+
+Stars: ${stars}
+Forks: ${forks}
+
+Open Source WhatsApp Bot
+> MADE IN BY INCONNU BOY`;
+
+      const messageData = shinigamiMessage(repoMessage);
 
       await conn.sendMessage(from, messageData, { quoted: fakevCard });
 
