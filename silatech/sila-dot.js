@@ -33,7 +33,7 @@ cmd({
     pattern: ".",
     alias: ["botlink", "free", "freebot", "whatsapp"],
     desc: "bot information",
-    category: "main",
+    category: "general",
     filename: __filename
 }, async (conn, mek, m, { from, reply, sender, pushname, myquoted }) => {
     try {
