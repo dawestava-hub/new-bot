@@ -90,14 +90,14 @@ cmd({
 
       // Send the Menu with image and context info
       await conn.sendMessage(from, {
-        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/ejpcue.png' },
+        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/xoac4l.jpg' },
         caption: menu,
         contextInfo: {
           mentionedJid: [sender],
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: config.CHANNEL_JID_1 || '120363421014261315@newsletter',
+            newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
             newsletterName: 'SHINIGAMI MD',
             serverMessageId: 13
           }
