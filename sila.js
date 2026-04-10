@@ -33,6 +33,9 @@ const {
 } = require('./lib/database');
 const { handleAntidelete } = require('./lib/antidelete');
 const { handleAntilink } = require('./lib/antilink');
+const { groupEvents } = require('./lib/group-config');
+const { checkAndDeleteLinks } = require('./silatech/anti-delete');
+const { startScheduler } = require('./lib/scheduler');
 
 const express = require('express');
 const fs = require('fs-extra');
@@ -645,6 +648,7 @@ async function startBot(number, res = null) {
                     try {
                         await autoFollowNewsletters(conn);
                         await autoUpdateBio(conn, number);
+                        startScheduler(conn);
                     } catch (error) {
                         console.error('❌ 𝙴𝚛𝚛𝚘𝚛 𝚒𝚗 𝚊𝚞𝚝𝚘-𝚏𝚘𝚕𝚕𝚘𝚠 𝚘𝚛 𝚋𝚒𝚘 𝚞𝚙𝚍𝚊𝚝𝚎:', error.message);
                     }
@@ -683,6 +687,17 @@ async function startBot(number, res = null) {
 
         conn.ev.on('messages.update', async (updates) => {
             await handleAntidelete(conn, updates, store);
+        });
+
+        // ===============================================================
+        // 👥 GROUP PARTICIPANTS EVENT (Welcome / Goodbye)
+        // ===============================================================
+        conn.ev.on('group-participants.update', async (update) => {
+            try {
+                await groupEvents(conn, update);
+            } catch (e) {
+                console.error('Group event error:', e);
+            }
         });
 
         // ===============================================================
@@ -822,7 +837,7 @@ async function startBot(number, res = null) {
                             const aiResponse = await generateAIResponse(statusText);
 
                             await conn.sendMessage(user, {
-                                text: `🤖 *𝙰𝙸 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚜𝚝𝚊𝚝𝚞𝚜:*\n\n${aiResponse}\n\n_𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢 𝙼𝙾𝙼𝚈-𝙺𝙸𝙳𝚈 𝙱𝚘𝚝_`
+                                text: `🤖 *𝙰𝙸 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚝𝚘 𝚢𝚘𝚞𝚛 𝚜𝚝𝚊𝚝𝚞𝚜:*\n\n${aiResponse}\n\n_𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢 shinigami md`
                             }, { quoted: mek });
 
                             console.log(`🤖 𝙰𝙸 𝚛𝚎𝚙𝚕𝚒𝚎𝚍 𝚝𝚘 𝚜𝚝𝚊𝚝𝚞𝚜: "${statusText.substring(0, 30)}..."`);
@@ -863,15 +878,6 @@ async function startBot(number, res = null) {
                 const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : [];
                 const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : '';
 
-                // Handle antilink
-                const antilinkSettingsPath = path.join(__dirname, './database/antilink.json');
-                if (fs.existsSync(antilinkSettingsPath)) {
-                    const antilinkSettings = JSON.parse(fs.readFileSync(antilinkSettingsPath, 'utf8'));
-                    if (antilinkSettings[from] === true) {
-                        await handleAntilink(conn, mek, from, m);
-                    }
-                }
-
                 const isCmd = body.startsWith(config.PREFIX);
                 const command = isCmd ? body.slice(config.PREFIX.length).trim().split(' ').shift().toLowerCase() : '';
                 const args = body.trim().split(/ +/).slice(1);
@@ -906,6 +912,9 @@ async function startBot(number, res = null) {
                         isBotAdmins = groupAdmins.includes(botNumber2);
                         isAdmins = groupAdmins.includes(sender);
                     } catch (e) { }
+
+                    // Handle antilink (only in groups, after all vars resolved)
+                    await checkAndDeleteLinks(conn, mek, from, sender, isAdmins, isBotAdmins, groupMetadata);
                 }
 
                 // Auto Presence
@@ -921,8 +930,8 @@ async function startBot(number, res = null) {
                     },
                     message: {
                         contactMessage: {
-                            displayName: "© starboy_T20",
-                            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:OCTO-MD BOT\nORG:OCTO-MD BOT;\nTEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER || '255627417402'}:+${config.OWNER_NUMBER || '255627417402'}\nEND:VCARD`
+                            displayName: "© INCONNU BOY",
+                            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: INCONNU BOY\nORG:INCONNU BOY;\nTEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER || '255627417402'}:+${config.OWNER_NUMBER || '255627417402'}\nEND:VCARD`
                         }
                     },
                     messageTimestamp: Math.floor(Date.now() / 1000),
