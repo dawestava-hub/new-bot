@@ -1,6 +1,17 @@
 const { cmd } = require('../momy');
 const config = require('../config');
 
+
+const contextInfo = {
+    forwardingScore: 999,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
+        newsletterName: 'SHINIGAMI MD',
+        serverMessageId: 13
+    }
+};
+
 // ─── KICKALL (kick everyone instantly) ────────────────────────────────────────
 cmd({
     pattern: "kickall",
@@ -10,11 +21,10 @@ cmd({
     use: ".kickall",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, participants, groupAdmins, botNumber }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, participants, groupAdmins, botNumber }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const botJid = botNumber + "@s.whatsapp.net";
 
@@ -47,11 +57,10 @@ cmd({
     use: ".kickall2",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, participants, groupAdmins, botNumber }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, participants, groupAdmins, botNumber }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const botJid = botNumber + "@s.whatsapp.net";
 
@@ -92,11 +101,10 @@ cmd({
     use: ".promote @user",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, mentionedJid, participants }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid, participants }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         if (!mentionedJid || mentionedJid.length === 0) {
             return reply("❌ Please tag the member to promote.\n\nExample:\n.promote @user");
@@ -109,7 +117,8 @@ async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, men
         const names = mentionedJid.map(j => "@" + j.split("@")[0]).join(", ");
         await conn.sendMessage(from, {
             text: `⬆️ *PROMOTED TO ADMIN*\n\n👑 ${names} is now a group admin!\n\n> SHINIGAMI MD`,
-            mentions: mentionedJid
+            mentions: mentionedJid,
+            contextInfo: { ...contextInfo, mentionedJid }
         }, { quoted: mek });
 
     } catch (e) {
@@ -128,11 +137,10 @@ cmd({
     use: ".demote @user",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, mentionedJid }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         if (!mentionedJid || mentionedJid.length === 0) {
             return reply("❌ Please tag the admin to demote.\n\nExample:\n.demote @user");
@@ -145,7 +153,8 @@ async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, men
         const names = mentionedJid.map(j => "@" + j.split("@")[0]).join(", ");
         await conn.sendMessage(from, {
             text: `⬇️ *DEMOTED FROM ADMIN*\n\n${names} is no longer an admin.\n\n> SHINIGAMI MD`,
-            mentions: mentionedJid
+            mentions: mentionedJid,
+            contextInfo: { ...contextInfo, mentionedJid }
         }, { quoted: mek });
 
     } catch (e) {
@@ -164,11 +173,10 @@ cmd({
     use: ".setdesc <new description>",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, args, q }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, args, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const desc = q?.trim();
         if (!desc) return reply("❌ Please provide a description.\n\nExample:\n.setdesc Welcome to our group!");
@@ -192,11 +200,10 @@ cmd({
     use: ".setname <new name>",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, q }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const name = q?.trim();
         if (!name) return reply("❌ Please provide a group name.\n\nExample:\n.setname My Awesome Group");
@@ -220,11 +227,10 @@ cmd({
     use: ".setppgroup (reply to image)",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const quoted = mek.message?.extendedTextMessage?.contextInfo?.quotedMessage;
         const imageMsg = quoted?.imageMessage || mek.message?.imageMessage;
@@ -261,11 +267,10 @@ cmd({
     use: ".opentime <now | HH:MM | DD/MM/YYYY HH:MM | +Xm/+Xh/+Xs | cancel | status>",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, sender, q }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, sender, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const { addSchedule, removeSchedule, getSchedules, parseScheduleInput } = require('../lib/scheduler');
         const moment = require('moment-timezone');
@@ -352,11 +357,10 @@ cmd({
     use: ".closetime <now | HH:MM | DD/MM/YYYY HH:MM | +Xm/+Xh/+Xs | cancel | status>",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, isBotAdmins, sender, q }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, sender, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
-        if (!isBotAdmins) return reply("❌ Please make the bot an admin first.");
 
         const { addSchedule, removeSchedule, getSchedules, parseScheduleInput } = require('../lib/scheduler');
         const moment = require('moment-timezone');
