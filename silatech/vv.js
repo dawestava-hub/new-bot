@@ -60,12 +60,12 @@ cmd({
 
             // Send the revealed media with styled caption
             const mediaType = isImage ? "image" : "video";
-            const caption = `╭━━【 OCTO MD BOT 】━━━━━━━━╮
+            const caption = `╭━━【 ANTI VV 】━━━━━╮
 │ *view-once revealed*
 │ *type:* ${isImage ? '🖼️ image' : '🎥 video'}
-╰━━━━━━━━━━━━━━━━━━━━╯
+╰━━━━━━━━━━━━━━━━╯
 
-${config.BOT_FOOTER || '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡'}`;
+${config.BOT_FOOTER || '> © MADE IN BY INCONNU BOY'}`;
 
             await conn.sendMessage(from, {
                 [mediaType]: buffer,
