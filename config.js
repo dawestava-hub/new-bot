@@ -69,18 +69,19 @@ module.exports = {
     REJECT_MSG: process.env.REJECT_MSG || '🔒 NO CALLS ALLOWED 🔒',
 
     // ===========================================================
-    // 7. IMAGES & LINKS
     // ===========================================================
-    IMAGE_PATH: 'https://files.catbox.moe/xoac4l.jpg',
-    CHANNEL_LINK: 'https://whatsapp.com/channel/0029VbC6It7K0IBkQwaKYd2J',
-    GROUP_LINK_1: 'https://chat.whatsapp.com/DJMA7QOT4V8FuRD6MpjPpt',
-    GROUP_LINK_2: 'https://chat.whatsapp.com/DJMA7QOT4V8FuRD6MpjPpt',
+// 7. IMAGES & LINKS
+// ===========================================================
+IMAGE_PATH: 'https://files.catbox.moe/xoac4l.jpg',
+CHANNEL_LINK: 'https://whatsapp.com/channel/0029VbC6It7K0IBkQwaKYd2J',
+GROUP_LINK_1: 'https://chat.whatsapp.com/DJMA7QOT4V8FuRD6MpjPpt',
 
-    // ===========================================================
-    // 8. CHANNEL JIDS (NEWSLETTER/CHANNEL)
-    // ===========================================================
-    CHANNEL_JID_1: '120363421014261315@newsletter',
-    CHANNEL_JID_2: '120363420222821450@newsletter',
+// ===========================================================
+// 8. CHANNEL JIDS (NEWSLETTER/CHANNEL)
+// ===========================================================
+CHANNEL_JID_1: '120363403408693274@newsletter',
+
+// Newsletter reaction settings
 
     // Newsletter reaction settings
     NEWSLETTER_AUTO_FOLLOW: process.env.NEWSLETTER_AUTO_FOLLOW || 'true',
