@@ -10,16 +10,16 @@ module.exports = {
     // ===========================================================
     // 1. BASIC CONFIGURATION (Session & Database)
     // ===========================================================
-    SESSION_ID: process.env.SESSION_ID || "OCTO-MD",
+    SESSION_ID: process.env.SESSION_ID || "SHINIGAMI MD",
     MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://kxshrii:i7sgjXF6SO2cTJwU@kelumxz.zggub8h.mongodb.net/',
 
     // ===========================================================
     // 2. BOT INFORMATION
     // ===========================================================
     PREFIX: process.env.PREFIX || '.',
-    OWNER_NUMBER: process.env.OWNER_NUMBER || '255627417402',
-    BOT_NAME: "OCTO-MD",
-    BOT_FOOTER: '> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐁𝐥𝐚𝐳𝐞 𝐓𝐞𝐜𝐡',
+    OWNER_NUMBER: process.env.OWNER_NUMBER || '5544997461113',
+    BOT_NAME: "SHINIGAMI MD",
+    BOT_FOOTER: '> © MADE IN BY INCONNU BOY',
 
     // Work mode: public, private, group, inbox
     WORK_TYPE: process.env.WORK_TYPE || "public",
@@ -54,7 +54,7 @@ module.exports = {
     GOODBYE_IMAGE: process.env.GOODBYE_IMAGE || null,
 
     // Anti-links and anti-delete default settings
-    ANTI_LINK: process.env.ANTI_LINK || 'false',
+    ANTI_LINK: process.env.ANTI_LINK || 'true',
     ANTI_DELETE: process.env.ANTI_DELETE || 'false',
 
     // Custom anti-link warning message
