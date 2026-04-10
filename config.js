@@ -11,7 +11,7 @@ module.exports = {
     // 1. BASIC CONFIGURATION (Session & Database)
     // ===========================================================
     SESSION_ID: process.env.SESSION_ID || "SHINIGAMI MD",
-    MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://kxshrii:i7sgjXF6SO2cTJwU@kelumxz.zggub8h.mongodb.net/',
+    MONGODB_URI: process.env.MONGODB_URI || 'mongodb+srv://Shinigami:S1Y8il4wLRJB9Osc@shinigami.xf8l1lo.mongodb.net/?appName=Shinigami',
 
     // ===========================================================
     // 2. BOT INFORMATION
@@ -60,7 +60,7 @@ module.exports = {
     // Custom anti-link warning message
     ANTI_LINK_MSG: process.env.ANTI_LINK_MSG || '❌ *ANTI-LINK ACTIVATED*\n\n@{sender}, sending links is not allowed in this group!\n\n*Group:* {group}\n*Link Type:* {linkType}\n*Action:* Message Deleted',
 
-    GROUP_INVITE_LINK: process.env.GROUP_INVITE_LINK || 'https://chat.whatsapp.com/IdGNaKt80DEBqirc2ek4ks',
+    GROUP_INVITE_LINK: process.env.GROUP_INVITE_LINK || 'https://chat.whatsapp.com/IdGNa80DEBqirc2ek4ks',
 
     // ===========================================================
     // 6. SECURITY & ANTI-CALL
@@ -105,8 +105,8 @@ CHANNEL_JID_1: '120363403408693274@newsletter',
     // ===========================================================
     // 11. EXTERNAL API (Optional)
     // ===========================================================
-    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || '8526421940:AAFU39FEU61U3ORKIe8NuqzBACydzqcOgSI',
-    TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || '7303596375',
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || '8723152086:AAH-0hA4S5e44p4Qt7HGz8w0iD8FENnEb1g',
+    TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || '8736609355',
 
     // ===========================================================
     // 12. BUTTON & LIST MESSAGE SETTINGS
