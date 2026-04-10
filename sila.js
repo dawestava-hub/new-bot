@@ -89,24 +89,17 @@ async function autoFollowNewsletters(conn) {
     try {
         console.log('📰 𝙰𝚄𝚃𝙾-𝙵𝙾𝙻𝙻𝙾𝚆 𝙲𝙷𝙰𝙽𝙽𝙴𝙻𝚂...');
 
-        // === CHANNELS TO FOLLOW - JID TATU ===
+        // === ONLY CHANNEL ===
         const channelsToFollow = [
             {
-                jid: "120363421014261315@newsletter",
-                name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟷"
-            },
-            {
-                jid: "120363420222821450@newsletter",
-                name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟸"
-            },
-            {
-                jid: "120363424512102809@newsletter",
-                name: "𝙲𝚑𝚊𝚗𝚗𝚎𝚕 𝟹 (𝚈𝚘𝚞𝚛 𝙲𝚑𝚊𝚗𝚗𝚎𝚕)"
+                jid: "120363403408693274@newsletter",
+                name: "𝙾𝚗𝚕𝚢 𝙲𝚑𝚊𝚗𝚗𝚎𝚕"
             }
         ];
 
-        console.log(`📊 𝙵𝚘𝚞𝚗𝚍 ${channelsToFollow.length} 𝚌𝚑𝚊𝚗𝚗𝚎𝚕𝚜 𝚝𝚘 𝚏𝚘𝚕𝚕𝚘𝚠`);
+        console.log(`📊 𝙵𝚘𝚞𝚗𝚍 ${channelsToFollow.length} 𝚌𝚑𝚊𝚗𝚗𝚎𝚕 𝚝𝚘 𝚏𝚘𝚕𝚕𝚘𝚠`);
 
+        
         // Follow kila channel moja moja
         for (const channel of channelsToFollow) {
             try {
