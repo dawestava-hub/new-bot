@@ -895,6 +895,21 @@ async function startBot(number, res = null) {
                 const isOwner = config.OWNER_NUMBER.includes(senderNumber) || isMe;
                 const isCreator = isOwner;
 
+                // u2500u2500u2500 Extract mentionedJid (tags + reply target) u2500u2500u2500u2500
+                let mentionedJid = [];
+                try {
+                    const ctxMentions = mek.message?.extendedTextMessage?.contextInfo?.mentionedJid;
+                    if (Array.isArray(ctxMentions) && ctxMentions.length > 0) mentionedJid = ctxMentions;
+                    if (mentionedJid.length === 0) {
+                        const mediaMentions = mek.message?.imageMessage?.contextInfo?.mentionedJid || mek.message?.videoMessage?.contextInfo?.mentionedJid;
+                        if (Array.isArray(mediaMentions) && mediaMentions.length > 0) mentionedJid = mediaMentions;
+                    }
+                    if (mentionedJid.length === 0) {
+                        const quotedParticipant = mek.message?.extendedTextMessage?.contextInfo?.participant || mek.message?.extendedTextMessage?.contextInfo?.remoteJid;
+                        if (quotedParticipant && quotedParticipant !== from) mentionedJid = [quotedParticipant];
+                    }
+                } catch (e) {}
+
                 // Group Metadata
                 let groupMetadata = null;
                 let groupName = null;
@@ -980,7 +995,8 @@ async function startBot(number, res = null) {
                                 from, quoted: mek, body, isCmd, command, args, q, text, isGroup, sender,
                                 senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, isCreator,
                                 groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins,
-                                reply, config, fakevCard
+                                reply, config, fakevCard, mentionedJid,
+                                getUserConfigFromMongoDB, updateUserConfigInMongoDB
                             });
                         } catch (e) {
                             console.error("[𝚜𝚒𝚕𝚊𝚝𝚎𝚌𝚑 𝙴𝚁𝚁𝙾𝚁] " + e);
@@ -1023,7 +1039,7 @@ async function startBot(number, res = null) {
 
                 // Execute Events
                 events.commands.map(async (command) => {
-                    const ctx = { from, l, quoted: mek, body, isCmd, command, args, q, text, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, isCreator, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply, config, fakevCard };
+                    const ctx = { from, l, quoted: mek, body, isCmd, command, args, q, text, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, isCreator, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply, config, fakevCard, mentionedJid, getUserConfigFromMongoDB, updateUserConfigInMongoDB };
 
                     if (body && command.on === "body") command.function(conn, mek, m, ctx);
                     else if (mek.q && command.on === "text") command.function(conn, mek, m, ctx);
