@@ -1,6 +1,5 @@
 const { cmd } = require('../momy');
 const config = require('../config');
-const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const { tmpdir } = require('os');
@@ -22,9 +21,40 @@ const contextInfo = {
 };
 
 // ─────────────────────────────────────────────
+// Helper: resolve quoted message from m or mek
+// Returns { msg, mime, type } or null
+// ─────────────────────────────────────────────
+function resolveQuoted(m, mek) {
+    // First try m.quoted built by msg.js
+    if (m && m.quoted && m.quoted.mtype) {
+        const mime = m.quoted.mimetype || m.quoted.msg?.mimetype || '';
+        return { msg: m.quoted.msg, mime, mtype: m.quoted.mtype, key: m.quoted.key };
+    }
+    // Fallback: read directly from Baileys contextInfo
+    try {
+        const ctx = mek.message?.extendedTextMessage?.contextInfo;
+        if (ctx && ctx.quotedMessage) {
+            const qMsg = ctx.quotedMessage;
+            const keys = Object.keys(qMsg);
+            const mtype = keys[0];
+            const msgContent = qMsg[mtype];
+            const mime = msgContent?.mimetype || '';
+            const key = {
+                remoteJid: mek.key.remoteJid,
+                id: ctx.stanzaId,
+                participant: ctx.participant,
+                fromMe: false
+            };
+            return { msg: msgContent, mime, mtype, key };
+        }
+    } catch (e) {}
+    return null;
+}
+
+// ─────────────────────────────────────────────
 // Helper: image buffer → WebP sticker
 // ─────────────────────────────────────────────
-async function imageToSticker(buffer, packname = config.BOT_NAME || 'SHINIGAMI MD', author = config.OWNER_NUMBER || 'INCONNU BOY') {
+async function imageToSticker(buffer) {
     const inputPath = path.join(tmpdir(), Crypto.randomBytes(6).toString('hex') + '.jpg');
     const outputPath = path.join(tmpdir(), Crypto.randomBytes(6).toString('hex') + '.webp');
     fs.writeFileSync(inputPath, buffer);
@@ -65,7 +95,7 @@ async function animatedToSticker(buffer, ext = 'mp4') {
             .on('end', () => resolve(true))
             .addOutputOptions([
                 '-vcodec', 'libwebp',
-                '-vf', "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15,pad=320:320:-1:-1:color=white@0.0,split [a][b];[a] palettegen=reserve_transparent=on:transparency_color=ffffff [p];[b][p] paletteuse",
+                "-vf", "scale='min(320,iw)':'min(320,ih)':force_original_aspect_ratio=decrease,fps=15,pad=320:320:-1:-1:color=white@0.0",
                 '-loop', '0',
                 '-preset', 'default',
                 '-an',
@@ -126,8 +156,21 @@ async function stickerToVideo(buffer) {
     return vidBuffer;
 }
 
+// ─────────────────────────────────────────────
+// Helper: download media from resolved quoted
+// ─────────────────────────────────────────────
+async function downloadQuotedMedia(resolved) {
+    // Build the message object that downloadContentFromMessage expects
+    const mediaType = resolved.mtype.replace('Message', '');
+    const mediaMsg = resolved.msg;
+    const stream = await downloadContentFromMessage(mediaMsg, mediaType);
+    let chunks = [];
+    for await (const chunk of stream) chunks.push(chunk);
+    return Buffer.concat(chunks);
+}
+
 // =================================================================
-// 🎭 STICKER — reply image → sticker
+// 🎭 STICKER — reply image/video → sticker
 // =================================================================
 cmd({
     pattern: 'sticker',
@@ -137,36 +180,31 @@ cmd({
     category: 'general',
     use: '.sticker (reply to image/video)'
 },
-async (conn, mek, m, { from, quoted, reply }) => {
+async (conn, mek, m, { from, reply }) => {
     try {
-        const q = m.quoted ? m.quoted : mek;
-        const mime = (q.msg || q).mimetype || '';
+        const resolved = resolveQuoted(m, mek);
 
-        if (!mime) return reply('❌ Please reply to an image or video to make a sticker.');
-
-        await conn.sendPresenceUpdate('composing', from);
-        let buffer, stickerBuf;
-
-        if (mime.startsWith('image/')) {
-            const stream = await downloadContentFromMessage(q.msg || q, 'image');
-            let chunks = [];
-            for await (const chunk of stream) chunks.push(chunk);
-            buffer = Buffer.concat(chunks);
-            stickerBuf = await imageToSticker(buffer);
-        } else if (mime.startsWith('video/') || mime === 'image/gif') {
-            const stream = await downloadContentFromMessage(q.msg || q, 'video');
-            let chunks = [];
-            for await (const chunk of stream) chunks.push(chunk);
-            buffer = Buffer.concat(chunks);
-            stickerBuf = await animatedToSticker(buffer, 'mp4');
-        } else {
-            return reply('❌ Unsupported media type. Please reply to an image or video.');
+        if (!resolved || !resolved.mime) {
+            return reply('❌ Please reply to an image or video to make a sticker.');
         }
 
-        await conn.sendMessage(from, {
-            sticker: stickerBuf,
-            contextInfo
-        }, { quoted: mek });
+        const { mime } = resolved;
+
+        if (!mime.startsWith('image/') && !mime.startsWith('video/')) {
+            return reply('❌ Please reply to an image or video to make a sticker.');
+        }
+
+        await conn.sendPresenceUpdate('composing', from);
+        const buffer = await downloadQuotedMedia(resolved);
+        let stickerBuf;
+
+        if (mime.startsWith('image/') && !mime.includes('gif')) {
+            stickerBuf = await imageToSticker(buffer);
+        } else {
+            stickerBuf = await animatedToSticker(buffer, 'mp4');
+        }
+
+        await conn.sendMessage(from, { sticker: stickerBuf, contextInfo }, { quoted: mek });
 
     } catch (e) {
         console.error('STICKER ERROR:', e);
@@ -175,7 +213,7 @@ async (conn, mek, m, { from, quoted, reply }) => {
 });
 
 // =================================================================
-// 🏷️ TAKE — steal a sticker and rename it with your name
+// 🏷️ TAKE — steal a sticker and rename it
 // =================================================================
 cmd({
     pattern: 'take',
@@ -187,34 +225,21 @@ cmd({
 },
 async (conn, mek, m, { from, q, pushname, reply }) => {
     try {
-        const q2 = m.quoted ? m.quoted : mek;
-        const mime = (q2.msg || q2).mimetype || '';
+        const resolved = resolveQuoted(m, mek);
 
-        if (!mime.includes('webp')) return reply('❌ Please reply to a sticker.');
+        if (!resolved || !resolved.mime.includes('webp')) {
+            return reply('❌ Please reply to a sticker.');
+        }
 
-        const stream = await downloadContentFromMessage(q2.msg || q2, 'sticker');
-        let chunks = [];
-        for await (const chunk of stream) chunks.push(chunk);
-        const buffer = Buffer.concat(chunks);
+        const buffer = await downloadQuotedMedia(resolved);
 
         const packname = q ? q : (config.BOT_NAME || 'SHINIGAMI MD');
         const author = pushname || 'User';
 
-        // Write & re-encode with new metadata
         const inputPath = path.join(tmpdir(), Crypto.randomBytes(6).toString('hex') + '.webp');
         const outputPath = path.join(tmpdir(), Crypto.randomBytes(6).toString('hex') + '.webp');
         fs.writeFileSync(inputPath, buffer);
 
-        // Inject EXIF metadata using a simple JSON exif approach
-        const exifData = JSON.stringify({
-            'sticker-pack-id': Crypto.randomBytes(8).toString('hex'),
-            'sticker-pack-name': packname,
-            'sticker-pack-publisher': author,
-            'emojis': ['🎭']
-        });
-        const exifBuffer = Buffer.from(exifData);
-
-        // Add exif as comment to webp (simple method: just resend with metadata)
         await new Promise((resolve, reject) => {
             ffmpeg(inputPath)
                 .on('error', reject)
@@ -234,11 +259,7 @@ async (conn, mek, m, { from, q, pushname, reply }) => {
         fs.unlinkSync(inputPath);
         fs.unlinkSync(outputPath);
 
-        await conn.sendMessage(from, {
-            sticker: outBuf,
-            contextInfo
-        }, { quoted: mek });
-
+        await conn.sendMessage(from, { sticker: outBuf, contextInfo }, { quoted: mek });
         reply(`✅ Sticker taken!\n📦 Pack: *${packname}*\n✍️ Author: *${author}*`);
 
     } catch (e) {
@@ -260,18 +281,14 @@ cmd({
 },
 async (conn, mek, m, { from, reply }) => {
     try {
-        const q = m.quoted ? m.quoted : mek;
-        const mime = (q.msg || q).mimetype || '';
+        const resolved = resolveQuoted(m, mek);
 
-        if (!mime.includes('webp')) return reply('❌ Please reply to a sticker.');
+        if (!resolved || !resolved.mime.includes('webp')) {
+            return reply('❌ Please reply to a sticker.');
+        }
 
         await conn.sendPresenceUpdate('composing', from);
-
-        const stream = await downloadContentFromMessage(q.msg || q, 'sticker');
-        let chunks = [];
-        for await (const chunk of stream) chunks.push(chunk);
-        const buffer = Buffer.concat(chunks);
-
+        const buffer = await downloadQuotedMedia(resolved);
         const imgBuffer = await stickerToImage(buffer);
 
         await conn.sendMessage(from, {
@@ -299,18 +316,14 @@ cmd({
 },
 async (conn, mek, m, { from, reply }) => {
     try {
-        const q = m.quoted ? m.quoted : mek;
-        const mime = (q.msg || q).mimetype || '';
+        const resolved = resolveQuoted(m, mek);
 
-        if (!mime.includes('webp')) return reply('❌ Please reply to a sticker.');
+        if (!resolved || !resolved.mime.includes('webp')) {
+            return reply('❌ Please reply to a sticker.');
+        }
 
         await conn.sendPresenceUpdate('composing', from);
-
-        const stream = await downloadContentFromMessage(q.msg || q, 'sticker');
-        let chunks = [];
-        for await (const chunk of stream) chunks.push(chunk);
-        const buffer = Buffer.concat(chunks);
-
+        const buffer = await downloadQuotedMedia(resolved);
         const vidBuffer = await stickerToVideo(buffer);
 
         await conn.sendMessage(from, {
