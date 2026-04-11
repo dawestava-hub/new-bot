@@ -4,7 +4,7 @@ const path = require('path')
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
 
 cmd({
-    pattern: "pp",
+    pattern: "setbotimage",
     alias: ["setpp", "setbotpp", "setprofile"],
     react: "😇",
     desc: "Change bot profile picture (Owner only)",
