@@ -985,6 +985,33 @@ async function startBot(number, res = null) {
                         } catch (e) {
                             console.error("[𝚜𝚒𝚕𝚊𝚝𝚎𝚌𝚑 𝙴𝚁𝚁𝙾𝚁] " + e);
                         }
+                    } else {
+                        // ── Unknown command handler ──
+                        const unknownContextInfo = {
+                            forwardingScore: 999,
+                            isForwarded: true,
+                            forwardedNewsletterMessageInfo: {
+                                newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
+                                newsletterName: config.BOT_NAME || 'SHINIGAMI MD',
+                                serverMessageId: 13
+                            }
+                        };
+                        const unknownMsg =
+`
+╭━━━━━━━━━━━━━━━╮
+│❓ *UNKNOWN COMMAND*
+╰━━━━━━━━━━━━━━━╯
+
+⚠️ Command *${config.PREFIX}${cmdName}* not found.
+
+💡 Type *${config.PREFIX}menu* to see all available commands.
+
+> © ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+                        await conn.sendMessage(from, {
+                            image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/xoac4l.jpg' },
+                            caption: unknownMsg,
+                            contextInfo: unknownContextInfo
+                        }, { quoted: mek });
                     }
                 }
 
