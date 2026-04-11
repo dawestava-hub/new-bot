@@ -18,28 +18,27 @@ const getAntilinkStatus = async (chatId) => {
 cmd({
     pattern: "antidelete",
     alias: ["antidel"],
-    desc: "Turn Antidelete on/off",
-    category: "owner",
+    desc: "Turn Antidelete on/off (owner or group admin)",
+    category: "group",
     react: "💀"
 },
-async(conn, mek, m, { args, isOwner, reply, from, getUserConfigFromMongoDB, updateUserConfigInMongoDB }) => {
-    if (!isOwner) return reply("*owner only command*");
+async(conn, mek, m, { args, isOwner, isAdmins, isGroup, reply, from, getUserConfigFromMongoDB, updateUserConfigInMongoDB }) => {
+    if (!isOwner && !isAdmins) return reply("*👑 admin only command*");
     const mode = args[0]?.toLowerCase();
-
     const botNumber = conn.user.id.split(':')[0];
-    
+
     if (mode === 'on' || mode === 'enable') {
         await updateUserConfigInMongoDB(botNumber, { ANTI_DELETE: 'true' });
         await setAntideleteStatus(from, true);
-        await reply("*✅ anti-delete activated*");
+        await reply("*✅ Anti-Delete ACTIVATED*\n🗑️ Deleted messages will be re-sent.");
     } else if (mode === 'off' || mode === 'disable') {
         await updateUserConfigInMongoDB(botNumber, { ANTI_DELETE: 'false' });
         await setAntideleteStatus(from, false);
-        await reply("*✅ anti-delete deactivated*");
+        await reply("*✅ Anti-Delete DEACTIVATED*\n🗑️ Deleted messages will NOT be re-sent.");
     } else {
         const userConfig = await getUserConfigFromMongoDB(botNumber);
         const current = userConfig?.ANTI_DELETE === 'true' || await getAntideleteStatus(from);
-        await reply(`*anti-delete: ${current ? "ON ✅" : "OFF ❌"}*`);
+        await reply(`*Anti-Delete: ${current ? "ON ✅" : "OFF ❌"}*\n\nUsage:\n• .antidelete on\n• .antidelete off`);
     }
 });
 
@@ -48,29 +47,28 @@ cmd({
     pattern: "antilink",
     alias: ["antilnk", "nolink"],
     desc: "Turn Antilink on/off (auto-delete links)",
-    category: "owner",
+    category: "group",
     react: "🔗"
 },
-async(conn, mek, m, { args, isOwner, reply, from, sender, isAdmins, isGroup, isBotAdmins, getUserConfigFromMongoDB, updateUserConfigInMongoDB }) => {
+async(conn, mek, m, { args, isOwner, reply, from, isAdmins, isGroup, isBotAdmins, getUserConfigFromMongoDB, updateUserConfigInMongoDB }) => {
     if (!isGroup) return reply("*📌 group command only*");
     if (!isOwner && !isAdmins) return reply("*👑 admin only command*");
-    
+
     const mode = args[0]?.toLowerCase();
     const botNumber = conn.user.id.split(':')[0];
 
     if (mode === 'on' || mode === 'enable') {
-        // ✅ Vérification bot admin SUPPRIMÉE
         await updateUserConfigInMongoDB(botNumber, { ANTI_LINK: 'true' });
         await setAntilinkStatus(from, true);
-        await reply("*✅ antilink activated*\n🔗 links will be auto-deleted");
+        await reply("*✅ Anti-Link ACTIVATED*\n🔗 Links sent by non-admins will be auto-deleted.");
     } else if (mode === 'off' || mode === 'disable') {
         await updateUserConfigInMongoDB(botNumber, { ANTI_LINK: 'false' });
         await setAntilinkStatus(from, false);
-        await reply("*✅ antilink deactivated*\n🔗 links allowed");
+        await reply("*✅ Anti-Link DEACTIVATED*\n🔗 Links are now allowed.");
     } else {
         const userConfig = await getUserConfigFromMongoDB(botNumber);
         const current = userConfig?.ANTI_LINK === 'true' || await getAntilinkStatus(from);
-        await reply(`*antilink: ${current ? "ON ✅" : "OFF ❌"}*`);
+        await reply(`*Anti-Link: ${current ? "ON ✅" : "OFF ❌"}*\n\nUsage:\n• .antilink on\n• .antilink off`);
     }
 });
 
