@@ -96,34 +96,45 @@ cmd({
     pattern: "promote",
     react: "⬆️",
     alias: ["makeadmin"],
-    desc: "Promote a member to admin",
+    desc: "Promote a member to admin (tag or reply)",
     category: "group",
-    use: ".promote @user",
+    use: ".promote @user  OR  reply to a message with .promote",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid, participants }) => {
+async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
-        if (!mentionedJid || mentionedJid.length === 0) {
-            return reply("❌ Please tag the member to promote.\n\nExample:\n.promote @user");
+        // Build target list: tags first, then quoted/replied sender
+        let targets = Array.isArray(mentionedJid) && mentionedJid.length > 0 ? [...mentionedJid] : [];
+
+        // Also check reply (quoted participant)
+        const quotedParticipant =
+            mek.message?.extendedTextMessage?.contextInfo?.participant ||
+            mek.message?.extendedTextMessage?.contextInfo?.remoteJid;
+        if (quotedParticipant && quotedParticipant !== from && !targets.includes(quotedParticipant)) {
+            targets.push(quotedParticipant);
         }
 
-        for (const user of mentionedJid) {
+        if (targets.length === 0) {
+            return reply("❌ Please tag or reply to the member to promote.\n\nExamples:\n• .promote @user\n• Reply to their message with .promote");
+        }
+
+        for (const user of targets) {
             await conn.groupParticipantsUpdate(from, [user], "promote");
         }
 
-        const names = mentionedJid.map(j => "@" + j.split("@")[0]).join(", ");
+        const names = targets.map(j => "@" + j.split("@")[0]).join(", ");
         await conn.sendMessage(from, {
             text: `⬆️ *PROMOTED TO ADMIN*\n\n👑 ${names} is now a group admin!\n\n> SHINIGAMI MD`,
-            mentions: mentionedJid,
-            contextInfo: { ...contextInfo, mentionedJid }
+            mentions: targets,
+            contextInfo: { ...contextInfo, mentionedJid: targets }
         }, { quoted: mek });
 
     } catch (e) {
         console.error("Promote error:", e);
-        reply("❌ Failed to promote member.");
+        reply("❌ Failed to promote member. Make sure the bot is an admin.");
     }
 });
 
@@ -132,9 +143,9 @@ cmd({
     pattern: "demote",
     react: "⬇️",
     alias: ["removeadmin"],
-    desc: "Demote an admin to regular member",
+    desc: "Demote an admin to regular member (tag or reply)",
     category: "group",
-    use: ".demote @user",
+    use: ".demote @user  OR  reply to a message with .demote",
     filename: __filename
 },
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid }) => {
@@ -142,24 +153,33 @@ async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, mentionedJid }) 
         if (!isGroup) return reply("❌ This command only works in groups.");
         if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
-        if (!mentionedJid || mentionedJid.length === 0) {
-            return reply("❌ Please tag the admin to demote.\n\nExample:\n.demote @user");
+        let targets = Array.isArray(mentionedJid) && mentionedJid.length > 0 ? [...mentionedJid] : [];
+
+        const quotedParticipant =
+            mek.message?.extendedTextMessage?.contextInfo?.participant ||
+            mek.message?.extendedTextMessage?.contextInfo?.remoteJid;
+        if (quotedParticipant && quotedParticipant !== from && !targets.includes(quotedParticipant)) {
+            targets.push(quotedParticipant);
         }
 
-        for (const user of mentionedJid) {
+        if (targets.length === 0) {
+            return reply("❌ Please tag or reply to the admin to demote.\n\nExamples:\n• .demote @user\n• Reply to their message with .demote");
+        }
+
+        for (const user of targets) {
             await conn.groupParticipantsUpdate(from, [user], "demote");
         }
 
-        const names = mentionedJid.map(j => "@" + j.split("@")[0]).join(", ");
+        const names = targets.map(j => "@" + j.split("@")[0]).join(", ");
         await conn.sendMessage(from, {
             text: `⬇️ *DEMOTED FROM ADMIN*\n\n${names} is no longer an admin.\n\n> SHINIGAMI MD`,
-            mentions: mentionedJid,
-            contextInfo: { ...contextInfo, mentionedJid }
+            mentions: targets,
+            contextInfo: { ...contextInfo, mentionedJid: targets }
         }, { quoted: mek });
 
     } catch (e) {
         console.error("Demote error:", e);
-        reply("❌ Failed to demote member.");
+        reply("❌ Failed to demote member. Make sure the bot is an admin.");
     }
 });
 
