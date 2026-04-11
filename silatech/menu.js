@@ -1,220 +1,112 @@
 const config = require('../config');
+const moment = require('moment-timezone');
+const { cmd, commands } = require('../momy');
 
-const contextInfo = {
-    forwardingScore: 999,
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-        newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
-        newsletterName: 'SHINIGAMI MD',
-        serverMessageId: 13
-    }
+// Function to convert text to plain uppercase
+const toUpper = (str) => str.toUpperCase();
+const normalize = str => str.toLowerCase().replace(/\s+menu$/, '').trim();
+
+// Uptime function
+const getUptime = () => {
+    let sec = process.uptime();
+    let h = Math.floor(sec / 3600);
+    let mn = Math.floor((sec % 3600) / 60);
+    let s = Math.floor(sec % 60);
+    return `${h}h ${mn}m ${s}s`;
 };
 
-async function groupEvents(conn, update) {
-    const isWelcomeEnabled = config.WELCOME_ENABLE === 'true';
-    const isGoodbyeEnabled = config.GOODBYE_ENABLE === 'true';
-
-    if (!isWelcomeEnabled && !isGoodbyeEnabled) return;
+// =============================================================
+// 📌 MENU COMMAND - DYNAMIC
+// =============================================================
+cmd({
+  pattern: "menu",
+  alias: ["help", "allmenu", "m", "list"],
+  use: ".menu",
+  desc: "show all bot commands",
+  category: "menu",
+  react: "💀",
+  filename: __filename
+},
+  async (conn, mek, m, { from, reply, sender, myquoted }) => {
 
     try {
-        const metadata = await conn.groupMetadata(update.id);
-        const groupName = metadata.subject;
-        const groupJid = update.id;
-        const participants = update.participants;
+      const totalCommands = commands.length;
+      const prefix = config.PREFIX || ".";
+      const mode = config.WORK_TYPE?.toUpperCase() || "PUBLIC";
+      const botName = config.BOT_NAME || "SHINIGAMI MD";
 
-        for (const participantJid of participants) {
-            const username = participantJid.split('@')[0];
-            const mentions = [participantJid];
+      // Menu Header
+      let menu = `
+╭━━━━━━━━━━━━━•
+│ • BOT: ${botName}
+│ • USER: @${sender.split("@")[0]}
+│ • PREFIX: ${prefix}
+│ • UPTIME: ${getUptime()}
+│ • COMMANDS: ${totalCommands}
+╰─────────────•\n`;
 
-            if (update.action === 'add' && isWelcomeEnabled) {
-                const welcomeMsg =
-`╭───────────────⊷
-│ 👋 *WELCOME*
-│
-│ 🧑‍💼 *User:* @${username}
-│ 📛 *Group:* ${groupName}
-│ 👥 *Members:* ${metadata.participants.length}
-│
-│ 💬 *Read the group rules!*
-╰───────────────⊷
-> MADE IN BY INCONNU BOY`;
+      // Grouping Categories
+      let categories = {};
+      for (let c of commands) {
+        if (!c || !c.pattern || !c.category) continue;
+        const cat = normalize(c.category);
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(c);
+      }
 
-                const welcomeImage = config.WELCOME_IMAGE || 'https://files.catbox.moe/xoac4l.jpg';
+      const sortedCats = Object.keys(categories).sort();
 
-                await conn.sendMessage(groupJid, {
-                    image: { url: welcomeImage },
-                    caption: welcomeMsg,
-                    mentions: mentions,
-                    contextInfo: {
-                        ...contextInfo,
-                        mentionedJid: mentions
-                    }
-                });
-            }
+      // Loop through Categories
+      for (let cat of sortedCats) {
+        const catHeader = toUpper(cat);
 
-            else if (update.action === 'remove' && isGoodbyeEnabled) {
-                const goodbyeMsg =
-`╭───────────────⊷
-│ 👋 *GOODBYE*
-│
-│ 🧑‍💼 *User:* @${username}
-│ 📛 *Group:* ${groupName}
-│ 👥 *Members Left:* ${metadata.participants.length}
-│
-│ ❌ *User has left the group*
-╰───────────────⊷
-> MADE IN BY INCONNU BOY`;
+        // Start category section
+        menu += `\n╭─  ${catHeader}\n`;
 
-                const goodbyeImage = config.GOODBYE_IMAGE || 'https://files.catbox.moe/xoac4l.jpg';
+        const cmds = categories[cat]
+          .filter(c => c.pattern)
+          .sort((a, b) => {
+            const nameA = Array.isArray(a.pattern) ? a.pattern[0] : a.pattern;
+            const nameB = Array.isArray(b.pattern) ? b.pattern[0] : b.pattern;
+            return nameA.localeCompare(nameB);
+          });
 
-                await conn.sendMessage(groupJid, {
-                    image: { url: goodbyeImage },
-                    caption: goodbyeMsg,
-                    mentions: mentions,
-                    contextInfo: {
-                        ...contextInfo,
-                        mentionedJid: mentions
-                    }
-                });
-            }
+        // Display commands in vertical list format
+        cmds.forEach((cmd, index) => {
+          const cmdName = Array.isArray(cmd.pattern) ? cmd.pattern[0] : cmd.pattern.split('|')[0];
+          const isLast = index === cmds.length - 1;
 
-            else if (update.action === 'promote') {
-                const author = update.author || '';
-                if (author) mentions.push(author);
+          if (isLast) {
+            menu += `│ • ${prefix}${cmdName}\n`;
+            menu += `╰───────────────⭓\n`;
+          } else {
+            menu += `│ • ${prefix}${cmdName}\n`;
+          }
+        });
+      }
 
-                const msg = `👑 Congratulations @${username}!\nYou have been promoted to *Admin* in *${groupName}*.\nPlease use your new privileges responsibly.`;
+      // Footer
+      menu += `\n> POWERED BY SHINIGAMI MD`;
 
-                await conn.sendMessage(groupJid, {
-                    text: msg,
-                    mentions: mentions,
-                    contextInfo: { ...contextInfo, mentionedJid: mentions }
-                });
-            }
-
-            else if (update.action === 'demote') {
-                const author = update.author || '';
-                if (author) mentions.push(author);
-
-                const msg = `🔻 @${username} has been removed from the *Admin* role in *${groupName}*.\nAdmin privileges have been revoked.`;
-
-                await conn.sendMessage(groupJid, {
-                    text: msg,
-                    mentions: mentions,
-                    contextInfo: { ...contextInfo, mentionedJid: mentions }
-                });
-            }
+      // Send the Menu with image and context info
+      await conn.sendMessage(from, {
+        image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/xoac4l.jpg' },
+        caption: menu,
+        contextInfo: {
+          mentionedJid: [sender],
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
+            newsletterName: 'SHINIGAMI MD',
+            serverMessageId: 13
+          }
         }
-
-        await handleChannelEvents(conn, update);
+      }, { quoted: myquoted });
 
     } catch (e) {
-        console.error("Group Events Error:", e.message);
+      console.error("menu error:", e);
+      reply(`❌ Error generating menu`);
     }
-}
 
-async function handleChannelEvents(conn, update) {
-    try {
-        const channelJids = [config.CHANNEL_JID_1, config.CHANNEL_JID_2].filter(Boolean);
-
-        for (const channelJid of channelJids) {
-            if (!channelJid) continue;
-            if (update.id.includes('@newsletter')) {
-                await handleNewsletterEvents(conn, update, channelJid);
-            }
-        }
-    } catch (e) {
-        console.error("Channel Events Error:", e.message);
-    }
-}
-
-async function handleNewsletterEvents(conn, update, channelJid) {
-    try {
-        const participantJid = update.participants?.[0] || '';
-        const username = participantJid.split('@')[0];
-        let channelMessage = '';
-
-        if (update.action === 'add') {
-            channelMessage = `📢 New subscriber: *${username}*\n🕐 ${new Date().toLocaleTimeString()}`;
-            if (config.OWNER_NUMBER) {
-                await conn.sendMessage(`${config.OWNER_NUMBER}@s.whatsapp.net`, {
-                    text: channelMessage,
-                    contextInfo
-                });
-            }
-        } else if (update.action === 'remove') {
-            channelMessage = `📢 A subscriber has left: *${username}*\n🕐 ${new Date().toLocaleTimeString()}`;
-            if (config.OWNER_NUMBER) {
-                await conn.sendMessage(`${config.OWNER_NUMBER}@s.whatsapp.net`, {
-                    text: channelMessage,
-                    contextInfo
-                });
-            }
-        }
-    } catch (e) {
-        console.error("Newsletter Events Error:", e.message);
-    }
-}
-
-async function handleGroupSettingsUpdate(conn, update) {
-    try {
-        if (update.announce === 'true' || update.announce === 'false') {
-            const status = update.announce === 'true' ? 'locked 🔒 — only admins can send messages' : 'unlocked 🔓 — all members can send messages';
-            await conn.sendMessage(update.id, {
-                text: `📢 The group has been ${status}.`,
-                contextInfo
-            });
-        }
-
-        if (update.restrict === 'true' || update.restrict === 'false') {
-            const status = update.restrict === 'true' ? 'enabled 🔒 — only admins can edit group settings' : 'disabled 🔓 — all members can edit group settings';
-            await conn.sendMessage(update.id, {
-                text: `⚙️ Group settings restriction has been ${status}.`,
-                contextInfo
-            });
-        }
-
-        if (update.subject) {
-            await conn.sendMessage(update.id, {
-                text: `📛 The group name has been updated to *${update.subject}*.`,
-                contextInfo
-            });
-        }
-
-        if (update.description) {
-            await conn.sendMessage(update.id, {
-                text: `📄 The group description has been updated. Please check the group info for details.`,
-                contextInfo
-            });
-        }
-
-        if (update.picture) {
-            await conn.sendMessage(update.id, {
-                text: `🖼️ The group profile picture has been changed.`,
-                contextInfo
-            });
-        }
-    } catch (e) {
-        console.error("Group Settings Update Error:", e.message);
-    }
-}
-
-async function handleAllEvents(conn, update) {
-    try {
-        if (update.type === 'participants') {
-            await groupEvents(conn, update);
-        } else if (update.type === 'group-update') {
-            await handleGroupSettingsUpdate(conn, update);
-        } else if (update.type === 'channel-update') {
-            await handleChannelEvents(conn, update);
-        }
-    } catch (e) {
-        console.error("All Events Handler Error:", e.message);
-    }
-}
-
-module.exports = {
-    groupEvents,
-    handleAllEvents,
-    handleChannelEvents,
-    handleGroupSettingsUpdate
-};
+  });
