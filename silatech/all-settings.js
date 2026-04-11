@@ -232,3 +232,57 @@ async(conn, mek, m, { args, isOwner, reply, botNumber, config }) => {
         reply(`*current prefix: ${config.PREFIX}*\n*use:*\n.𝗌𝖾𝗍𝗉𝗋𝖾𝖿𝗂𝗑 .\n.𝗌𝖾𝗍𝗉𝗋𝖾𝖿𝗂𝗑 !\n.𝗌𝖾𝗍𝗉𝗋𝖾𝖿𝗂𝗑 #`);
     }
 });
+
+// ============================================================
+// 6. BOT NAME (Owner only)
+// ============================================================
+
+cmd({
+    pattern: "setbotname",
+    desc: "Change the bot's display name",
+    category: "owner",
+    react: "🤖"
+},
+async(conn, mek, m, { args, q, isOwner, reply, botNumber, config }) => {
+    if (!isOwner) return reply("*owner only command*");
+
+    const newName = q?.trim();
+    if (!newName) {
+        return reply(
+            `🤖 *SETBOTNAME*\n\n` +
+            `Current bot name: *${config.BOT_NAME || conn.user?.name || 'Unknown'}*\n\n` +
+            `Usage: .setbotname <new name>\n` +
+            `Example: .setbotname shinigami`
+        );
+    }
+
+    if (newName.length > 25) return reply("❌ Bot name too long (max 25 characters).");
+
+    try {
+        // Update WhatsApp profile name
+        await conn.updateProfileName(newName);
+
+        // Update in-memory config
+        config.BOT_NAME = newName;
+
+        // Persist to database
+        const { updateUserConfig } = require('../lib/database');
+        await updateUserConfig(botNumber, { ...config, BOT_NAME: newName });
+
+        await reply(
+            `✅ *BOT NAME UPDATED*\n\n` +
+            `🤖 New name: *${newName}*\n\n` +
+            `> SHINIGAMI MD`
+        );
+    } catch (e) {
+        console.error("Setbotname error:", e);
+        // Even if WhatsApp name update fails, update config
+        config.BOT_NAME = newName;
+        await reply(
+            `⚠️ *BOT NAME PARTIALLY UPDATED*\n\n` +
+            `🤖 Config updated to: *${newName}*\n` +
+            `⚠️ WhatsApp profile name update failed (may need bot to be a contact).\n\n` +
+            `> SHINIGAMI MD`
+        );
+    }
+});
