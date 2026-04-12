@@ -14,11 +14,15 @@ cmd({
 async (conn, mek, m, { from, reply, sender, isOwner, prefix }) => {
 
   try {
+    // Normalize sender to avoid fake/LID JID display
+    const realSender = (typeof sender === 'string' && sender.endsWith('@s.whatsapp.net'))
+        ? sender
+        : (mek.key?.participant?.replace(/:[0-9]+@/, '@') || mek.key?.remoteJid || sender);
 
     let menu = `
 ╭━━━━━━━━━━━━━•
 │ • BOT: SHINIGAMI MD
-│ • USER: @${sender.split("@")[0]}
+│ • USER: @${realSender.split("@")[0]}
 │ • TYPE: BUG/CRASH COMMANDS
 ╰─────────────•\n`;
 
@@ -39,7 +43,7 @@ async (conn, mek, m, { from, reply, sender, isOwner, prefix }) => {
       image: { url: config.IMAGE_PATH || 'https://files.catbox.moe/xoac4l.jpg' },
       caption: menu,
       contextInfo: {
-        mentionedJid: [sender],
+        mentionedJid: [realSender],
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
