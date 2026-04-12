@@ -1,8 +1,7 @@
 const { cmd } = require('../momy');
 const config = require('../config');
 
-// ─── Shared context info ──────────────────────────────────────────────────────
-const getCtx = () => ({
+const contextInfo = () => ({
     forwardingScore: 999,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
@@ -12,700 +11,371 @@ const getCtx = () => ({
     }
 });
 
-// ─── Helper: pick random int ──────────────────────────────────────────────────
-const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// ─── Helper: get mentioned JID from message ───────────────────────────────
+function getMentioned(m, mek) {
+    const mentioned = mek.message?.extendedTextMessage?.contextInfo?.mentionedJid ||
+                      mek.message?.imageMessage?.contextInfo?.mentionedJid ||
+                      mek.message?.videoMessage?.contextInfo?.mentionedJid || [];
+    return mentioned[0] || null;
+}
 
-// ─── In-memory TicTacToe game store ──────────────────────────────────────────
-const tttGames = {}; // key: groupJid
+// ─── Helper: random int between min and max ───────────────────────────────
+function rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-// =============================================================================
-// 🏳️‍🌈  .gay @user
-// =============================================================================
+// ─── Helper: pick random item from array ─────────────────────────────────
+function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// =================================================================
+// 🏳️‍🌈 GAY — Check gay percentage of a user
+// =================================================================
 cmd({
     pattern: 'gay',
-    desc: 'Check how gay someone is (random %)',
+    alias: ['gaymeter', 'gayrate'],
+    desc: 'Check the gay percentage of a user',
     category: 'fun',
     react: '🏳️‍🌈',
     filename: __filename
-}, async (conn, mek, m, { from, sender, reply, mentioned, isGroup }) => {
+},
+async (conn, mek, m, { from, sender, reply, pushname, isGroup }) => {
     try {
-        if (!isGroup) return reply('❌ This command only works in groups.');
-
-        const target = mentioned && mentioned[0]
-            ? mentioned[0]
-            : sender;
+        const mentionedJid = getMentioned(m, mek);
+        const targetJid = mentionedJid || sender;
+        const targetName = mentionedJid
+            ? `@${mentionedJid.split('@')[0]}`
+            : (pushname || sender.split('@')[0]);
 
         const percent = rand(0, 100);
-        let bar = '';
-        for (let i = 0; i < 10; i++) bar += i < Math.floor(percent / 10) ? '🟣' : '⬜';
+        const bar = '█'.repeat(Math.floor(percent / 10)) + '░'.repeat(10 - Math.floor(percent / 10));
 
-        let label;
-        if (percent < 20) label = '😐 Barely noticeable';
-        else if (percent < 40) label = '🤔 A little curious';
-        else if (percent < 60) label = '😏 Halfway there';
-        else if (percent < 80) label = '🌈 Pretty gay ngl';
-        else label = '🏳️‍🌈 FULL RAINBOW MODE';
+        let emoji, verdict;
+        if (percent <= 10) { emoji = '😐'; verdict = 'Absolutely straight'; }
+        else if (percent <= 30) { emoji = '🤔'; verdict = 'A little curious...'; }
+        else if (percent <= 50) { emoji = '😏'; verdict = 'Bisexual vibes'; }
+        else if (percent <= 70) { emoji = '🌈'; verdict = 'Pretty gay ngl'; }
+        else if (percent <= 90) { emoji = '🏳️‍🌈'; verdict = 'Very gay!'; }
+        else { emoji = '💅'; verdict = 'MAX GAY LEVEL'; }
 
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│  🏳️‍🌈  GAY METER  🏳️‍🌈
-╰━━━━━━━━━━━━━━━━━━╯
+        const message =
+`╭━━━━━━━━━━━━━━━━━╮
+│  🏳️‍🌈  *GAY METER*  🏳️‍🌈
+╰━━━━━━━━━━━━━━━━━╯
 
-👤 User: @${target.split('@')[0]}
-📊 Gay Level: *${percent}%*
-${bar}
-🏷️ Status: *${label}*
+👤 *User:* ${targetName}
+📊 *Result:* ${percent}%
+🎨 *[${bar}]*
+${emoji} *Verdict:* ${verdict}
 
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
 
         await conn.sendMessage(from, {
-            text: msg,
-            mentions: [target],
-            contextInfo: getCtx()
+            text: message,
+            mentions: [targetJid],
+            contextInfo: {
+                ...contextInfo(),
+                mentionedJid: [targetJid]
+            }
         }, { quoted: mek });
 
         await m.react('🏳️‍🌈');
     } catch (e) {
-        reply('❌ Error running .gay command');
+        console.error('GAY CMD ERROR:', e);
+        reply('❌ Error running .gay command: ' + e.message);
+        await m.react('❌');
     }
 });
 
-// =============================================================================
-// ❤️  .love @user
-// =============================================================================
-cmd({
-    pattern: 'love',
-    desc: 'Check how much you love someone (%)',
-    category: 'fun',
-    react: '❤️',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, mentioned, isGroup }) => {
-    try {
-        if (!isGroup) return reply('❌ This command only works in groups.');
-
-        const target = mentioned && mentioned[0]
-            ? mentioned[0]
-            : null;
-
-        if (!target) return reply('❌ Mention a user!\nUsage: *.love @user*');
-
-        const percent = rand(0, 100);
-        let bar = '';
-        for (let i = 0; i < 10; i++) bar += i < Math.floor(percent / 10) ? '❤️' : '🖤';
-
-        let label;
-        if (percent < 20) label = '😶 Not really...';
-        else if (percent < 40) label = '🙂 Just friends';
-        else if (percent < 60) label = '😊 It\'s getting warm';
-        else if (percent < 80) label = '😍 Deeply in love';
-        else label = '💘 SOULMATES DETECTED';
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│     ❤️  LOVE METER  ❤️
-╰━━━━━━━━━━━━━━━━━━╯
-
-💑 @${sender.split('@')[0]}  ➜  @${target.split('@')[0]}
-💗 Love Level: *${percent}%*
-${bar}
-🏷️ Status: *${label}*
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [sender, target],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('❤️');
-    } catch (e) {
-        reply('❌ Error running .love command');
-    }
-});
-
-// =============================================================================
-// 💌  .loving @user  — romantic message
-// =============================================================================
-const loveMsgs = [
-    "Every second with you feels like a dream I never want to wake up from. 🌙",
-    "You are the reason I smile at my phone like an idiot. 😄💕",
-    "If love were a crime, I'd gladly go to jail for you. 🔒❤️",
-    "You're not just on my mind — you *are* my mind. 🧠💗",
-    "The universe made a mistake once — luckily it corrected it by creating you. ✨",
-    "I'd cross every ocean, climb every mountain, just to see your notification pop up. 📳💖",
-    "You make my heart do things my cardiologist can't explain. 💓",
-    "If you were a song, I'd have you on repeat forever. 🎵❤️",
-    "You're the WiFi to my phone — lost without you. 📶💘",
-    "I don't need stars to light up my night — I have you. 🌟"
-];
-
-cmd({
-    pattern: 'loving',
-    desc: 'Send a random romantic love message to someone',
-    category: 'fun',
-    react: '💌',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, mentioned, isGroup }) => {
-    try {
-        if (!isGroup) return reply('❌ This command only works in groups.');
-
-        const target = mentioned && mentioned[0] ? mentioned[0] : null;
-        if (!target) return reply('❌ Mention a user!\nUsage: *.loving @user*');
-
-        const message = loveMsgs[rand(0, loveMsgs.length - 1)];
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│   💌  LOVE MESSAGE  💌
-╰━━━━━━━━━━━━━━━━━━╯
-
-💝 From: @${sender.split('@')[0]}
-💝 To: @${target.split('@')[0]}
-
-"${message}"
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [sender, target],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('💌');
-    } catch (e) {
-        reply('❌ Error running .loving command');
-    }
-});
-
-// =============================================================================
-// 💑  .daycouple — random couple of the day
-// =============================================================================
+// =================================================================
+// 💑 DAYCOUPLE — Pick a random couple of the day from group members
+// =================================================================
 cmd({
     pattern: 'daycouple',
-    alias: ['coupleofday', 'coupleday'],
+    alias: ['coupleoftheday', 'shipper', 'couple'],
     desc: 'Pick a random couple of the day from group members',
     category: 'fun',
     react: '💑',
     filename: __filename
-}, async (conn, mek, m, { from, sender, reply, isGroup }) => {
+},
+async (conn, mek, m, { from, reply, isGroup }) => {
     try {
         if (!isGroup) return reply('❌ This command only works in groups.');
 
         const groupData = await conn.groupMetadata(from);
-        const members = groupData.participants
-            .filter(p => p.id && p.id.endsWith('@s.whatsapp.net'));
+        const members = groupData.participants || [];
 
-        if (members.length < 2) return reply('❌ Not enough members in this group!');
+        // Accept @s.whatsapp.net and @lid
+        const validMembers = members.filter(p =>
+            p.id && (p.id.endsWith('@s.whatsapp.net') || p.id.endsWith('@lid'))
+        );
 
-        // Pick 2 unique random members
-        const shuffled = members.sort(() => 0.5 - Math.random());
-        const p1 = shuffled[0].id;
-        const p2 = shuffled[1].id;
+        if (validMembers.length < 2) {
+            return reply('❌ Not enough members in this group! Need at least 2 members.');
+        }
 
-        const compatibility = rand(60, 100);
-        let bar = '';
-        for (let i = 0; i < 10; i++) bar += i < Math.floor(compatibility / 10) ? '💗' : '🖤';
+        // Pick 2 distinct random members
+        const shuffled = [...validMembers].sort(() => Math.random() - 0.5);
+        const person1 = shuffled[0];
+        const person2 = shuffled[1];
 
-        let status;
-        if (compatibility < 75) status = '😊 A cute duo!';
-        else if (compatibility < 90) status = '💞 Very compatible!';
-        else status = '💘 PERFECT MATCH!';
+        const name1 = `@${person1.id.split('@')[0]}`;
+        const name2 = `@${person2.id.split('@')[0]}`;
 
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│  💑  COUPLE OF THE DAY  💑
-╰━━━━━━━━━━━━━━━━━━╯
+        const lovePercent = rand(60, 100);
+        const hearts = ['❤️', '💕', '💞', '💓', '💗', '💖', '💝'];
+        const heart = pick(hearts);
 
-💫 Today's couple in *${groupData.subject}*:
+        const phrases = [
+            `made for each other! 💫`,
+            `a perfect match! ✨`,
+            `totally goals! 👑`,
+            `the cutest couple! 🥰`,
+            `unstoppable together! 💪`,
+        ];
 
-👫  @${p1.split('@')[0]}
-        +
-     @${p2.split('@')[0]}
+        const message =
+`╭━━━━━━━━━━━━━━━━━╮
+│  💑  *COUPLE OF THE DAY*
+╰━━━━━━━━━━━━━━━━━╯
 
-💗 Compatibility: *${compatibility}%*
-${bar}
-🏷️ Status: *${status}*
+${heart} ${name1}
+     *+*
+${heart} ${name2}
 
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+💯 *Love Meter:* ${lovePercent}%
+💬 *Verdict:* They are ${pick(phrases)}
+
+🗓️ *Group:* ${groupData.subject}
+
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
 
         await conn.sendMessage(from, {
-            text: msg,
-            mentions: [p1, p2],
-            contextInfo: getCtx()
+            text: message,
+            mentions: [person1.id, person2.id],
+            contextInfo: {
+                ...contextInfo(),
+                mentionedJid: [person1.id, person2.id]
+            }
         }, { quoted: mek });
 
         await m.react('💑');
     } catch (e) {
-        console.error(e);
-        reply('❌ Error running .daycouple command');
+        console.error('DAYCOUPLE CMD ERROR:', e);
+        reply('❌ Error running .daycouple command: ' + e.message);
+        await m.react('❌');
     }
 });
 
-// =============================================================================
-// ❌⭕  .tictactoe @user — 2-player TicTacToe
-// =============================================================================
+// =================================================================
+// 💕 LEVE / LOVING — Show love percentage between sender and mention
+// =================================================================
+cmd({
+    pattern: 'leve',
+    alias: ['loving', 'lovemeter', 'amour', 'love'],
+    desc: 'Check love percentage between you and a mentioned user',
+    category: 'fun',
+    react: '💕',
+    filename: __filename
+},
+async (conn, mek, m, { from, sender, reply, pushname, isGroup }) => {
+    try {
+        const mentionedJid = getMentioned(m, mek);
 
-function renderBoard(board) {
-    const sym = { '': '⬜', X: '❌', O: '⭕' };
-    return [0, 1, 2].map(r =>
-        board.slice(r * 3, r * 3 + 3).map(c => sym[c]).join('')
-    ).join('\n');
+        if (!mentionedJid) {
+            return reply(
+`❌ Mention a user!
+Usage: *.leve @user*
+
+Example: .leve @someone`
+            );
+        }
+
+        if (mentionedJid === sender) {
+            return reply('❌ You cannot use this command on yourself!');
+        }
+
+        const senderName = `@${sender.split('@')[0]}`;
+        const targetName = `@${mentionedJid.split('@')[0]}`;
+
+        const lovePercent = rand(0, 100);
+        const bar = '❤️'.repeat(Math.floor(lovePercent / 20)) + '🤍'.repeat(5 - Math.floor(lovePercent / 20));
+
+        let verdict;
+        if (lovePercent <= 20) verdict = 'Just friends... for now 😅';
+        else if (lovePercent <= 40) verdict = 'There\'s a spark! 🔥';
+        else if (lovePercent <= 60) verdict = 'Crushing hard! 😍';
+        else if (lovePercent <= 80) verdict = 'Deeply in love! 💞';
+        else verdict = 'SOULMATES! 💖✨';
+
+        const message =
+`╭━━━━━━━━━━━━━━━━━╮
+│  💕  *LOVE METER*  💕
+╰━━━━━━━━━━━━━━━━━╯
+
+💘 ${senderName}
+     *&*
+💘 ${targetName}
+
+${bar}
+❤️ *Love:* ${lovePercent}%
+💬 *Verdict:* ${verdict}
+
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+
+        await conn.sendMessage(from, {
+            text: message,
+            mentions: [sender, mentionedJid],
+            contextInfo: {
+                ...contextInfo(),
+                mentionedJid: [sender, mentionedJid]
+            }
+        }, { quoted: mek });
+
+        await m.react('💕');
+    } catch (e) {
+        console.error('LEVE CMD ERROR:', e);
+        reply('❌ Error running .leve command: ' + e.message);
+        await m.react('❌');
+    }
+});
+
+// =================================================================
+// ❌⭕ TICTACTOE — Play Tic-Tac-Toe against a mentioned user
+// =================================================================
+
+// Active games store: key = groupJid, value = game state
+const activeGames = new Map();
+
+function makeBoard() {
+    return [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
 }
 
-function checkWinner(b) {
-    const lines = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
+function renderBoard(board) {
+    const s = board.map((c, i) => c === ' ' ? (i + 1) : c);
+    return (
+        ` ${s[0]} │ ${s[1]} │ ${s[2]} \n` +
+        `───┼───┼───\n` +
+        ` ${s[3]} │ ${s[4]} │ ${s[5]} \n` +
+        `───┼───┼───\n` +
+        ` ${s[6]} │ ${s[7]} │ ${s[8]} `
+    );
+}
+
+function checkWinner(board) {
+    const wins = [
+        [0,1,2],[3,4,5],[6,7,8], // rows
+        [0,3,6],[1,4,7],[2,5,8], // cols
+        [0,4,8],[2,4,6]           // diags
     ];
-    for (const [a, bb, c] of lines) {
-        if (b[a] && b[a] === b[bb] && b[a] === b[c]) return b[a];
+    for (const [a,b,c] of wins) {
+        if (board[a] !== ' ' && board[a] === board[b] && board[b] === board[c]) {
+            return board[a];
+        }
     }
-    return b.includes('') ? null : 'draw';
+    if (board.every(c => c !== ' ')) return 'draw';
+    return null;
 }
 
 cmd({
     pattern: 'tictactoe',
-    alias: ['ttt'],
-    desc: 'Start a TicTacToe game against another group member',
+    alias: ['ttt', 'xo'],
+    desc: 'Play Tic-Tac-Toe with a mentioned user',
     category: 'fun',
     react: '❌',
     filename: __filename
-}, async (conn, mek, m, { from, sender, reply, mentioned, isGroup }) => {
+},
+async (conn, mek, m, { from, sender, reply, isGroup }) => {
     try {
         if (!isGroup) return reply('❌ This command only works in groups.');
 
-        const opponent = mentioned && mentioned[0] ? mentioned[0] : null;
-        if (!opponent) return reply('❌ Mention your opponent!\nUsage: *.tictactoe @user*');
-        if (opponent === sender) return reply('❌ You cannot play against yourself!');
+        const mentionedJid = getMentioned(m, mek);
 
-        if (tttGames[from]) return reply('⚠️ A game is already in progress in this group!\nType *.tttend* to cancel it.');
+        if (!mentionedJid) {
+            return reply(
+`❌ Mention your opponent!
+Usage: *.tictactoe @user*
 
-        tttGames[from] = {
-            board: Array(9).fill(''),
-            players: { X: sender, O: opponent },
-            turn: 'X',
-            createdAt: Date.now()
+Example: .tictactoe @someone`
+            );
+        }
+
+        if (mentionedJid === sender) {
+            return reply('❌ You cannot play against yourself!');
+        }
+
+        // Start a new game (overwrite any existing game in group)
+        const game = {
+            board: makeBoard(),
+            players: { X: sender, O: mentionedJid },
+            currentTurn: sender, // sender (X) goes first
+            groupJid: from
         };
+        activeGames.set(from, game);
 
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│  ❌⭕  TIC TAC TOE  ❌⭕
-╰━━━━━━━━━━━━━━━━━━╯
+        const senderTag = `@${sender.split('@')[0]}`;
+        const opponentTag = `@${mentionedJid.split('@')[0]}`;
 
-👤 ❌ @${sender.split('@')[0]}
-👤 ⭕ @${opponent.split('@')[0]}
+        const message =
+`╭━━━━━━━━━━━━━━━━━╮
+│  ❌⭕  *TIC-TAC-TOE*
+╰━━━━━━━━━━━━━━━━━╯
 
-${renderBoard(tttGames[from].board)}
+${senderTag} ❌  VS  ⭕ ${opponentTag}
 
-🎮 It's ❌ @${sender.split('@')[0]}'s turn!
+\`\`\`
+${renderBoard(game.board)}
+\`\`\`
 
-📌 To play, type: *.tttplay <1-9>*
-The grid positions:
-1️⃣2️⃣3️⃣
-4️⃣5️⃣6️⃣
-7️⃣8️⃣9️⃣
+🎯 *${senderTag}'s turn* (❌)
 
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+💬 Reply with a number *1-9* to play!
+⏱️ Game expires after 2 minutes of inactivity.
+
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
 
         await conn.sendMessage(from, {
-            text: msg,
-            mentions: [sender, opponent],
-            contextInfo: getCtx()
+            text: message,
+            mentions: [sender, mentionedJid],
+            contextInfo: {
+                ...contextInfo(),
+                mentionedJid: [sender, mentionedJid]
+            }
         }, { quoted: mek });
 
         await m.react('❌');
+
+        // Auto-expire game after 2 minutes
+        setTimeout(() => {
+            if (activeGames.has(from)) {
+                const g = activeGames.get(from);
+                if (g.players.X === sender && g.players.O === mentionedJid) {
+                    activeGames.delete(from);
+                }
+            }
+        }, 2 * 60 * 1000);
+
     } catch (e) {
-        reply('❌ Error starting TicTacToe');
+        console.error('TICTACTOE CMD ERROR:', e);
+        reply('❌ Error running .tictactoe command: ' + e.message);
+        await m.react('❌');
     }
 });
 
+// ─── Tictactoe move handler (listen to number replies in active games) ────
 cmd({
-    pattern: 'tttplay',
-    desc: 'Play a move in TicTacToe (1-9)',
-    category: 'fun',
-    react: '🎮',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, args, isGroup }) => {
-    try {
-        if (!isGroup) return reply('❌ This command only works in groups.');
-
-        const game = tttGames[from];
-        if (!game) return reply('❌ No active game! Start one with *.tictactoe @user*');
-
-        const currentPlayer = game.players[game.turn];
-        if (sender !== currentPlayer)
-            return reply(`⏳ It's not your turn! Waiting for @${currentPlayer.split('@')[0]}`, from, { mentions: [currentPlayer] });
-
-        const pos = parseInt(args[0]);
-        if (isNaN(pos) || pos < 1 || pos > 9)
-            return reply('❌ Choose a valid position between 1 and 9.');
-
-        const idx = pos - 1;
-        if (game.board[idx] !== '')
-            return reply('❌ That cell is already taken! Choose another.');
-
-        game.board[idx] = game.turn;
-
-        const winner = checkWinner(game.board);
-        const boardStr = renderBoard(game.board);
-
-        if (winner === 'draw') {
-            delete tttGames[from];
-            return await conn.sendMessage(from, {
-                text: `${boardStr}\n\n🤝 *It's a DRAW!* Nobody wins this time.\n\n> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`,
-                contextInfo: getCtx()
-            }, { quoted: mek });
-        }
-
-        if (winner) {
-            const winnerJid = game.players[winner];
-            delete tttGames[from];
-            const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│   🏆  GAME OVER!  🏆
-╰━━━━━━━━━━━━━━━━━━╯
-
-${boardStr}
-
-🎉 Winner: ${winner} @${winnerJid.split('@')[0]}
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-            return await conn.sendMessage(from, {
-                text: msg,
-                mentions: [winnerJid],
-                contextInfo: getCtx()
-            }, { quoted: mek });
-        }
-
-        // Switch turn
-        game.turn = game.turn === 'X' ? 'O' : 'X';
-        const nextPlayer = game.players[game.turn];
-
-        const msg =
-`${boardStr}
-
-🎮 It's ${game.turn} @${nextPlayer.split('@')[0]}'s turn!
-Type *.tttplay <1-9>* to play.
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [nextPlayer],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-    } catch (e) {
-        reply('❌ Error processing move');
-    }
+    pattern: 'tttmove',
+    alias: [],
+    desc: 'Internal: handle tictactoe move',
+    category: 'hidden',
+    react: '',
+    filename: __filename,
+    dontAddCommandList: true
+},
+async (conn, mek, m, { from, sender, body }) => {
+    // This is handled inline below via message event, not as a cmd
 });
 
-cmd({
-    pattern: 'tttend',
-    desc: 'Cancel the current TicTacToe game',
-    category: 'fun',
-    react: '🛑',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, isGroup, isAdmins }) => {
-    try {
-        if (!isGroup) return reply('❌ Groups only.');
-        const game = tttGames[from];
-        if (!game) return reply('❌ No active game to cancel.');
-        const isPlayer = Object.values(game.players).includes(sender);
-        if (!isPlayer && !isAdmins) return reply('❌ Only players or admins can cancel the game.');
-        delete tttGames[from];
-        reply('🛑 Game cancelled.');
-        await m.react('🛑');
-    } catch (e) {
-        reply('❌ Error cancelling game');
-    }
-});
-
-// =============================================================================
-// 🎱  .8ball <question> — Magic 8-Ball
-// =============================================================================
-const eightBallAnswers = [
-    '✅ It is certain.', '✅ It is decidedly so.', '✅ Without a doubt.',
-    '✅ Yes, definitely!', '✅ You may rely on it.', '✅ As I see it, yes.',
-    '✅ Most likely.', '✅ Outlook good.', '✅ Yes.',
-    '✅ Signs point to yes.',
-    '🤔 Reply hazy, try again.', '🤔 Ask again later.',
-    '🤔 Better not tell you now.', '🤔 Cannot predict now.',
-    '🤔 Concentrate and ask again.',
-    '❌ Don\'t count on it.', '❌ My reply is no.',
-    '❌ My sources say no.', '❌ Outlook not so good.',
-    '❌ Very doubtful.'
-];
-
-cmd({
-    pattern: '8ball',
-    alias: ['magic8', 'eightball'],
-    desc: 'Ask the magic 8-ball a yes/no question',
-    category: 'fun',
-    react: '🎱',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, args }) => {
-    try {
-        const question = args.join(' ').trim();
-        if (!question) return reply('❓ Ask a question!\nUsage: *.8ball will I be rich?*');
-
-        const answer = eightBallAnswers[rand(0, eightBallAnswers.length - 1)];
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│      🎱  MAGIC 8-BALL  🎱
-╰━━━━━━━━━━━━━━━━━━╯
-
-❓ *Question:* ${question}
-
-🎱 *Answer:* ${answer}
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('🎱');
-    } catch (e) {
-        reply('❌ Error running .8ball');
-    }
-});
-
-// =============================================================================
-// 🎰  .ship @user1 @user2 — Compatibility meter between 2 users
-// =============================================================================
-cmd({
-    pattern: 'ship',
-    desc: 'Ship two users together and get their compatibility score',
-    category: 'fun',
-    react: '💘',
-    filename: __filename
-}, async (conn, mek, m, { from, sender, reply, mentioned, isGroup }) => {
-    try {
-        if (!isGroup) return reply('❌ Groups only.');
-
-        let p1, p2;
-        if (mentioned && mentioned.length >= 2) {
-            p1 = mentioned[0]; p2 = mentioned[1];
-        } else if (mentioned && mentioned.length === 1) {
-            p1 = sender; p2 = mentioned[0];
-        } else {
-            return reply('❌ Mention at least one user!\nUsage: *.ship @user1 @user2*');
-        }
-        if (p1 === p2) return reply('❌ You can\'t ship someone with themselves!');
-
-        const score = rand(0, 100);
-        let bar = '';
-        for (let i = 0; i < 10; i++) bar += i < Math.floor(score / 10) ? '💗' : '🖤';
-
-        let label;
-        if (score < 20) label = '💀 No chance';
-        else if (score < 40) label = '😬 Awkward at best';
-        else if (score < 60) label = '🙂 Could work!';
-        else if (score < 80) label = '💞 Strong connection!';
-        else label = '💘 PERFECT SHIP!';
-
-        const shipName = `${p1.split('@')[0].slice(0, 4)}${p2.split('@')[0].slice(0, 4)}`;
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│     💘  SHIP METER  💘
-╰━━━━━━━━━━━━━━━━━━╯
-
-💫 @${p1.split('@')[0]} 💗 @${p2.split('@')[0]}
-🚢 Ship name: *${shipName}*
-
-📊 Compatibility: *${score}%*
-${bar}
-🏷️ Status: *${label}*
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [p1, p2],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('💘');
-    } catch (e) {
-        reply('❌ Error running .ship');
-    }
-});
-
-// =============================================================================
-// 🔮  .wouldyourather — "Would you rather" random dilemma
-// =============================================================================
-const wyrQuestions = [
-    ['be able to fly', 'be invisible'],
-    ['have unlimited money', 'be immortal'],
-    ['lose your memories', 'lose all your friends'],
-    ['be famous but hated', 'unknown but loved'],
-    ['only eat sweet food forever', 'only eat salty food forever'],
-    ['always be 10 minutes late', 'always be 2 hours early'],
-    ['speak every language', 'play every instrument'],
-    ['have no phone for a year', 'have no music for a year'],
-    ['be the funniest person alive', 'be the smartest person alive'],
-    ['fight 100 duck-sized horses', 'fight 1 horse-sized duck'],
-    ['know when you\'ll die', 'know how you\'ll die'],
-    ['live in the past', 'live in the future'],
-    ['have a rewind button in life', 'have a pause button in life'],
-    ['be always hot', 'be always cold'],
-    ['lose your sense of smell', 'lose your sense of taste']
-];
-
-cmd({
-    pattern: 'wouldyourather',
-    alias: ['wyr', 'rather'],
-    desc: 'Get a random "Would you rather" question',
-    category: 'fun',
-    react: '🔮',
-    filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-    try {
-        const q = wyrQuestions[rand(0, wyrQuestions.length - 1)];
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│   🔮  WOULD YOU RATHER?  🔮
-╰━━━━━━━━━━━━━━━━━━╯
-
-🅰️ *${q[0].toUpperCase()}*
-
-         ── OR ──
-
-🅱️ *${q[1].toUpperCase()}*
-
-💬 Reply A or B and defend your choice!
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('🔮');
-    } catch (e) {
-        reply('❌ Error running .wouldyourather');
-    }
-});
-
-// =============================================================================
-// 🤔  .truth — Random truth question
-// =============================================================================
-const truthQuestions = [
-    "What's the most embarrassing thing you've done in public?",
-    "Have you ever lied to get out of trouble? What was the lie?",
-    "What's a secret you've never told anyone in this group?",
-    "Who in this group do you find the most attractive?",
-    "What's the weirdest dream you've ever had?",
-    "Have you ever cheated on a test or exam?",
-    "What's the most childish thing you still do?",
-    "Have you ever ghosted someone? Why?",
-    "What's your biggest insecurity?",
-    "What's something you've done that you'd never want your parents to find out?",
-    "Have you ever sent a text to the wrong person? What did it say?",
-    "What's the longest you've gone without showering?",
-    "Have you ever pretended to be sick to avoid something?",
-    "What's the most embarrassing song on your playlist?",
-    "Have you ever had a crush on a friend's partner?"
-];
-
-cmd({
-    pattern: 'truth',
-    desc: 'Get a random truth question for truth or dare',
-    category: 'fun',
-    react: '🤔',
-    filename: __filename
-}, async (conn, mek, m, { from, mentioned, sender, reply, isGroup }) => {
-    try {
-        const target = mentioned && mentioned[0] ? mentioned[0] : sender;
-        const question = truthQuestions[rand(0, truthQuestions.length - 1)];
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│      🤔  TRUTH  🤔
-╰━━━━━━━━━━━━━━━━━━╯
-
-🎯 @${target.split('@')[0]}, your TRUTH is:
-
-❓ *"${question}"*
-
-💬 You must answer honestly!
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [target],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('🤔');
-    } catch (e) {
-        reply('❌ Error running .truth');
-    }
-});
-
-// =============================================================================
-// 😈  .dare — Random dare challenge
-// =============================================================================
-const dares = [
-    "Send a voice note singing 'Happy Birthday' right now.",
-    "Change your WhatsApp status to 'I love SHINIGAMI MD' for 10 minutes.",
-    "Tag 3 people in this group and tell them something nice.",
-    "Send a selfie with a funny face in the next 2 minutes.",
-    "Type a message using only emojis for the next 5 minutes.",
-    "Confess your last lie to the group.",
-    "Send a voice note saying 'I am the silliest person in this group'.",
-    "Let the next person who messages you choose your WhatsApp profile picture for a day.",
-    "Send a screenshot of your most recent conversation.",
-    "Write a love poem (minimum 4 lines) about someone in this group.",
-    "Send a voice note doing your best impression of an animal.",
-    "Reveal your top 3 most contacted people on WhatsApp.",
-    "Send a 'good morning' voice note to a family member right now.",
-    "Change your name in this group to 'DARE COMPLETED' for 1 hour.",
-    "Reply to every message in this group with a compliment for the next 10 minutes."
-];
-
-cmd({
-    pattern: 'dare',
-    desc: 'Get a random dare challenge for truth or dare',
-    category: 'fun',
-    react: '😈',
-    filename: __filename
-}, async (conn, mek, m, { from, mentioned, sender, reply }) => {
-    try {
-        const target = mentioned && mentioned[0] ? mentioned[0] : sender;
-        const dare = dares[rand(0, dares.length - 1)];
-
-        const msg =
-`╭━━━━━━━━━━━━━━━━━━╮
-│       😈  DARE  😈
-╰━━━━━━━━━━━━━━━━━━╯
-
-🎯 @${target.split('@')[0]}, your DARE is:
-
-🔥 *"${dare}"*
-
-⚠️ No chickening out!
-
-> Powered by ${config.BOT_NAME || 'SHINIGAMI MD'}`;
-
-        await conn.sendMessage(from, {
-            text: msg,
-            mentions: [target],
-            contextInfo: getCtx()
-        }, { quoted: mek });
-
-        await m.react('😈');
-    } catch (e) {
-        reply('❌ Error running .dare');
-    }
-});
+// Export activeGames for use in sila.js message handler if needed
+module.exports = { activeGames };
