@@ -128,37 +128,37 @@ cmd({
     category: "group",
     filename: __filename
 },
-async(conn, mek, m, {from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-    if (!isGroup) {
-        return await conn.sendMessage(from, {
-            text: `❌ This command is only for groups`,
-            contextInfo: getContextInfo(sender)
-        }, { quoted: fakevCard });
+async (conn, mek, m, { from, q, isGroup, sender, participants, reply }) => {
+    try {
+        if (!isGroup) return reply("❌ This command is only for groups.");
+
+        const message = q || "📢 Attention all members!";
+        const mentions = participants.map(p => p.id);
+
+        const contextInfo = {
+            forwardingScore: 999,
+            isForwarded: true,
+            mentionedJid: mentions,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
+                newsletterName: config.BOT_NAME || 'SHINIGAMI MD',
+                serverMessageId: 13
+            }
+        };
+
+        await conn.sendMessage(from, {
+            text: message,
+            mentions: mentions,
+            contextInfo: contextInfo
+        }, { quoted: mek });
+
+        await m.react("✅");
+
+    } catch (e) {
+        console.error("HIDETAG ERROR:", e);
+        reply("❌ Command failed: " + e.message);
+        await m.react("❌");
     }
-    
-    if (!isAdmins) {
-        return await conn.sendMessage(from, {
-            text: `❌ You need to be an admin`,
-            contextInfo: getContextInfo(sender)
-        }, { quoted: fakevCard });
-    }
-    
-    const message = q || "📢 Attention all members!";
-    const mentions = participants.map(p => p.id);
-    
-    await conn.sendMessage(from, {
-        text: message,
-        mentions: mentions
-    }, { quoted: fakevCard });
-    
-} catch (e) {
-    await conn.sendMessage(from, {
-        text: `❌ Command failed`,
-        contextInfo: getContextInfo(sender)
-    }, { quoted: fakevCard });
-    l(e);
-}
 });
 
 // TAG command
