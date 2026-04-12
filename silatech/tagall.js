@@ -22,38 +22,55 @@ cmd({
             return reply("*❌ 𝙽𝚘 𝚖𝚎𝚖𝚋𝚎𝚛𝚜 𝚏𝚘𝚞𝚗𝚍 𝚒𝚗 𝚝𝚑𝚎 𝚐𝚛𝚘𝚞𝚙*");
         }
 
-        // Check if sender is admin
+        // Check if sender is admin ONLY
         const senderParticipant = members.find(p => p.id === sender);
         if (!senderParticipant || (senderParticipant.admin !== "admin" && senderParticipant.admin !== "superadmin")) {
             return reply("*❌ 𝙾𝚗𝚕𝚢 𝚐𝚛𝚘𝚞𝚙 𝚊𝚍𝚖𝚒𝚗𝚜 𝚌𝚊𝚗 𝚞𝚜𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍*");
         }
 
-        // Check if bot is admin
-        const botParticipant = members.find(p => p.id === conn.user.id);
-        if (!botParticipant || (botParticipant.admin !== "admin" && botParticipant.admin !== "superadmin")) {
-            return reply("*❌ 𝙿𝚕𝚎𝚊𝚜𝚎 𝚖𝚊𝚔𝚎 𝚝𝚑𝚎 𝚋𝚘𝚝 𝚊𝚗 𝚊𝚍𝚖𝚒𝚗 𝚏𝚒𝚛𝚜𝚝*");
-        }
+        // Get admin list
+        const admins = members.filter(p => p.admin === "admin" || p.admin === "superadmin");
+        const adminNames = admins.map(a => {
+            const num = a.id.split('@')[0];
+            return `@${num}`;
+        }).join('\n│ • ');
 
-        // Create message with tags
-        let messageText = `╭━━【 🏷️ 𝚃𝙰𝙶 𝙰𝙻𝙻 】━━━╮
-│ 📢 𝙶𝚛𝚘𝚞𝚙: ${groupData.subject}
-│ 👥 𝚃𝚘𝚝𝚊𝚕 𝙼𝚎𝚖𝚋𝚎𝚛𝚜: ${members.length}
-╰━━━━━━━━━━━━━━━━━━━╯
+        // Get sender info
+        const senderNum = sender.split('@')[0];
 
-🔊 *𝙷𝚎𝚕𝚕𝚘 𝙴𝚟𝚎𝚛𝚢𝚘𝚗𝚎!*`;
+        // Build the styled message
+        let tagMessage = `╭━━━━━━━━━━━━━•
+│ • BOT: SHINIGAMI-MD 
+│ • MEMBRE: ${members.length}
+│ • ADMIN:\n│ • ${adminNames}
+│ • USER: @${senderNum}
+│ • GROUP: ${groupData.subject}
+╰─────────────•
+
+🏷️ *TAG ALL MEMBERS*\n`;
 
         // Add all members mentions
         members.forEach((member, index) => {
             const number = member.id.split('@')[0];
-            messageText += `\n${index + 1}. @${number}`;
+            tagMessage += `\n${index + 1}. @${number}`;
         });
 
-        messageText += `\n\n> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐢𝐥𝐚 𝐓𝐞𝐜𝐡`;
+        tagMessage += `\n\n> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢-𝐌𝐃`;
 
-        // Send message with mentions
+        // Send message with contextInfo style
         await conn.sendMessage(from, {
-            text: messageText,
-            mentions: members.map(m => m.id)
+            text: tagMessage,
+            mentions: members.map(m => m.id),
+            contextInfo: {
+                mentionedJid: [sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363403408693274@newsletter',
+                    newsletterName: 'SHINIGAMI MD',
+                    serverMessageId: 13
+                }
+            }
         }, { quoted: mek });
 
         await m.react("✅");
