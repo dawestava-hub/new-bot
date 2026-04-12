@@ -148,7 +148,6 @@ async function stickerToVideo(buffer) {
     await new Promise((resolve, reject) => {
         ffmpeg()
             .input(inputPath)
-            .inputFormat('webp')
             .on('error', reject)
             .on('end', () => resolve(true))
             .outputOptions([
@@ -272,7 +271,7 @@ async (conn, mek, m, { from, q, pushname, reply }) => {
         fs.unlinkSync(outputPath);
 
         await conn.sendMessage(from, { sticker: outBuf, contextInfo }, { quoted: mek });
-        // Message de confirmation supprimé
+        reply(`✅ Sticker taken!\n📦 Pack: *${packname}*\n✍️ Author: *${author}*`);
 
     } catch (e) {
         console.error('TAKE ERROR:', e);
