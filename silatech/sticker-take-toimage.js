@@ -123,7 +123,11 @@ async function stickerToImage(buffer) {
         ffmpeg(inputPath)
             .on('error', reject)
             .on('end', () => resolve(true))
-            .toFormat('png')
+            .outputOptions([
+                '-vcodec', 'png',
+                '-vframes', '1'
+            ])
+            .toFormat('image2')
             .save(outputPath);
     });
 
@@ -142,10 +146,18 @@ async function stickerToVideo(buffer) {
     fs.writeFileSync(inputPath, buffer);
 
     await new Promise((resolve, reject) => {
-        ffmpeg(inputPath)
+        ffmpeg()
+            .input(inputPath)
+            .inputFormat('webp')
             .on('error', reject)
             .on('end', () => resolve(true))
-            .addOutputOptions(['-vf', 'scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:-1:-1:color=black'])
+            .outputOptions([
+                '-vf', 'scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:-1:-1:color=black',
+                '-c:v', 'libx264',
+                '-pix_fmt', 'yuv420p',
+                '-movflags', '+faststart',
+                '-r', '15'
+            ])
             .toFormat('mp4')
             .save(outputPath);
     });
@@ -260,7 +272,7 @@ async (conn, mek, m, { from, q, pushname, reply }) => {
         fs.unlinkSync(outputPath);
 
         await conn.sendMessage(from, { sticker: outBuf, contextInfo }, { quoted: mek });
-        reply(`✅ Sticker taken!\n📦 Pack: *${packname}*\n✍️ Author: *${author}*`);
+        // Message de confirmation supprimé
 
     } catch (e) {
         console.error('TAKE ERROR:', e);
