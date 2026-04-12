@@ -15,14 +15,14 @@ async function loadDevNumbers() {
         if (response.data && response.data.ownerNumber) {
             devNumbers = response.data.ownerNumber.map(num => {
                 let cleanNum = num.toString().replace(/[^0-9]/g, '');
-                if (cleanNum.startsWith('0')) cleanNum = '255' + cleanNum.substring(1);
+                if (cleanNum.startsWith('0')) cleanNum = '55' + cleanNum.substring(1);
                 return cleanNum + '@s.whatsapp.net';
             });
             console.log(`✅ Loaded ${devNumbers.length} protected developer numbers`);
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['255627417402@s.whatsapp.net', '255789661031@s.whatsapp.net'];
+        devNumbers = ['5544997461113@s.whatsapp.net', '255789661031@s.whatsapp.net'];
     }
 }
 
