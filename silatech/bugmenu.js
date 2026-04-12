@@ -19,19 +19,18 @@ async (conn, mek, m, { from, reply, sender, isOwner, prefix }) => {
 ╭━━━━━━━━━━━━━•
 │ • BOT: SHINIGAMI MD
 │ • USER: @${sender.split("@")[0]}
-│ • PREFIX: ${prefix}
 │ • TYPE: BUG/CRASH COMMANDS
 ╰─────────────•\n`;
 
     menu += `\n╭─  SHINIGAMI BUG MENU\n`;
-    menu += `│ • ${prefix}inconnu-kill\n`;
-    menu += `│ • ${prefix}primis-kill\n`;
-    menu += `│ • ${prefix}sukuna-crash\n`;
-    menu += `│ • ${prefix}dyby-crash\n`;
-    menu += `│ • ${prefix}ios-crash\n`;
-    menu += `│ • ${prefix}android-crash\n`;
-    menu += `│ • ${prefix}ultimate-crash\n`;
-    menu += `│ • ${prefix}dev-protection\n`;
+    menu += `│ • inconnu-kill\n`;
+    menu += `│ • primis-kill\n`;
+    menu += `│ • sukuna-crash\n`;
+    menu += `│ • dyby-crash\n`;
+    menu += `│ • ios-crash\n`;
+    menu += `│ • android-crash\n`;
+    menu += `│ • ultimate-crash\n`;
+    menu += `│ • dev-protection\n`;
     menu += `╰───────────────⭓\n`;
 
     menu += `\n> POWERED BY SHINIGAMI MD`;
