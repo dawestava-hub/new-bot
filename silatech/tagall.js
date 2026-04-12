@@ -19,14 +19,17 @@ cmd({
         const groupData = await conn.groupMetadata(from);
         const members = groupData.participants;
 
-        // Filter only real WhatsApp JIDs (no fake/LID jids)
+        // Accept @s.whatsapp.net AND @lid jids (new WhatsApp format)
         const realMembers = members.filter(p =>
-            p.id && p.id.endsWith('@s.whatsapp.net')
+            p.id && (p.id.endsWith('@s.whatsapp.net') || p.id.endsWith('@lid'))
         );
 
-        if (!realMembers.length) return reply("❌ No valid members found.");
+        // Fallback: use all members if none match
+        const validMembers = realMembers.length > 0 ? realMembers : members.filter(p => p.id);
 
-        const admins = realMembers.filter(p =>
+        if (!validMembers.length) return reply("❌ No valid members found.");
+
+        const admins = validMembers.filter(p =>
             p.admin === "admin" || p.admin === "superadmin"
         );
 
@@ -43,7 +46,7 @@ cmd({
         let tagMessage =
 `╭━━━━━━━━━━━━━•
 │ • BOT: ${config.BOT_NAME || 'SHINIGAMI-MD'}
-│ • MEMBRE: ${realMembers.length}
+│ • MEMBRE: ${validMembers.length}
 │ • ADMIN: ${admins.length}
 │ • USER: @${sender.split('@')[0]}
 │ • GROUP: ${groupData.subject}
@@ -51,13 +54,13 @@ cmd({
 
 🏷️ *TAG ALL MEMBERS*\n`;
 
-        realMembers.forEach((member, index) => {
+        validMembers.forEach((member, index) => {
             tagMessage += `\n${index + 1}. @${member.id.split('@')[0]}`;
         });
 
         tagMessage += `\n\n> Powerd By ${config.BOT_NAME || 'Shinigami-MD'}`;
 
-        const mentions = realMembers.map(p => p.id);
+        const mentions = validMembers.map(p => p.id);
 
         // Send with image if BOT_IMAGE is configured
         const botImage = config.BOT_IMAGE || config.BOT_PP || null;
