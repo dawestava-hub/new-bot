@@ -1,83 +1,87 @@
 const { cmd } = require('../momy');
+const config = require('../config');
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const fs = require('fs');
+const path = require('path');
 
 cmd({
     pattern: "tagall",
     alias: ["all", "mentionall", "everyone"],
-    desc: "tag all group members",
+    desc: "Tag all group members",
     category: "group",
     react: "🏷️",
     filename: __filename
-}, async (conn, mek, m, { from, reply, sender, isGroup, participants, groupMetadata }) => {
+}, async (conn, mek, m, { from, reply, sender, isGroup, isAdmins }) => {
     try {
-        // Check if in group
-        if (!isGroup) {
-            return reply("*❌ 𝚃𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚘𝚗𝚕𝚢 𝚠𝚘𝚛𝚔𝚜 𝚒𝚗 𝚐𝚛𝚘𝚞𝚙𝚜*");
-        }
+        if (!isGroup) return reply("❌ This command only works in groups.");
+        if (!isAdmins) return reply("❌ Only group admins can use this command.");
 
-        // Get group metadata
         const groupData = await conn.groupMetadata(from);
         const members = groupData.participants;
-        
-        if (!members || members.length === 0) {
-            return reply("*❌ 𝙽𝚘 𝚖𝚎𝚖𝚋𝚎𝚛𝚜 𝚏𝚘𝚞𝚗𝚍 𝚒𝚗 𝚝𝚑𝚎 𝚐𝚛𝚘𝚞𝚙*");
-        }
 
-        // Check if sender is admin ONLY
-        const senderParticipant = members.find(p => p.id === sender);
-        if (!senderParticipant || (senderParticipant.admin !== "admin" && senderParticipant.admin !== "superadmin")) {
-            return reply("*❌ 𝙾𝚗𝚕𝚢 𝚐𝚛𝚘𝚞𝚙 𝚊𝚍𝚖𝚒𝚗𝚜 𝚌𝚊𝚗 𝚞𝚜𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍*");
-        }
+        // Filter only real WhatsApp JIDs (no fake/LID jids)
+        const realMembers = members.filter(p =>
+            p.id && p.id.endsWith('@s.whatsapp.net')
+        );
 
-        // Get admin list
-        const admins = members.filter(p => p.admin === "admin" || p.admin === "superadmin");
-        const adminNames = admins.map(a => {
-            const num = a.id.split('@')[0];
-            return `@${num}`;
-        }).join('\n│ • ');
+        if (!realMembers.length) return reply("❌ No valid members found.");
 
-        // Get sender info
-        const senderNum = sender.split('@')[0];
+        const admins = realMembers.filter(p =>
+            p.admin === "admin" || p.admin === "superadmin"
+        );
 
-        // Build the styled message
-        let tagMessage = `╭━━━━━━━━━━━━━•
-│ • BOT: SHINIGAMI-MD 
-│ • MEMBRE: ${members.length}
-│ • ADMIN:\n│ • ${adminNames}
-│ • USER: @${senderNum}
+        const contextInfo = {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: config.CHANNEL_JID_1 || '120363403408693274@newsletter',
+                newsletterName: config.BOT_NAME || 'SHINIGAMI MD',
+                serverMessageId: 13
+            }
+        };
+
+        let tagMessage =
+`╭━━━━━━━━━━━━━•
+│ • BOT: ${config.BOT_NAME || 'SHINIGAMI-MD'}
+│ • MEMBRE: ${realMembers.length}
+│ • ADMIN: ${admins.length}
+│ • USER: @${sender.split('@')[0]}
 │ • GROUP: ${groupData.subject}
 ╰─────────────•
 
 🏷️ *TAG ALL MEMBERS*\n`;
 
-        // Add all members mentions
-        members.forEach((member, index) => {
-            const number = member.id.split('@')[0];
-            tagMessage += `\n${index + 1}. @${number}`;
+        realMembers.forEach((member, index) => {
+            tagMessage += `\n${index + 1}. @${member.id.split('@')[0]}`;
         });
 
-        tagMessage += `\n\n> 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢-𝐌𝐃`;
+        tagMessage += `\n\n> Powerd By ${config.BOT_NAME || 'Shinigami-MD'}`;
 
-        // Send message with contextInfo style
-        await conn.sendMessage(from, {
-            text: tagMessage,
-            mentions: members.map(m => m.id),
-            contextInfo: {
-                mentionedJid: [sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363403408693274@newsletter',
-                    newsletterName: 'SHINIGAMI MD',
-                    serverMessageId: 13
-                }
-            }
-        }, { quoted: mek });
+        const mentions = realMembers.map(p => p.id);
+
+        // Send with image if BOT_IMAGE is configured
+        const botImage = config.BOT_IMAGE || config.BOT_PP || null;
+
+        if (botImage) {
+            await conn.sendMessage(from, {
+                image: { url: botImage },
+                caption: tagMessage,
+                mentions,
+                contextInfo
+            }, { quoted: mek });
+        } else {
+            await conn.sendMessage(from, {
+                text: tagMessage,
+                mentions,
+                contextInfo
+            }, { quoted: mek });
+        }
 
         await m.react("✅");
 
     } catch (error) {
-        console.error('Error in tagall command:', error);
-        reply("*❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚝𝚊𝚐 𝚊𝚕𝚕 𝚖𝚎𝚖𝚋𝚎𝚛𝚜*");
+        console.error('Error in tagall:', error);
+        reply("❌ Failed to tag all members");
         await m.react("❌");
     }
 });
