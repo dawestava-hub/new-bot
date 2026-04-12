@@ -18,16 +18,12 @@ cmd({
         const groupData = await conn.groupMetadata(from);
         const members = groupData.participants;
         
-        // Check if sender is admin
+        // Check if sender is admin - FIXED: better admin detection
         const senderParticipant = members.find(p => p.id === sender);
-        if (!senderParticipant || (senderParticipant.admin !== "admin" && senderParticipant.admin !== "superadmin")) {
+        const isAdmin = senderParticipant && (senderParticipant.admin === "admin" || senderParticipant.admin === "superadmin");
+        
+        if (!isAdmin) {
             return reply("❌ Only group admins can use this command");
-        }
-
-        // Check if bot is admin
-        const botParticipant = members.find(p => p.id === conn.user.id);
-        if (!botParticipant || (botParticipant.admin !== "admin" && botParticipant.admin !== "superadmin")) {
-            return reply("❌ Please make the bot an admin first");
         }
 
         // Get duration from args
@@ -49,7 +45,7 @@ Members can now send messages`;
                 return;
             } catch (error) {
                 console.error('Error unmuting group:', error);
-                return reply("❌ Failed to unmute group");
+                return reply("❌ Failed to unmute group: " + error.message);
             }
         }
 
@@ -107,7 +103,7 @@ Use: .mute off to unmute`;
 
     } catch (error) {
         console.error('Error in mute command:', error);
-        reply("❌ Failed to mute/unmute group");
+        reply("❌ Failed to mute/unmute group: " + error.message);
         await m.react("❌");
     }
 });
