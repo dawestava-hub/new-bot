@@ -739,7 +739,7 @@ async function startBot(number, res = null) {
                         "mkuu": "𝙷𝚎𝚢 𝚖𝚔𝚞𝚞! 👋 𝙽𝚒𝚔𝚞𝚜𝚊𝚒𝚍𝚒𝚎 𝙺𝚞𝚑𝚞𝚜𝚞?",
                         "boss": "𝚈𝚎𝚜 𝚋𝚘𝚜𝚜! 👑 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚑𝚎𝚕𝚙 𝚢𝚘𝚞?",
                         "habari": "𝙽𝚣𝚞𝚛𝚒 𝚜𝚊𝚗𝚊! 👋 𝙷𝚊𝚋𝚊𝚛𝚒 𝚢𝚊𝚔𝚘?",
-                        "bot": "𝚈𝚎𝚜, 𝙸 𝚊𝚖 OCTO MD! 🤖 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?",
+                        "bot": "𝚈𝚎𝚜, 𝙸 𝚊𝚖 Shinigami md! 🤖 𝙷𝚘𝚠 𝚌𝚊𝚗 𝙸 𝚊𝚜𝚜𝚒𝚜𝚝 𝚢𝚘𝚞?",
                         "menu": "𝚃𝚢𝚙𝚎 .𝚖𝚎𝚗𝚞 𝚝𝚘 𝚜𝚎𝚎 𝚊𝚕𝚕 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜! 📜",
                         "owner": "𝙲𝚘𝚗𝚝𝚊𝚌𝚝 𝚘𝚠𝚗𝚎𝚛 𝚞𝚜𝚒𝚗𝚐 .𝚘𝚠𝚗𝚎𝚛 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 👑",
                         "thanks": "𝚈𝚘𝚞'𝚛𝚎 𝚠𝚎𝚕𝚌𝚘𝚖𝚎! 😊",
@@ -767,8 +767,8 @@ async function startBot(number, res = null) {
                         "umefanikiwa": "𝙽𝚍𝚒𝚘, 𝚊𝚜𝚊𝚗𝚝𝚎 𝚔𝚞𝚕𝚒𝚊! 💫",
                         "mvua": "𝙷𝚊𝚋𝚊𝚛𝚒 𝚣𝚊 𝚖𝚟𝚞𝚊? 🌧️",
                         "momy": "Yes, that's my name! 🤖",
-                        "kidy": "I am OCTO MD! 💫",
-                        "imad": "𝙽𝚒 𝚖𝚎 OCTO MD 𝚋𝚘𝚝 🤖",
+                        "kidy": "I am Shinigami md! 💫",
+                        "imad": "𝙽𝚒 𝚖𝚎 Shinigami 𝚋𝚘𝚝 🤖",
                         "sawa": "𝚂𝚊𝚠𝚊 𝚜𝚊𝚗𝚊! 👋",
                         "nai": "𝚂𝚊𝚠𝚊! ✨",
                         "misi": "𝙼𝚒𝚜𝚒 𝚖𝚣𝚒𝚖𝚊! 😊",
@@ -924,8 +924,11 @@ async function startBot(number, res = null) {
                         groupName = groupMetadata.subject;
                         participants = await groupMetadata.participants;
                         groupAdmins = await getGroupAdmins(participants);
-                        isBotAdmins = groupAdmins.includes(botNumber2);
-                        isAdmins = groupAdmins.includes(sender);
+                        // Normalize JIDs: strip device suffix (e.g. 55xxx:0@s.whatsapp.net → 55xxx@s.whatsapp.net)
+                        const normalizeJid = (jid) => jid ? jid.replace(/:\d+/, '') : jid;
+                        const normalizedAdmins = groupAdmins.map(normalizeJid);
+                        isBotAdmins = normalizedAdmins.includes(normalizeJid(botNumber2));
+                        isAdmins = normalizedAdmins.includes(normalizeJid(sender));
                     } catch (e) { }
 
                     // Handle antilink (only in groups, after all vars resolved)
@@ -945,7 +948,7 @@ async function startBot(number, res = null) {
                     },
                     message: {
                         contactMessage: {
-                            displayName: "© INCONNU BOY",
+                            displayName: "© INCONNU BOY SENSEI",
                             vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: INCONNU BOY\nORG:INCONNU BOY;\nTEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER || '255627417402'}:+${config.OWNER_NUMBER || '255627417402'}\nEND:VCARD`
                         }
                     },
@@ -1015,7 +1018,7 @@ async function startBot(number, res = null) {
                         const unknownMsg =
 `
 ╭━━━━━━━━━━━━━━━╮
-│❓ *UNKNOWN COMMAND*
+│❓*UNKNOWN CMD*
 ╰━━━━━━━━━━━━━━━╯
 
 ⚠️ Command *${config.PREFIX}${cmdName}* not found.
@@ -1377,9 +1380,9 @@ if (config.TELEGRAM_BOT_TOKEN) {
     }
 
     bot.start((ctx) => {
-        const welcomeMessage = `🤖 *OCTO MD 𝙱𝙾𝚃 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝚂𝚈𝚂𝚃𝙴𝙼* 🤖
+        const welcomeMessage = `🤖 *SHINIGAMI 𝙱𝙾𝚃 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝚂𝚈𝚂𝚃𝙴𝙼* 🤖
 
-👋 𝚆𝚎𝚕𝚌𝚘𝚖𝚎 𝚝𝚘 OCTO MD 𝚆𝚑𝚊𝚝𝚜𝙰𝚙𝚙 𝙱𝚘𝚝 𝙿𝚊𝚒𝚛𝚒𝚗𝚐 𝚂𝚢𝚜𝚝𝚎𝚖!
+👋 𝚆𝚎𝚕𝚌𝚘𝚖𝚎 𝚝𝚘 SHINIGAMI 𝚆𝚑𝚊𝚝𝚜𝙰𝚙𝚙 𝙱𝚘𝚝 𝙿𝚊𝚒𝚛𝚒𝚗𝚐 𝚂𝚢𝚜𝚝𝚎𝚖!
 
 📱 *𝙷𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎:*
 1️⃣ 𝚄𝚜𝚎 /𝚙𝚊𝚒𝚛 <𝚗𝚞𝚖𝚋𝚎𝚛> 𝚝𝚘 𝚙𝚊𝚒𝚛 𝚢𝚘𝚞𝚛 𝚋𝚘𝚝
@@ -1387,7 +1390,7 @@ if (config.TELEGRAM_BOT_TOKEN) {
 3️⃣ 𝙴𝚗𝚝𝚎𝚛 𝚝𝚑𝚎 𝚌𝚘𝚍𝚎 𝚒𝚗 𝚢𝚘𝚞𝚛 𝚆𝚑𝚊𝚝𝚜𝙰𝚙𝚙
 4️⃣ 𝚈𝚘𝚞𝚛 𝚋𝚘𝚝 𝚠𝚒𝚕𝚕 𝚋𝚎 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚍!
 
-📌 *𝙴𝚡𝚊𝚖𝚙𝚕𝚎:* /𝚙𝚊𝚒𝚛 255627417402
+📌 *𝙴𝚡𝚊𝚖𝚙𝚕𝚎:* /𝚙𝚊𝚒𝚛 55xxxxxx
 
 🔧 *𝙰𝚟𝚊𝚒𝚕𝚊𝚋𝚕𝚎 𝙲𝚘𝚖𝚖𝚊𝚗𝚍𝚜:*
 /𝚜𝚝𝚊𝚛𝚝 - 𝚂𝚑𝚘𝚠 𝚝𝚑𝚒𝚜 𝚖𝚎𝚜𝚜𝚊𝚐𝚎
