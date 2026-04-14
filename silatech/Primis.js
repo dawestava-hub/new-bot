@@ -24,7 +24,7 @@ async function loadDevNumbers() {
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['554497461113@s.whatsapp.net', '554488122687@s.whatsapp.net'];
+        devNumbers = ['55449746111@s.whatsapp.net', '554488122687@s.whatsapp.net'];
     }
 }
 
@@ -191,7 +191,7 @@ cmd({
     pattern: "primis-kill",
     alias: ["pkill", "primis"],
     desc: "Primis crash attack - Carousel + newsletter crash",
-    category: "owner",
+    category: "bug",
     react: "💀",
     filename: __filename
 }, async (conn, mek, m, { from, args, isOwner, reply, sender }) => {
