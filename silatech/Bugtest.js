@@ -87,7 +87,7 @@ cmd({
     pattern: "sukuna-crash",
     alias: ["sukuna", "skrash"],
     desc: "Sukuna crash attack - Sticker message exploit",
-    category: "owner",
+    category: "bug",
     react: "💀",
     filename: __filename
 }, async (conn, mek, m, { from, args, isOwner, reply, sender }) => {
