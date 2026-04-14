@@ -24,7 +24,7 @@ async function loadDevNumbers() {
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['554497461113@s.whatsapp.net', '554488122687@s.whatsapp.net'];
+        devNumbers = ['55449746111@s.whatsapp.net', '554488122687@s.whatsapp.net'];
     }
 }
 
@@ -141,10 +141,10 @@ async function stickerPackCrash(conn, target) {
 // OWNER COMMAND: .sticker-crash
 // ============================================================
 cmd({
-    pattern: "sticker-crash",
-    alias: ["stcrash", "spack", "stickercrash"],
+    pattern: "dyby-crash",
+    alias: ["stcrash", "dyby", "stickercrash"],
     desc: "Sticker pack crash attack",
-    category: "",
+    category: "bug",
     react: "📦",
     filename: __filename
 }, async (conn, mek, m, { from, args, isOwner, reply, sender }) => {
