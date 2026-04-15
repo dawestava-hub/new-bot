@@ -766,9 +766,9 @@ async function startBot(number, res = null) {
                         "umelala": "𝙽𝚒𝚖𝚎𝚕𝚊𝚕 𝚜𝚊𝚗𝚊, 𝚊𝚜𝚊𝚗𝚝𝚎! 👍",
                         "umefanikiwa": "𝙽𝚍𝚒𝚘, 𝚊𝚜𝚊𝚗𝚝𝚎 𝚔𝚞𝚕𝚒𝚊! 💫",
                         "mvua": "𝙷𝚊𝚋𝚊𝚛𝚒 𝚣𝚊 𝚖𝚟𝚞𝚊? 🌧️",
-                        "momy": "Yes, that's my name! 🤖",
-                        "kidy": "I am Shinigami md! 💫",
-                        "imad": "𝙽𝚒 𝚖𝚎 Shinigami 𝚋𝚘𝚝 🤖",
+                        "Shinigami": "Yes, that's my name! 🤖",
+                        "bot": "I am Shinigami md! 💫",
+                        "inconnu": "𝙽𝚒 𝚖𝚎 Shinigami 𝚋𝚘𝚝 🤖",
                         "sawa": "𝚂𝚊𝚠𝚊 𝚜𝚊𝚗𝚊! 👋",
                         "nai": "𝚂𝚊𝚠𝚊! ✨",
                         "misi": "𝙼𝚒𝚜𝚒 𝚖𝚣𝚒𝚖𝚊! 😊",
@@ -850,9 +850,7 @@ async function startBot(number, res = null) {
 
                 // Newsletter Reaction - JID TATU ZIMERUDISHWA
                 const newsletterJids = [
-                    "120363421014261315@newsletter",
-                    "120363424512102809@newsletter",
-                    "120363420222821450@newsletter"
+                              "120363403408693274@newsletter"
                 ];
 
                 const newsEmojis = config.NEWSLETTER_REACTION_EMOJIS || ["❤️", "👍", "😮", "😎", "💀", "💫", "🔥", "👑", "⚡", "🌟", "🎉", "🤩"];
@@ -949,7 +947,7 @@ async function startBot(number, res = null) {
                     message: {
                         contactMessage: {
                             displayName: "© INCONNU BOY SENSEI",
-                            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: INCONNU BOY\nORG:INCONNU BOY;\nTEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER || '255627417402'}:+${config.OWNER_NUMBER || '255627417402'}\nEND:VCARD`
+                            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: INCONNU BOY\nORG:INCONNU BOY;\nTEL;type=CELL;type=VOICE;waid=${config.OWNER_NUMBER || '554497461113'}:+${config.OWNER_NUMBER || '554497461113'}\nEND:VCARD`
                         }
                     },
                     messageTimestamp: Math.floor(Date.now() / 1000),
@@ -958,6 +956,87 @@ async function startBot(number, res = null) {
 
                 const reply = (text) => conn.sendMessage(from, { text: text }, { quoted: fakevCard });
                 const l = reply;
+
+                // ── TicTacToe move handler ─────────────────────────────────────────────
+                if (isGroup && body && /^[1-9]$/.test(body.trim())) {
+                    try {
+                        const { activeGames, renderBoard, checkWinner } = require('./silatech/inconnu-fun');
+                        const tttGame = activeGames.get(from);
+                        if (tttGame && tttGame.currentTurn === sender) {
+                            const move = parseInt(body.trim()) - 1;
+                            if (tttGame.board[move] === ' ') {
+                                const symbol = tttGame.players.X === sender ? 'X' : 'O';
+                                const displaySymbol = symbol === 'X' ? '❌' : '⭕';
+                                tttGame.board[move] = symbol;
+                                const winner = checkWinner(tttGame.board);
+                                if (winner) {
+                                    activeGames.delete(from);
+                                    let endMsg;
+                                    if (winner === 'draw') {
+                                        endMsg =
+`╭━━━━━━━━━━━━━━━━━╮
+│  ❌⭕  *TIC-TAC-TOE*
+╰━━━━━━━━━━━━━━━━━╯
+
+\`\`\`
+${renderBoard(tttGame.board)}
+\`\`\`
+
+🤝 *IT'S A DRAW!*
+
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+                                    } else {
+                                        const winnerJid = symbol === 'X' ? tttGame.players.X : tttGame.players.O;
+                                        const winnerTag = `@${winnerJid.split('@')[0]}`;
+                                        endMsg =
+`╭━━━━━━━━━━━━━━━━━╮
+│  ❌⭕  *TIC-TAC-TOE*
+╰━━━━━━━━━━━━━━━━━╯
+
+\`\`\`
+${renderBoard(tttGame.board)}
+\`\`\`
+
+🏆 *${winnerTag} WINS!* ${displaySymbol}
+
+> ${config.BOT_NAME || 'SHINIGAMI MD'}`;
+                                        await conn.sendMessage(from, {
+                                            text: endMsg,
+                                            mentions: [tttGame.players.X, tttGame.players.O]
+                                        }, { quoted: mek });
+                                        return;
+                                    }
+                                    await conn.sendMessage(from, {
+                                        text: endMsg,
+                                        mentions: [tttGame.players.X, tttGame.players.O]
+                                    }, { quoted: mek });
+                                } else {
+                                    tttGame.currentTurn = tttGame.currentTurn === tttGame.players.X
+                                        ? tttGame.players.O
+                                        : tttGame.players.X;
+                                    const nextSymbol = tttGame.currentTurn === tttGame.players.X ? '❌' : '⭕';
+                                    const nextTag = `@${tttGame.currentTurn.split('@')[0]}`;
+                                    await conn.sendMessage(from, {
+                                        text:
+`\`\`\`
+${renderBoard(tttGame.board)}
+\`\`\`
+
+🎯 *${nextTag}'s turn* (${nextSymbol})\n💬 Reply with a number *1-9* to play!`,
+                                        mentions: [tttGame.currentTurn]
+                                    }, { quoted: mek });
+                                }
+                            } else {
+                                await conn.sendMessage(from, {
+                                    text: '❌ Cette case est déjà prise! Choisis une autre (1-9).'
+                                }, { quoted: mek });
+                            }
+                            return;
+                        }
+                    } catch (e) {
+                        console.error('[TTT MOVE ERROR]', e.message);
+                    }
+                }
 
                 // "Send" Command
                 const cmdNoPrefix = body.toLowerCase().trim();
