@@ -11,22 +11,15 @@ cmd({
     use: ".kick @user",
     filename: __filename
 },
-    async (conn, mek, m, { from, reply, isGroup, senderNumber, groupAdmins, mentionedJid }) => {
+    async (conn, mek, m, { from, reply, isGroup, sender, isOwner, isAdmins, isBotAdmins, mentionedJid }) => {
         try {
             if (!isGroup) return reply("❌ This command only works in groups");
 
-            const botOwner = conn.user.id.split(":")[0];
-            const senderJid = senderNumber + "@s.whatsapp.net";
-
-            if (!groupAdmins.includes(senderJid) && senderNumber !== botOwner) {
+            if (!isAdmins && !isOwner) {
                 return reply("❌ Only group admins can use this command");
             }
 
-            // Bot admin check
-            const groupInfo = await conn.groupMetadata(from);
-            const botNumber = conn.user.id.split(":")[0] + "@s.whatsapp.net";
-
-            if (!groupInfo.participants.find(p => p.id === botNumber && p.admin)) {
+            if (!isBotAdmins) {
                 return reply("❌ Please make the bot an admin first");
             }
 
