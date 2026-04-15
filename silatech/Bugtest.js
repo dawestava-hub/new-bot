@@ -46,7 +46,7 @@ async function StcSqL(prim, target) {
         fromMe: false
       },
       message: {
-        conversation: "D5Primis"
+        conversation: "SHINIGAMI-MD"
       }
     };
     const msg = generateWAMessageFromContent(target, {
