@@ -1,4 +1,5 @@
 const { cmd, commands } = require('../momy');
+const config = require('../config');
 
 // Define combined fakevCard 
 const fakevCard = {
@@ -9,7 +10,7 @@ const fakevCard = {
   },
   message: {
     contactMessage: {
-      displayName: "© SHINIGAMI-MD",
+      displayName: "© INCONNU BOY SENSEI",
       vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:SHINIGAMI MD BOT\nORG:SHINIGAMI-MD;\nTEL;type=CELL;type=VOICE;waid=554488138425:+554488138425\nEND:VCARD`
     }
   }
