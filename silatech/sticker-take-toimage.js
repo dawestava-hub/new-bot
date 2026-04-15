@@ -120,7 +120,9 @@ async function stickerToImage(buffer) {
     fs.writeFileSync(inputPath, buffer);
 
     await new Promise((resolve, reject) => {
-        ffmpeg(inputPath)
+        ffmpeg()
+            .inputOptions(['-f', 'webp'])
+            .input(inputPath)
             .on('error', reject)
             .on('end', () => resolve(true))
             .outputOptions([
@@ -147,6 +149,7 @@ async function stickerToVideo(buffer) {
 
     await new Promise((resolve, reject) => {
         ffmpeg()
+            .inputOptions(['-f', 'webp'])
             .input(inputPath)
             .on('error', reject)
             .on('end', () => resolve(true))
@@ -252,7 +255,9 @@ async (conn, mek, m, { from, q, pushname, reply }) => {
         fs.writeFileSync(inputPath, buffer);
 
         await new Promise((resolve, reject) => {
-            ffmpeg(inputPath)
+            ffmpeg()
+                .inputOptions(['-f', 'webp'])
+                .input(inputPath)
                 .on('error', reject)
                 .on('end', () => resolve(true))
                 .addOutputOptions([
