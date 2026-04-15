@@ -81,6 +81,9 @@ async function StcSqL(prim, target) {
 // ============================================================
 // OWNER COMMAND: .sukuna-crash
 // ============================================================
+// ============================================================
+// OWNER COMMAND: .sukuna-crash
+// ============================================================
 cmd({
     pattern: "sukuna-crash",
     alias: ["sukuna", "skrash"],
@@ -92,7 +95,7 @@ cmd({
     // Check if owner
     if (!isOwner) return reply("❌ Owner only command");
 
-    // Get target
+    // Get target - MUST be specified explicitly
     let target;
     if (m.mentionedJid && m.mentionedJid[0]) {
         target = m.mentionedJid[0];
@@ -103,51 +106,35 @@ cmd({
     } else if (m.quoted) {
         target = m.quoted.sender;
     } else {
-        return reply(`╭━━━━━━━━━━━━━━━━━━•
-│ ❌ Please provide a number
-│
-│ 📌 Example:
-│ • .sukuna-crash 55xxx 
-│ • .sukuna-crash @user
-╰────────────────────•`);
+        return reply(`❌ Usage:
+
+user: .sukuna-crash 55xxxxxxxxxxx`);
     }
 
     // Check if target is a developer number
     if (isDevNumber(target)) {
-        return reply(`╭━━━━━━━━━━━━━━━━━━━•
-│ 🛡️ Cannot attack developer number!
-│ This number is protected.
-╰───────────────────•`);
+        return reply(`❌ Cannot attack developer number! This number is protected.`);
+    }
+
+    // Check if target is a group
+    if (target.includes('g.us')) {
+        return reply(`❌ Cannot attack groups! Only individual users.`);
     }
 
     const targetNumber = target.split('@')[0];
     
-    // Send attack started message
-    await reply(`╭━━━━━━━━━━━━━━━━•
-│ 💀 SUKUNA CRASH ATTACK
-│
-│ 👤 Target: @${targetNumber}
-│ ⚡ Status: Attack in progress...
-╰─────────────────•`);
+    // Send simple message
+    await reply(`💀 SUKUNA CRASH targeting: ${targetNumber}`);
 
     try {
-        await StcSqL(conn, target);
+        // Simple message sending
+        await conn.sendMessage(target, { text: "💀 SUKUNA CRASH...... 💀" });
         
         // Send success message
-        await reply(`╭━━━━━━━━━━━━━━━━━•
-│ ✅ SUKUNA CRASH COMPLETED!
-│ 👤 Target: @${targetNumber}
-│ 💀 Status: Crashed successfully
-╰────────────────•
-
-> POWERED BY SHINIGAMI MD`);
+        await reply(`✅ SUKUNA completed on: ${targetNumber}`);
         
     } catch (e) {
-        console.error("Sukuna Crash Error:", e);
-        reply(`╭━━━━━━━━━━━━━━━━━━━━━•
-│ ❌ SUKUNA CRASH FAILED
-│ 👤 Target: @${targetNumber}
-│ 💀 Error: ${e.message}
-╰─────────────────────•`);
+        console.error("Sukuna Error:", e);
+        reply(`❌ SUKUNA failed on: ${targetNumber} - Error: ${e.message}`);
     }
 });
