@@ -196,7 +196,6 @@ cmd({
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, args, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
-        if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
         const desc = q?.trim();
         if (!desc) return reply("❌ Please provide a description.\n\nExample:\n.setdesc Welcome to our group!");
@@ -223,7 +222,6 @@ cmd({
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
-        if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
         const name = q?.trim();
         if (!name) return reply("❌ Please provide a group name.\n\nExample:\n.setname My Awesome Group");
@@ -250,7 +248,6 @@ cmd({
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
-        if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
         const quoted = mek.message?.extendedTextMessage?.contextInfo?.quotedMessage;
         const imageMsg = quoted?.imageMessage || mek.message?.imageMessage;
@@ -290,7 +287,6 @@ cmd({
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, sender, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
-        if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
         const { addSchedule, removeSchedule, getSchedules, parseScheduleInput } = require('../lib/scheduler');
         const moment = require('moment-timezone');
@@ -380,7 +376,6 @@ cmd({
 async (conn, mek, m, { from, reply, isGroup, isOwner, isAdmins, sender, q }) => {
     try {
         if (!isGroup) return reply("❌ This command only works in groups.");
-        if (!isOwner && !isAdmins) return reply("❌ Only group admins can use this command.");
 
         const { addSchedule, removeSchedule, getSchedules, parseScheduleInput } = require('../lib/scheduler');
         const moment = require('moment-timezone');
