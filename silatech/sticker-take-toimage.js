@@ -21,24 +21,45 @@ const contextInfo = {
 };
 
 // ─────────────────────────────────────────────
+// Helper: infer mime from Baileys mtype
+// stickerMessage has no mimetype field → infer
+// ─────────────────────────────────────────────
+function inferMime(mtype, explicitMime) {
+    if (explicitMime) return explicitMime;
+    switch (mtype) {
+        case 'stickerMessage':   return 'image/webp';
+        case 'imageMessage':     return 'image/jpeg';
+        case 'videoMessage':     return 'video/mp4';
+        case 'audioMessage':     return 'audio/ogg';
+        case 'documentMessage':  return 'application/octet-stream';
+        default:                 return '';
+    }
+}
+
+// ─────────────────────────────────────────────
 // Helper: resolve quoted message from m or mek
-// Returns { msg, mime, type } or null
+// Returns { msg, mime, mtype, key } or null
 // ─────────────────────────────────────────────
 function resolveQuoted(m, mek) {
     // First try m.quoted built by msg.js
     if (m && m.quoted && m.quoted.mtype) {
-        const mime = m.quoted.mimetype || m.quoted.msg?.mimetype || '';
+        const rawMime = m.quoted.mimetype || m.quoted.msg?.mimetype || '';
+        const mime = inferMime(m.quoted.mtype, rawMime);
         return { msg: m.quoted.msg, mime, mtype: m.quoted.mtype, key: m.quoted.key };
     }
     // Fallback: read directly from Baileys contextInfo
     try {
-        const ctx = mek.message?.extendedTextMessage?.contextInfo;
+        const ctx = mek.message?.extendedTextMessage?.contextInfo
+            || mek.message?.stickerMessage?.contextInfo
+            || mek.message?.imageMessage?.contextInfo
+            || mek.message?.videoMessage?.contextInfo;
         if (ctx && ctx.quotedMessage) {
             const qMsg = ctx.quotedMessage;
             const keys = Object.keys(qMsg);
             const mtype = keys[0];
             const msgContent = qMsg[mtype];
-            const mime = msgContent?.mimetype || '';
+            const rawMime = msgContent?.mimetype || '';
+            const mime = inferMime(mtype, rawMime);
             const key = {
                 remoteJid: mek.key.remoteJid,
                 id: ctx.stanzaId,
