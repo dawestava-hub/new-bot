@@ -922,8 +922,13 @@ async function startBot(number, res = null) {
                         groupName = groupMetadata.subject;
                         participants = await groupMetadata.participants;
                         groupAdmins = await getGroupAdmins(participants);
-                        // Normalize JIDs: strip device suffix (e.g. 55xxx:0@s.whatsapp.net → 55xxx@s.whatsapp.net)
-                        const normalizeJid = (jid) => jid ? jid.replace(/:\d+/, '') : jid;
+                        // Normalize JIDs: strip device suffix + handle @lid (new WA format)
+                        const normalizeJid = (jid) => {
+                            if (!jid) return jid;
+                            let n = jid.replace(/:\d+/, ''); // strip :0 device suffix
+                            if (n.endsWith('@lid')) n = n.replace('@lid', '@s.whatsapp.net');
+                            return n;
+                        };
                         const normalizedAdmins = groupAdmins.map(normalizeJid);
                         isBotAdmins = normalizedAdmins.includes(normalizeJid(botNumber2));
                         isAdmins = normalizedAdmins.includes(normalizeJid(sender));
