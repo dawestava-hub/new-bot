@@ -41,34 +41,43 @@ function inferMime(mtype, explicitMime) {
 // Returns { msg, mime, mtype, key } or null
 // ─────────────────────────────────────────────
 function resolveQuoted(m, mek) {
-    // First try m.quoted built by msg.js
-    if (m && m.quoted && m.quoted.mtype) {
+    // 1. Essayer m.quoted (construit par msg.js)
+    if (m?.quoted?.mtype) {
         const rawMime = m.quoted.mimetype || m.quoted.msg?.mimetype || '';
         const mime = inferMime(m.quoted.mtype, rawMime);
         return { msg: m.quoted.msg, mime, mtype: m.quoted.mtype, key: m.quoted.key };
     }
-    // Fallback: read directly from Baileys contextInfo
+
+    // 2. Fallback : toutes les sources possibles de contextInfo Baileys
     try {
-        const ctx = mek.message?.extendedTextMessage?.contextInfo
-            || mek.message?.stickerMessage?.contextInfo
-            || mek.message?.imageMessage?.contextInfo
-            || mek.message?.videoMessage?.contextInfo;
-        if (ctx && ctx.quotedMessage) {
+        const ctx =
+            mek.message?.extendedTextMessage?.contextInfo ||
+            mek.message?.stickerMessage?.contextInfo ||
+            mek.message?.imageMessage?.contextInfo ||
+            mek.message?.videoMessage?.contextInfo ||
+            mek.message?.documentMessage?.contextInfo ||
+            mek.message?.buttonsResponseMessage?.contextInfo ||
+            mek.message?.templateButtonReplyMessage?.contextInfo;
+
+        if (ctx?.quotedMessage) {
             const qMsg = ctx.quotedMessage;
-            const keys = Object.keys(qMsg);
-            const mtype = keys[0];
+            const mtype = Object.keys(qMsg)[0];
+            if (!mtype) return null;
             const msgContent = qMsg[mtype];
+            if (!msgContent) return null;
             const rawMime = msgContent?.mimetype || '';
             const mime = inferMime(mtype, rawMime);
             const key = {
                 remoteJid: mek.key.remoteJid,
                 id: ctx.stanzaId,
-                participant: ctx.participant,
+                participant: ctx.participant || mek.key.participant,
                 fromMe: false
             };
             return { msg: msgContent, mime, mtype, key };
         }
-    } catch (e) {}
+    } catch (e) {
+        console.error('resolveQuoted error:', e);
+    }
     return null;
 }
 
@@ -263,10 +272,11 @@ async (conn, mek, m, { from, q, pushname, reply }) => {
         const resolved = resolveQuoted(m, mek);
 
         if (!resolved || !resolved.mime.includes('webp')) {
-            return reply('❌ Please reply to a sticker.');
+            return reply('❌ Reply to a sticker to use .take\n\nExample: Reply to a sticker with .take MyPack');
         }
 
         const buffer = await downloadQuotedMedia(resolved);
+        if (!buffer || buffer.length === 0) return reply('❌ Failed to download the sticker. Try again.');
 
         const packname = q ? q : (config.BOT_NAME || 'SHINIGAMI MD');
         const author = pushname || 'User';
@@ -326,6 +336,7 @@ async (conn, mek, m, { from, reply }) => {
 
         await conn.sendPresenceUpdate('composing', from);
         const buffer = await downloadQuotedMedia(resolved);
+        if (!buffer || buffer.length === 0) return reply('❌ Failed to download the sticker. Try again.');
         const imgBuffer = await stickerToImage(buffer);
 
         await conn.sendMessage(from, {
@@ -361,6 +372,7 @@ async (conn, mek, m, { from, reply }) => {
 
         await conn.sendPresenceUpdate('composing', from);
         const buffer = await downloadQuotedMedia(resolved);
+        if (!buffer || buffer.length === 0) return reply('❌ Failed to download the sticker. Try again.');
         const vidBuffer = await stickerToVideo(buffer);
 
         await conn.sendMessage(from, {
